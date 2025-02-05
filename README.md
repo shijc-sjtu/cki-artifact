@@ -22,23 +22,34 @@ Memcached and Redis are evaluated using memtier\_benchmark, which can be fetched
 
 ## Set-up
 
-Step 1-2 is required for all experiments:
+Step 1-4 is required for all experiments:
 
 1. Download the image tarball from [link](https://www.dropbox.com/scl/fo/iedumaw4y9fg7tlx0ogde/ANYVteAdU3NT6ND-5PnTSC8?rlkey=x64edtal07735983yl6ah4zjt&st=6d0ktjv4&dl=0) and extract the images (`ubuntu-22.04.qcow2`, `bzImage-cki` and `bzImage-pvm`) into the `prebulit` directory.
 
-2. Configure the password in `config.json` (`password` field), as some evaluation steps require superuser permissions (starting VM and running network configuration commands).
+2. Download and build QEMU v6.2.0.
 
-Step 4-5 is only required for experiment *E3*.
+```Bash
+git clone -b v6.2.0 --depth=1 https://github.com/qemu/qemu.git
+mkdir qemu/build && cd qemu/build
+../configure --target-list=x86_64-softmmu
+make -j$(nproc)
+```
 
-3. Create a tap device on the host kernel with the following instruction, with `eth0` replaced with the name of your physical network card.
+3. Configure the path of `qemu-system-x86_64` in `config.json` (`qemu` field).
+
+4. Configure the password in `config.json` (`password` field), as some evaluation steps require superuser permissions (starting VM and running network configuration commands).
+
+Step 4-6 is only required for experiment *E3*.
+
+5. Create a tap device on the host kernel with the following instruction, with `eth0` replaced with the name of your physical network card.
 
 ```Bash
 ./scripts/init_tap.sh eth0
 ```
 
-4. Configure a static IP for the secure container in your local network in `config.json` (`container_ip` field).
+6. Configure a static IP for the secure container in your local network in `config.json` (`container_ip` field).
 
-5. Download memtier_benchmark from Docker Hub.
+7. Download memtier_benchmark from Docker Hub.
 
 ```Bash
 docker pull redislabs/memtier_benchmark:latest
