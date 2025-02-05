@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/time /bin/parsec/dedup -c -p -v -t 1 -i /var/parsec/dedup/media.dat -o /tmp/output.dat.ddp

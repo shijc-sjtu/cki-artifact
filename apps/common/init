@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+VETH=eth0
+
+ip=${ctrip:-192.168.12.240/24}
+subcmd=${subcmd:-default}
+
+/bin/busybox echo "IP: $ip"
+
+/bin/busybox echo "127.0.0.1 localhost" > /etc/hosts
+/bin/busybox echo "::1 localhost ip6-localhost ip6-loopback" >> /etc/hosts
+
+/bin/busybox mount -t sysfs sysfs /sys
+/bin/busybox mount -t proc proc /proc
+/bin/busybox mount -t tmpfs tmpfs /tmp
+/bin/busybox mount -t devtmpfs none /dev
+
+/bin/busybox ip link set lo up
+
+/bin/busybox ip addr add $ip dev $VETH
+/bin/busybox ip link set $VETH up
+
+arg1=$(echo $subcmd | cut -d "," -f 2)
+arg2=$(echo $subcmd | cut -d "," -f 3)
+subcmd=$(echo $subcmd | cut -d "," -f 1)
+
+/bin/command-${subcmd} $arg1 $arg2

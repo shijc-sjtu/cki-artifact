@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/bin/bench_xsbench_mt -- -s small -p ${1:-50000}

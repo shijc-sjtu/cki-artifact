@@ -1,0 +1,25 @@
+#!/usr/bin/expect -f
+
+set password [lindex $argv 0]
+set qemu [lindex $argv 1]
+
+set timeout 60
+
+spawn bash -c "QEMU=$qemu ./scripts/simulate.sh"
+
+expect "password for"
+send "$password\n"
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "123\n"
+
+expect "root@ubuntu"
+send "cd split-kernel/tender\n"
+
+expect "root@ubuntu"
+send "./runpk_test.sh parsec/fluidanimate\n"
+
+expect "root@ubuntu"

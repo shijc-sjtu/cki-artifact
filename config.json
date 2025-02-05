@@ -1,0 +1,5 @@
+{
+    "qemu": "qemu-system-x86_64",
+    "password": "xxx",
+    "container_ip": "192.168.12.240/24"
+}

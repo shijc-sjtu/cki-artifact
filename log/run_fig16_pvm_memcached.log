@@ -1,0 +1,1469 @@
+spawn bash -c ./scripts/simulate.sh pvm tap
+[sudo] password for sjc: 
+c[?7l[2J[0mSeaBIOS (version rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org)
+
+
+iPXE (http://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+7FF91090+7FEF1090 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from ROM..c[?7l[2J[0m.[    0.000000] Linux version 6.7.0-rc6-pvm+ (sjc@epyc-9654) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #24 SMP Thu Oct 17 14:51:15 CST 2024
+[    0.000000] Command line: root=/dev/vda1 console=ttyS0 hugepagesz=1G hugepages=4 norandmaps nokaslr mce=off nmi_watchdog=0 nowatchdog nosoftlockup
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000027fffffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: using sched offset of 148229438 cycles
+[    0.000002] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000004] tsc: Detected 999.999 MHz processor
+[    0.000813] last_pfn = 0x280000 max_arch_pfn = 0x400000000
+[    0.000847] MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+[    0.000849] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.000896] last_pfn = 0x7ffdc max_arch_pfn = 0x400000000
+[    0.004253] found SMP MP-table at [mem 0x000f5b90-0x000f5b9f]
+[    0.004270] Using GB pages for direct mapping
+[    0.004653] ACPI: Early table checksum verification disabled
+[    0.004656] ACPI: RSDP 0x00000000000F59A0 000014 (v00 BOCHS )
+[    0.004661] ACPI: RSDT 0x000000007FFE23E2 000038 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004666] ACPI: FACP 0x000000007FFE21C2 0000F4 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004671] ACPI: DSDT 0x000000007FFE0040 002182 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004674] ACPI: FACS 0x000000007FFE0000 000040
+[    0.004676] ACPI: APIC 0x000000007FFE22B6 000090 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004679] ACPI: HPET 0x000000007FFE2346 000038 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004681] ACPI: MCFG 0x000000007FFE237E 00003C (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004684] ACPI: WAET 0x000000007FFE23BA 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.004686] ACPI: Reserving FACP table memory at [mem 0x7ffe21c2-0x7ffe22b5]
+[    0.004687] ACPI: Reserving DSDT table memory at [mem 0x7ffe0040-0x7ffe21c1]
+[    0.004688] ACPI: Reserving FACS table memory at [mem 0x7ffe0000-0x7ffe003f]
+[    0.004688] ACPI: Reserving APIC table memory at [mem 0x7ffe22b6-0x7ffe2345]
+[    0.004689] ACPI: Reserving HPET table memory at [mem 0x7ffe2346-0x7ffe237d]
+[    0.004690] ACPI: Reserving MCFG table memory at [mem 0x7ffe237e-0x7ffe23b9]
+[    0.004690] ACPI: Reserving WAET table memory at [mem 0x7ffe23ba-0x7ffe23e1]
+[    0.004883] No NUMA configuration found
+[    0.004885] Faking a node at [mem 0x0000000000000000-0x000000027fffffff]
+[    0.004893] NODE_DATA(0) allocated [mem 0x27ffd3000-0x27fffdfff]
+[    0.005070] Zone ranges:
+[    0.005070]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.005072]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.005074]   Normal   [mem 0x0000000100000000-0x000000027fffffff]
+[    0.005075]   Device   empty
+[    0.005076] Movable zone start for each node
+[    0.005077] Early memory node ranges
+[    0.005078]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.005079]   node   0: [mem 0x0000000000100000-0x000000007ffdbfff]
+[    0.005080]   node   0: [mem 0x0000000100000000-0x000000027fffffff]
+[    0.005082] Initmem setup node 0 [mem 0x0000000000001000-0x000000027fffffff]
+[    0.005230] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.005242] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.019859] On node 0, zone Normal: 36 pages in unavailable ranges
+[    0.020103] ACPI: PM-Timer IO Port: 0x608
+[    0.020115] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.020142] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.020145] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.020147] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.020148] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.020149] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.020150] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.020153] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.020154] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+[    0.020158] TSC deadline timer available
+[    0.020159] smpboot: Allowing 4 CPUs, 0 hotplug CPUs
+[    0.020181] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.020195] kvm-guest: KVM setup pv remote TLB flush
+[    0.020198] kvm-guest: setup PV sched yield
+[    0.020206] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.020208] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+[    0.020209] PM: hibernation: Registered nosave memory: [mem 0x000a0000-0x000effff]
+[    0.020210] PM: hibernation: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+[    0.020211] PM: hibernation: Registered nosave memory: [mem 0x7ffdc000-0x7fffffff]
+[    0.020212] PM: hibernation: Registered nosave memory: [mem 0x80000000-0xafffffff]
+[    0.020212] PM: hibernation: Registered nosave memory: [mem 0xb0000000-0xbfffffff]
+[    0.020213] PM: hibernation: Registered nosave memory: [mem 0xc0000000-0xfed1bfff]
+[    0.020213] PM: hibernation: Registered nosave memory: [mem 0xfed1c000-0xfed1ffff]
+[    0.020214] PM: hibernation: Registered nosave memory: [mem 0xfed20000-0xfeffbfff]
+[    0.020215] PM: hibernation: Registered nosave memory: [mem 0xfeffc000-0xfeffffff]
+[    0.020215] PM: hibernation: Registered nosave memory: [mem 0xff000000-0xfffbffff]
+[    0.020216] PM: hibernation: Registered nosave memory: [mem 0xfffc0000-0xffffffff]
+[    0.020217] [mem 0xc0000000-0xfed1bfff] available for PCI devices
+[    0.020219] Booting paravirtualized kernel on KVM
+[    0.020221] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    0.020227] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:4 nr_cpu_ids:4 nr_node_ids:1
+[    0.020506] percpu: Embedded 63 pages/cpu s221184 r8192 d28672 u524288
+[    0.020544] kvm-guest: PV spinlocks enabled
+[    0.020546] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.020550] Kernel command line: root=/dev/vda1 console=ttyS0 hugepagesz=1G hugepages=4 norandmaps nokaslr mce=off nmi_watchdog=0 nowatchdog nosoftlockup
+[    0.021334] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.021360] random: crng init done
+[    0.022170] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.022574] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.022606] Fallback order for Node 0: 0 
+[    0.022608] Built 1 zonelists, mobility grouping on.  Total pages: 2064092
+[    0.022610] Policy zone: Normal
+[    0.022615] mem auto-init: stack:off, heap alloc:on, heap free:off
+[    0.022619] software IO TLB: area num 4.
+[    0.038379] Memory: 3947100K/8388072K available (16384K kernel code, 3244K rwdata, 5944K rodata, 3192K init, 5680K bss, 4440716K reserved, 0K cma-reserved)
+[    0.038668] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.038694] ftrace: allocating 52555 entries in 206 pages
+[    0.050420] ftrace: allocated 206 pages with 5 groups
+[    0.050658] rcu: Hierarchical RCU implementation.
+[    0.050659] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=4.
+[    0.050661] 	Rude variant of Tasks RCU enabled.
+[    0.050661] 	Tracing variant of Tasks RCU enabled.
+[    0.050662] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.050663] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.053511] NR_IRQS: 524544, nr_irqs: 456, preallocated irqs: 16
+[    0.053724] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.060003] Console: colour VGA+ 80x25
+[    0.060040] printk: legacy console [ttyS0] enabled
+[    0.143560] ACPI: Core revision 20230628
+[    0.144073] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    0.145087] APIC: Switch to symmetric I/O mode setup
+[    0.145795] x2apic enabled
+[    0.146296] APIC: Switched APIC routing to: physical x2apic
+[    0.146873] kvm-guest: APIC: send_IPI_mask() replaced with kvm_send_ipi_mask()
+[    0.147614] kvm-guest: APIC: send_IPI_mask_allbutself() replaced with kvm_send_ipi_mask_allbutself()
+[    0.148548] kvm-guest: setup PV IPIs
+[    0.149737] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.150388] tsc: Marking TSC unstable due to TSCs unsynchronized
+[    0.151017] Calibrating delay loop (skipped) preset value.. 1999.99 BogoMIPS (lpj=3999996)
+[    0.151963] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.152651] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.155017] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    0.155704] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.156591] Spectre V2 : Mitigation: Retpolines
+[    0.157067] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.157928] Spectre V2 : Spectre v2 / SpectreRSB : Filling RSB on VMEXIT
+[    0.158622] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    0.159015] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.159895] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+[    0.160781] Speculative Return Stack Overflow: IBPB-extending microcode not applied!
+[    0.161592] Speculative Return Stack Overflow: WARNING: See https://kernel.org/doc/html/latest/admin-guide/hw-vuln/srso.html for mitigation options.
+[    0.161593] Speculative Return Stack Overflow: WARNING: kernel not compiled with CPU_SRSO.
+[    0.163877] Speculative Return Stack Overflow: Vulnerable: No microcode
+[    0.164590] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.165408] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.166085] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.167014] x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+[    0.167703] x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+[    0.168382] x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+[    0.169094] x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+[    0.169924] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.170581] x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+[    0.171014] x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+[    0.171673] x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+[    0.172337] x86/fpu: xstate_offset[9]: 2432, xstate_sizes[9]:    8
+[    0.172995] x86/fpu: Enabled xstate features 0x2e7, context size is 2440 bytes, using 'compacted' format.
+[    0.182455] Freeing SMP alternatives memory: 44K
+[    0.182957] pid_max: default: 32768 minimum: 301
+[    0.183051] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,integrity
+[    0.183916] landlock: Up and running.
+[    0.184311] Yama: becoming mindful.
+[    0.184703] AppArmor: AppArmor initialized
+[    0.185174] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.185980] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.187262] smpboot: CPU0: AMD EPYC 9654 96-Core Processor (family: 0x19, model: 0x11, stepping: 0x1)
+[    0.188351] RCU Tasks Rude: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1.
+[    0.189158] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1.
+[    0.189974] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
+[    0.190689] ... version:                0
+[    0.191013] ... bit width:              48
+[    0.191017] ... generic registers:      6
+[    0.191446] ... value mask:             0000ffffffffffff
+[    0.192008] ... max period:             00007fffffffffff
+[    0.192578] ... fixed-purpose events:   0
+[    0.193009] ... event mask:             000000000000003f
+[    0.193651] signal: max sigframe size: 3376
+[    0.194124] rcu: Hierarchical SRCU implementation.
+[    0.194642] rcu: 	Max phase no-delay instances is 1000.
+[    0.195279] smp: Bringing up secondary CPUs ...
+[    0.195999] smpboot: x86: Booting SMP configuration:
+[    0.196532] .... node  #0, CPUs:      #1 #2 #3
+[    0.196884] smp: Brought up 1 node, 4 CPUs
+[    0.196884] smpboot: Max logical packages: 1
+[    0.199023] smpboot: Total of 4 processors activated (7999.99 BogoMIPS)
+[    0.200121] devtmpfs: initialized
+[    0.200121] x86/mm: Memory block size: 128MB
+[    0.200406] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.200406] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.203061] pinctrl core: initialized pinctrl subsystem
+[    0.203718] PM: RTC time: 04:17:00, date: 2025-02-05
+[    0.204660] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.205545] DMA: preallocated 512 KiB GFP_KERNEL pool for atomic allocations
+[    0.206331] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.207042] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.207889] audit: initializing netlink subsys (disabled)
+[    0.208476] audit: type=2000 audit(1738729020.482:1): state=initialized audit_enabled=0 res=1
+[    0.208476] thermal_sys: Registered thermal governor 'fair_share'
+[    0.208476] thermal_sys: Registered thermal governor 'bang_bang'
+[    0.208652] thermal_sys: Registered thermal governor 'step_wise'
+[    0.209293] thermal_sys: Registered thermal governor 'user_space'
+[    0.211021] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.211677] EISA bus registered
+[    0.212720] cpuidle: using governor ladder
+[    0.213166] cpuidle: using governor menu
+[    0.213979] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.213979] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0xb0000000-0xbfffffff] (base 0xb0000000)
+[    0.215019] PCI: MMCONFIG at [mem 0xb0000000-0xbfffffff] reserved as E820 entry
+[    0.215811] PCI: Using configuration type 1 for base access
+[    0.216640] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.219022] HugeTLB: registered 1.00 GiB page size, pre-allocated 4 pages
+[    0.219756] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.220462] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.221190] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.243135] ACPI: Added _OSI(Module Device)
+[    0.243630] ACPI: Added _OSI(Processor Device)
+[    0.244107] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.244609] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.244609] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.247064] ACPI: _OSC evaluation for CPUs failed, trying _PDC
+[    0.247831] ACPI: Interpreter enabled
+[    0.248242] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.248701] ACPI: Using IOAPIC for interrupt routing
+[    0.249271] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.251018] PCI: Using E820 reservations for host bridge windows
+[    0.251750] ACPI: Enabled 2 GPEs in block 00 to 3F
+[    0.253811] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.254488] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    0.255067] acpi PNP0A08:00: _OSC: platform does not support [PCIeHotplug LTR DPC]
+[    0.255934] acpi PNP0A08:00: _OSC: OS now controls [SHPCHotplug PME AER PCIeCapability]
+[    0.256901] PCI host bridge to bus 0000:00
+[    0.257343] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.258074] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.258797] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.259017] pci_bus 0000:00: root bus resource [mem 0x80000000-0xafffffff window]
+[    0.259814] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.260609] pci_bus 0000:00: root bus resource [mem 0x280000000-0xa7fffffff window]
+[    0.261428] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.262054] pci 0000:00:00.0: [8086:29c0] type 00 class 0x060000
+[    0.263005] pci 0000:00:01.0: [1234:1111] type 00 class 0x030000
+[    0.264128] pci 0000:00:01.0: reg 0x10: [mem 0xfd000000-0xfdffffff pref]
+[    0.266565] pci 0000:00:01.0: reg 0x18: [mem 0xfebd0000-0xfebd0fff]
+[    0.270021] pci 0000:00:01.0: reg 0x30: [mem 0xfebc0000-0xfebcffff pref]
+[    0.270780] pci 0000:00:01.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.271211] pci 0000:00:02.0: [1af4:1001] type 00 class 0x010000
+[    0.273248] pci 0000:00:02.0: reg 0x10: [io  0xc000-0xc07f]
+[    0.275018] pci 0000:00:02.0: reg 0x14: [mem 0xfebd1000-0xfebd1fff]
+[    0.279690] pci 0000:00:02.0: reg 0x20: [mem 0xfe000000-0xfe003fff 64bit pref]
+[    0.281964] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+[    0.283393] pci 0000:00:03.0: reg 0x10: [io  0xc0c0-0xc0df]
+[    0.284791] pci 0000:00:03.0: reg 0x14: [mem 0xfebd2000-0xfebd2fff]
+[    0.288503] pci 0000:00:03.0: reg 0x20: [mem 0xfe004000-0xfe007fff 64bit pref]
+[    0.290215] pci 0000:00:03.0: reg 0x30: [mem 0xfeb80000-0xfebbffff pref]
+[    0.298239] pci 0000:00:1f.0: [8086:2918] type 00 class 0x060100
+[    0.299197] pci 0000:00:1f.0: quirk: [io  0x0600-0x067f] claimed by ICH6 ACPI/GPIO/TCO
+[    0.300207] pci 0000:00:1f.2: [8086:2922] type 00 class 0x010601
+[    0.303261] pci 0000:00:1f.2: reg 0x20: [io  0xc0e0-0xc0ff]
+[    0.304332] pci 0000:00:1f.2: reg 0x24: [mem 0xfebd3000-0xfebd3fff]
+[    0.305669] pci 0000:00:1f.3: [8086:2930] type 00 class 0x0c0500
+[    0.307637] pci 0000:00:1f.3: reg 0x20: [io  0x0700-0x073f]
+[    0.310180] ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+[    0.310928] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    0.311079] ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+[    0.311778] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    0.312475] ACPI: PCI: Interrupt link LNKE configured for IRQ 10
+[    0.313167] ACPI: PCI: Interrupt link LNKF configured for IRQ 10
+[    0.313865] ACPI: PCI: Interrupt link LNKG configured for IRQ 11
+[    0.314575] ACPI: PCI: Interrupt link LNKH configured for IRQ 11
+[    0.315039] ACPI: PCI: Interrupt link GSIA configured for IRQ 16
+[    0.315685] ACPI: PCI: Interrupt link GSIB configured for IRQ 17
+[    0.316331] ACPI: PCI: Interrupt link GSIC configured for IRQ 18
+[    0.316979] ACPI: PCI: Interrupt link GSID configured for IRQ 19
+[    0.317624] ACPI: PCI: Interrupt link GSIE configured for IRQ 20
+[    0.318270] ACPI: PCI: Interrupt link GSIF configured for IRQ 21
+[    0.318923] ACPI: PCI: Interrupt link GSIG configured for IRQ 22
+[    0.319023] ACPI: PCI: Interrupt link GSIH configured for IRQ 23
+[    0.319925] iommu: Default domain type: Translated
+[    0.319925] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.320318] SCSI subsystem initialized
+[    0.320729] ACPI: bus type USB registered
+[    0.320729] usbcore: registered new interface driver usbfs
+[    0.320729] usbcore: registered new interface driver hub
+[    0.323023] usbcore: registered new device driver usb
+[    0.323576] pps_core: LinuxPPS API ver. 1 registered
+[    0.324110] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.325083] PTP clock support registered
+[    0.325517] EDAC MC: Ver: 3.0.0
+[    0.325517] NetLabel: Initializing
+[    0.325517] NetLabel:  domain hash size = 128
+[    0.327018] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.327633] NetLabel:  unlabeled traffic allowed by default
+[    0.328243] PCI: Using ACPI for IRQ routing
+[    0.431345] pci 0000:00:01.0: vgaarb: setting as boot VGA device
+[    0.431680] pci 0000:00:01.0: vgaarb: bridge control possible
+[    0.432298] pci 0000:00:01.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.433207] vgaarb: loaded
+[    0.433509] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+[    0.433509] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+[    0.439094] clocksource: Switched to clocksource kvm-clock
+[    0.440380] VFS: Disk quotas dquot_6.6.0
+[    0.440827] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.441606] FS-Cache: Loaded
+[    0.441990] AppArmor: AppArmor Filesystem Enabled
+[    0.442511] pnp: PnP ACPI init
+[    0.442987] system 00:05: [mem 0xb0000000-0xbfffffff window] has been reserved
+[    0.443907] pnp: PnP ACPI: found 6 devices
+[    0.451113] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.452104] NET: Registered PF_INET protocol family
+[    0.452810] IP idents hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.455169] tcp_listen_portaddr_hash hash table entries: 4096 (order: 4, 65536 bytes, linear)
+[    0.456128] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.456976] TCP established hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.458048] TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+[    0.458959] TCP: Hash tables configured (established 65536 bind 65536)
+[    0.459704] MPTCP token hash table entries: 8192 (order: 5, 196608 bytes, linear)
+[    0.460535] UDP hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[    0.461273] UDP-Lite hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[    0.462085] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.462692] NET: Registered PF_XDP protocol family
+[    0.463217] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.463882] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.464540] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.465270] pci_bus 0000:00: resource 7 [mem 0x80000000-0xafffffff window]
+[    0.466004] pci_bus 0000:00: resource 8 [mem 0xc0000000-0xfebfffff window]
+[    0.466732] pci_bus 0000:00: resource 9 [mem 0x280000000-0xa7fffffff window]
+[    0.467545] PCI: CLS 0 bytes, default 64
+[    0.467979] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.468668] software IO TLB: mapped [mem 0x000000007bfdc000-0x000000007ffdc000] (64MB)
+[    0.469871] Initialise system trusted keyrings
+[    0.470360] Key type blacklist registered
+[    0.470934] workingset: timestamp_bits=36 max_order=21 bucket_order=0
+[    0.471629] zbud: loaded
+[    0.472100] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.472919] fuse: init (API version 7.39)
+[    0.473567] integrity: Platform Keyring initialized
+[    0.484977] Key type asymmetric registered
+[    0.485430] Asymmetric key parser 'x509' registered
+[    0.486103] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+[    0.487037] io scheduler mq-deadline registered
+[    0.487747] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    0.488557] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    0.489396] ACPI: button: Power Button [PWRF]
+[    0.490385] ACPI: \_SB_.GSIG: Enabled at IRQ 22
+[    0.491824] ACPI: \_SB_.GSIH: Enabled at IRQ 23
+[    0.493117] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    0.517257] 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    0.519969] Linux agpgart interface v0.103
+[    0.522245] loop: module loaded
+[    0.522729] virtio_blk virtio0: 4/0/0 default/read/poll queues
+[    0.524208] virtio_blk virtio0: [vda] 41943040 512-byte logical blocks (21.5 GB/20.0 GiB)
+[    0.526574]  vda: vda1 vda14 vda15
+[    0.527358] tun: Universal TUN/TAP device driver, 1.6
+[    0.527925] PPP generic driver version 2.4.2
+[    0.528497] VFIO - User Level meta-driver version: 0.3
+[    0.529099] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    0.530474] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    0.530986] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    0.531594] mousedev: PS/2 mouse device common for all mice
+[    0.532302] rtc_cmos 00:04: RTC can wake from S4
+[    0.532678] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+[    0.533612] rtc_cmos 00:04: registered as rtc0
+[    0.534686] rtc_cmos 00:04: setting system clock to 2025-02-05T04:17:00 UTC (1738729020)
+[    0.535540] rtc_cmos 00:04: alarms up to one day, y3k, 242 bytes nvram, hpet irqs
+[    0.536308] i2c_dev: i2c /dev entries driver
+[    0.536762] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    0.538018] device-mapper: uevent: version 1.0.3
+[    0.538544] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+[    0.539418] platform eisa.0: Probing EISA bus 0
+[    0.539886] platform eisa.0: EISA: Cannot allocate resource for mainboard
+[    0.540577] platform eisa.0: Cannot allocate resource for EISA slot 1
+[    0.541230] platform eisa.0: Cannot allocate resource for EISA slot 2
+[    0.541894] platform eisa.0: Cannot allocate resource for EISA slot 3
+[    0.542597] platform eisa.0: Cannot allocate resource for EISA slot 4
+[    0.543256] platform eisa.0: Cannot allocate resource for EISA slot 5
+[    0.543919] platform eisa.0: Cannot allocate resource for EISA slot 6
+[    0.544576] platform eisa.0: Cannot allocate resource for EISA slot 7
+[    0.545235] platform eisa.0: Cannot allocate resource for EISA slot 8
+[    0.545901] platform eisa.0: EISA: Detected 0 cards
+[    0.546397] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+[    0.547311] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.547988] drop_monitor: Initializing network drop monitor service
+[    0.548715] NET: Registered PF_INET6 protocol family
+[    0.550115] Segment Routing with IPv6
+[    0.550566] In-situ OAM (IOAM) with IPv6
+[    0.551172] NET: Registered PF_PACKET protocol family
+[    0.551777] Key type dns_resolver registered
+[    0.552259] mce: Unable to init MCE device (rc: -5)
+[    0.552914] IPI shorthand broadcast: enabled
+[    0.554446] sched_clock: Marking stable (460102008, 93282259)->(567021729, -13637462)
+[    0.555423] registered taskstats version 1
+[    0.556079] Loading compiled-in X.509 certificates
+[    0.557166] Loaded X.509 cert 'Build time autogenerated kernel key: b9a1cbcc08b8165721bf682d6b795c20c213174a'
+[    0.559549] Key type .fscrypt registered
+[    0.559961] Key type fscrypt-provisioning registered
+[    0.561245] Key type encrypted registered
+[    0.561677] AppArmor: AppArmor sha1 policy hashing enabled
+[    0.562247] ima: No TPM chip found, activating TPM-bypass!
+[    0.562812] Loading compiled-in module X.509 certificates
+[    0.563874] Loaded X.509 cert 'Build time autogenerated kernel key: b9a1cbcc08b8165721bf682d6b795c20c213174a'
+[    0.564911] ima: Allocated hash algorithm: sha1
+[    0.565392] ima: No architecture policies found
+[    0.565871] evm: Initialising EVM extended attributes:
+[    0.566399] evm: security.selinux
+[    0.566744] evm: security.SMACK64
+[    0.567088] evm: security.SMACK64EXEC
+[    0.567467] evm: security.SMACK64TRANSMUTE
+[    0.567897] evm: security.SMACK64MMAP
+[    0.568275] evm: security.apparmor
+[    0.568627] evm: security.ima
+[    0.568933] evm: security.capability
+[    0.569309] evm: HMAC attrs: 0x1
+[    0.569922] PM:   Magic number: 13:490:261
+[    0.570531] RAS: Correctable Errors collector initialized.
+[    0.571121] clk: Disabling unused clocks
+[    0.571748] md: Waiting for all devices to be available before autodetect
+[    0.572264] md: If you don't use raid, use raid=noautodetect
+[    0.572680] md: Autodetecting RAID arrays.
+[    0.572982] md: autorun ...
+[    0.573193] md: ... autorun DONE.
+[    0.574595] EXT4-fs (vda1): INFO: recovery required on readonly filesystem
+[    0.575111] EXT4-fs (vda1): write access will be enabled during recovery
+[    0.591837] EXT4-fs (vda1): recovery complete
+[    0.595976] EXT4-fs (vda1): mounted filesystem 3fe0b3c6-c5ee-4b61-a8db-fd686714bc06 ro with ordered data mode. Quota mode: none.
+[    0.596828] VFS: Mounted root (ext4 filesystem) readonly on device 253:1.
+[    0.597448] devtmpfs: mounted
+[    0.598346] Freeing unused decrypted memory: 2028K
+[    0.599060] Freeing unused kernel image (initmem) memory: 3192K
+[    0.609351] Write protecting the kernel read-only data: 22528k
+[    0.609987] Freeing unused kernel image (rodata/data gap) memory: 200K
+[    0.647816] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    0.648313] Run /sbin/init as init process
+[    0.694586] systemd[1]: Inserted module 'autofs4'
+[    0.719477] systemd[1]: systemd 249.11-0ubuntu3.12 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY -P11KIT -QRENCODE +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    0.721947] systemd[1]: Detected virtualization kvm.
+[    0.722346] systemd[1]: Detected architecture x86-64.
+
+Welcome to [1mUbuntu 22.04.4 LTS[0m!
+
+[    0.723637] systemd[1]: Hostname set to <ubuntu>.
+[    0.746929] block vda: the capability attribute has been deprecated.
+[    0.798289] systemd[1]: Configuration file /run/systemd/system/netplan-ovs-cleanup.service is marked world-inaccessible. This has no effect as configuration data is accessible via APIs without restrictions. Proceeding anyway.
+[    0.867684] systemd[1]: Queued start job for default target Graphical Interface.
+[    0.869420] systemd[1]: Created slice Slice /system/modprobe.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/modprobe[0m.
+[    0.870842] systemd[1]: Created slice Slice /system/serial-getty.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/serial-getty[0m.
+[    0.872222] systemd[1]: Created slice Slice /system/systemd-fsck.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/systemd-fsck[0m.
+[    0.873583] systemd[1]: Created slice User and Session Slice.
+[[0;32m  OK  [0m] Created slice [0;1;39mUser and Session Slice[0m.
+[    0.874701] systemd[1]: Started Forward Password Requests to Wall Directory Watch.
+[[0;32m  OK  [0m] Started [0;1;39mForward Password R…uests to Wall Directory Watch[0m.
+[    0.876193] systemd[1]: Set up automount Arbitrary Executable File Formats File System Automount Point.
+[[0;32m  OK  [0m] Set up automount [0;1;39mArbitrary…s File System Automount Point[0m.
+[    0.877754] systemd[1]: Reached target Slice Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mSlice Units[0m.
+[    0.878651] systemd[1]: Reached target Mounting snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mMounting snaps[0m.
+[    0.879597] systemd[1]: Reached target Swaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mSwaps[0m.
+[    0.880420] systemd[1]: Reached target Local Verity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal Verity Protected Volumes[0m.
+[    0.881641] systemd[1]: Listening on Device-mapper event daemon FIFOs.
+[[0;32m  OK  [0m] Listening on [0;1;39mDevice-mapper event daemon FIFOs[0m.
+[    0.882895] systemd[1]: Listening on LVM2 poll daemon socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mLVM2 poll daemon socket[0m.
+[    0.884025] systemd[1]: Listening on multipathd control socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mmultipathd control socket[0m.
+[    0.885172] systemd[1]: Listening on Syslog Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mSyslog Socket[0m.
+[    0.886161] systemd[1]: Listening on fsck to fsckd communication Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mfsck to fsckd communication Socket[0m.
+[    0.887400] systemd[1]: Listening on initctl Compatibility Named Pipe.
+[[0;32m  OK  [0m] Listening on [0;1;39minitctl Compatibility Named Pipe[0m.
+[    0.888720] systemd[1]: Listening on Journal Audit Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Audit Socket[0m.
+[    0.889805] systemd[1]: Listening on Journal Socket (/dev/log).
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Socket (/dev/log)[0m.
+[    0.890966] systemd[1]: Listening on Journal Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Socket[0m.
+[    0.891997] systemd[1]: Listening on Network Service Netlink Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mNetwork Service Netlink Socket[0m.
+[    0.893224] systemd[1]: Listening on udev Control Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mudev Control Socket[0m.
+[    0.894291] systemd[1]: Listening on udev Kernel Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mudev Kernel Socket[0m.
+[    0.895990] systemd[1]: Mounting Huge Pages File System...
+         Mounting [0;1;39mHuge Pages File System[0m...
+[    0.897803] systemd[1]: Mounting POSIX Message Queue File System...
+         Mounting [0;1;39mPOSIX Message Queue File System[0m...
+[    0.899636] systemd[1]: Mounting Kernel Debug File System...
+         Mounting [0;1;39mKernel Debug File System[0m...
+[    0.901353] systemd[1]: Mounting Kernel Trace File System...
+         Mounting [0;1;39mKernel Trace File System[0m...
+[    0.903674] systemd[1]: Starting Journal Service...
+         Starting [0;1;39mJournal Service[0m...
+[    0.905332] systemd[1]: Starting Set the console keyboard layout...
+         Starting [0;1;39mSet the console keyboard layout[0m...
+[    0.907263] systemd[1]: Starting Create List of Static Device Nodes...
+         Starting [0;1;39mCreate List of Static Device Nodes[0m...
+[    0.909223] systemd[1]: Starting Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+         Starting [0;1;39mMonitoring of LVM…meventd or progress polling[0m...
+[    0.910917] systemd[1]: Condition check resulted in LXD - agent being skipped.
+[    0.912347] systemd[1]: Starting Load Kernel Module configfs...
+         Starting [0;1;39mLoad Kernel Module configfs[0m...
+[    0.914520] systemd[1]: Starting Load Kernel Module drm...
+         Starting [0;1;39mLoad Kernel Module drm[0m...
+[    0.916650] systemd[1]: Starting Load Kernel Module efi_pstore...
+         Starting [0;1;39mLoad Kernel Module efi_pstore[0m...
+[    0.918696] systemd[1]: Starting Load Kernel Module fuse...
+         Starting [0;1;39mLoad Kernel Module fuse[0m...
+[    0.919801] systemd[1]: Condition check resulted in OpenVSwitch configuration for cleanup being skipped.
+[    0.921692] systemd[1]: Starting File System Check on Root Device...
+         Starting [0;1;39mFile System Check on Root Device[0m...
+[    0.923987] systemd[1]: Starting Load Kernel Modules...
+         Starting [0;1;39mLoad Kernel Modules[0m...
+[    0.926098] systemd[1]: Starting Coldplug All udev Devices...
+         Starting [0;1;39mColdplug All udev Devices[0m...
+[    0.928484] systemd[1]: Mounted Huge Pages File System.
+[[0;32m  OK  [0m] Mounted [0;1;39mHuge Pages File System[0m.
+[    0.930457] systemd[1]: Started Journal Service.
+[[0;32m  OK  [0m] Started [0;1;39mJournal Service[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mPOSIX Message Queue File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Debug File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Trace File System[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate List of Static Device Nodes[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Module configfs[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Module efi_pstore[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Module fuse[0m.
+         Mounting [0;1;39mFUSE Control File System[0m...
+         Mounting [0;1;39mKernel Configuration File System[0m...
+[[0;32m  OK  [0m] Started [0;1;39mFile System Check Daemon to report status[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mFUSE Control File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Configuration File System[0m.
+[    0.952734] ACPI: bus type drm_connector registered
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Module drm[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mFile System Check on Root Device[0m.
+         Starting [0;1;39mRemount Root and Kernel File Systems[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mColdplug All udev Devices[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSet the console keyboard layout[0m.
+[    1.007955] EXT4-fs (vda1): re-mounted 3fe0b3c6-c5ee-4b61-a8db-fd686714bc06 r/w. Quota mode: none.
+[[0;32m  OK  [0m] Finished [0;1;39mRemount Root and Kernel File Systems[0m.
+         Starting [0;1;39mDevice-Mapper Multipath Device Controller[0m...
+         Starting [0;1;39mFlush Journal to Persistent Storage[0m...
+         Starting [0;1;39mLoad/Save Random Seed[0m...
+         Starting [0;1;39mCreate System Users[0m...
+[    1.021384] alua: device handler registered
+[    1.023051] emc: device handler registered
+[    1.024049] systemd-journald[125]: Received client request to flush runtime journal.
+[    1.024818] rdac: device handler registered
+[    1.027076] NET: Registered PF_VSOCK protocol family
+[[0;32m  OK  [0m] Finished [0;1;39mCreate System Users[0m.
+         Starting [0;1;39mCreat[    1.033861] systemd-journald[125]: File /var/log/journal/9d50ab55c75c4f6586e03a6a26c9b1ff/system.journal corrupted or uncleanly shut down, renaming and replacing.
+e Static Device Nodes in /dev[0m...
+[    1.042463] Guest personality initialized and is inactive
+[    1.043061] VMCI host device registered (name=vmci, major=10, minor=121)
+[    1.043881] Initialized host personality
+[[0;32m  OK  [0m] Finished [0;1;39mLoad/Save Random Seed[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate Static Device Nodes in /dev[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Modules[0m.
+         Starting [0;1;39mApply Kernel Variables[0m...
+         Starting [0;1;39mRule-based Manage…for Device Events and Files[0m...
+[[0;32m  OK  [0m] Started [0;1;39mDevice-Mapper Multipath Device Controller[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mApply Kernel Variables[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mFlush Journal to Persistent Storage[0m.
+[[0;32m  OK  [0m] Started [0;1;39mRule-based Manager for Device Events and Files[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDispatch Password …ts to Console Directory Watch[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal Encrypted Volumes[0m.
+[[0;32m  OK  [0m] Found device [0;1;39m/dev/ttyS0[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mLoad/Save RF …itch Status /dev/rfkill Watch[0m.
+[[0;32m  OK  [0m] Found device [0;1;39m/dev/disk/by-label/UEFI[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mMonitoring of LVM… dmeventd or progress polling[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Local File Systems[0m.
+         Mounting [0;1;39mMount unit for core20, revision 2379[0m...
+         Mounting [0;1;39mMount unit for core20, revision 2434[0m...
+         Mounting [0;1;39mMount unit for lxd, revision 29351[0m...
+         Mounting [0;1;39mMount unit for lxd, revision 31333[0m...
+         Mounting [0;1;39mMount unit for snapd, revision 23258[0m...
+         Mounting [0;1;39mMount unit for snapd, revision 23545[0m...
+         Starting [0;1;39mFile System Check on /dev/disk/by-label/UEFI[0m...
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for core20, revision 2379[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for core20, revision 2434[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for lxd, revision 29351[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for lxd, revision 31333[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for snapd, revision 23258[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mMount unit for snapd, revision 23545[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mMounted snaps[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mFile System Check on /dev/disk/by-label/UEFI[0m.
+         Mounting [0;1;39m/boot/efi[0m...
+[[0;32m  OK  [0m] Mounted [0;1;39m/boot/efi[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal File Systems[0m.
+         Starting [0;1;39mLoad AppArmor profiles[0m...
+         Starting [0;1;39mSet console font and keymap[0m...
+         Starting [0;1;39mCreate final runt…dir for shutdown pivot root[0m...
+         Starting [0;1;39mTell Plymouth To Write Out Runtime Data[0m...
+         Starting [0;1;39mSet Up Additional Binary Formats[0m...
+         Starting [0;1;39mCreate Volatile Files and Directories[0m...
+         Starting [0;1;39mUncomplicated firewall[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mSet console font and keymap[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate final runt…e dir for shutdown pivot root[0m.
+         Mounting [0;1;39mArbitrary Executable File Formats File System[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mUncomplicated firewall[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate Volatile Files and Directories[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Network[0m.
+         Starting [0;1;39mNetwork Configuration[0m...
+         Starting [0;1;39mNetwork Time Synchronization[0m...
+         Starting [0;1;39mRecord System Boot/Shutdown in UTMP[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mTell Plymouth To Write Out Runtime Data[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mArbitrary Executable File Formats File System[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSet Up Additional Binary Formats[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRecord System Boot/Shutdown in UTMP[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad AppArmor profiles[0m.
+         Starting [0;1;39mLoad AppArmor pro…managed internally by snapd[0m...
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Configuration[0m.
+         Starting [0;1;39mWait for Network to be Configured[0m...
+         Starting [0;1;39mNetwork Name Resolution[0m...
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Time Synchronization[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Time Set[0m.
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Name Resolution[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mNetwork[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mHost and Network Name Lookups[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad AppArmor pro…s managed internally by snapd[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Initialization[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily apt download activities[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily apt upgrade and clean activities[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily dpkg database backup timer[0m.
+[[0;32m  OK  [0m] Started [0;1;39mPeriodic ext4 Onli…ata Check for All Filesystems[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDiscard unused blocks once a week[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily rotation of log files[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily man-db regeneration[0m.
+[[0;32m  OK  [0m] Started [0;1;39mMessage of the Day[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily Cleanup of Temporary Directories[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPath Units[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mD-Bus System Message Bus Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mOpen-iSCSI iscsid Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSocket unix for snap application lxd.daemon[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSocket unix f…p application lxd.user-daemon[0m.
+         Starting [0;1;39mSocket activation for snappy daemon[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mUUID daemon activation socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSocket activation for snappy daemon[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSocket Units[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mBasic System[0m.
+         Starting [0;1;39mcontainerd container runtime[0m...
+[[0;32m  OK  [0m] Started [0;1;39mD-Bus System Message Bus[0m.
+[[0;32m  OK  [0m] Started [0;1;39mSave initial kernel messages after boot[0m.
+         Starting [0;1;39mRemove Stale Onli…t4 Metadata Check Snapshots[0m...
+         Starting [0;1;39mRecord successful boot for GRUB[0m...
+[[0;32m  OK  [0m] Started [0;1;39mirqbalance daemon[0m.
+         Starting [0;1;39mDispatcher daemon for systemd-networkd[0m...
+         Starting [0;1;39mSystem Logging Service[0m...
+         Starting [0;1;39mService for snap application lxd.activate[0m...
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Logins[0m.
+         Starting [0;1;39mWait until snapd is fully seeded[0m...
+         Starting [0;1;39mSnap Daemon[0m...
+         Starting [0;1;39mUser Login Management[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mRemove Stale Onli…ext4 Metadata Check Snapshots[0m.
+         Starting [0;1;39mHostname Service[0m...
+[[0;32m  OK  [0m] Started [0;1;39mSystem Logging Service[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRecord successful boot for GRUB[0m.
+         Starting [0;1;39mGRUB failed boot detection[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mGRUB failed boot detection[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Login Management[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUnattended Upgrades Shutdown[0m.
+[[0;32m  OK  [0m] Started [0;1;39mHostname Service[0m.
+         Starting [0;1;39mAuthorization Manager[0m...
+[[0;32m  OK  [0m] Started [0;1;39mAuthorization Manager[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDispatcher daemon for systemd-networkd[0m.
+[[0;32m  OK  [0m] Started [0;1;39mcontainerd container runtime[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mWait for Network to be Configured[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mNetwork is Online[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDownload data for …ailed at package install time[0m.
+[[0;32m  OK  [0m] Started [0;1;39mCheck to see wheth…w version of Ubuntu available[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mTimer Units[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Remote File Systems[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mRemote File Systems[0m.
+         Starting [0;1;39mLSB: automatic crash report generation[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mAvailability of block devices[0m.
+[[0;32m  OK  [0m] Started [0;1;39mRegular background program processing daemon[0m.
+         Starting [0;1;39mOpenBSD Secure Shell server[0m...
+         Starting [0;1;39mPermit User Sessions[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mPermit User Sessions[0m.
+         Starting [0;1;39mHold until boot process finishes up[0m...
+         Starting [0;1;39mTerminate Plymouth Boot Screen[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mHold until boot process finishes up[0m.
+[[0;32m  OK  [0m] Started [0;1;39mSerial Getty on ttyS0[0m.
+         Starting [0;1;39mSet console scheme[0m...
+[[0;32m  OK  [0m] Started [0;1;39mSnap Daemon[0m.
+[[0;32m  OK  [0m] Started [0;1;39mLSB: automatic crash report generation[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSet console scheme[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mTerminate Plymouth Boot Screen[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/getty[0m.
+[[0;32m  OK  [0m] Started [0;1;39mGetty on tty1[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLogin Prompts[0m.
+         Starting [0;1;39mTime & Date Service[0m...
+[[0;32m  OK  [0m] Started [0;1;39mOpenBSD Secure Shell server[0m.
+[[0;32m  OK  [0m] Started [0;1;39mTime & Date Service[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mWait until snapd is fully seeded[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mService for snap application lxd.activate[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mMulti-User System[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mGraphical Interface[0m.
+         Starting [0;1;39mRecord Runlevel Change in UTMP[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mRecord Runlevel Change in UTMP[0m.
+
+Ubuntu 22.04.4 LTS ubuntu ttyS0
+
+ubuntu login: root
+Password: 
+Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 6.7.0-rc6-pvm+ x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+  System information as of Wed Feb  5 04:17:05 UTC 2025
+
+  System load:  0.0                Processes:               157
+  Usage of /:   59.4% of 19.20GB   Users logged in:         0
+  Memory usage: 54%                IPv4 address for enp0s3: 192.168.12.68
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+98 updates can be applied immediately.
+42 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+New release '24.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Wed Feb  5 04:10:51 UTC 2025 on ttyS0
+[?2004hroot@ubuntu:~# cd split-kernel/tender
+[?2004l[?2004hroot@ubuntu:~/split-kernel/tender# IP=192.168.12.240/24 ./pvm_test_hostnet.sh memcached
+[?2004l[    0.000000] Linux version 6.7.0-rc6+ (sjc@epyc-9654) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #38 SMP Thu Jan  9 21:02:23 CST 2025
+[    0.000000] Command line: console=ttyS0 rdinit=/bin/init myip=192.168.12.240/24 subcmd=default
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x00000000000cffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000d0000-0x00000000000effff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007fffffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.1 11/11/2019
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000002] kvm-clock: using sched offset of 129547677 cycles
+[    0.000004] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000007] tsc: Detected 999.999 MHz processor
+[    0.000033] last_pfn = 0x80000 max_arch_pfn = 0x400000000
+[    0.000058] MTRRs disabled by BIOS
+[    0.000060] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.000381] found SMP MP-table at [mem 0x0009fc00-0x0009fc0f]
+[    0.001472] Using GB pages for direct mapping
+[    0.001591] RAMDISK: [mem 0x7fb1e000-0x7ffd7fff]
+[    0.001600] ACPI: Early table checksum verification disabled
+[    0.001613] ACPI: RSDP 0x00000000000F5EE0 000014 (v00 BOCHS )
+[    0.001622] ACPI: RSDT 0x00000000000D2E4F 000040 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001639] ACPI: FACP 0x00000000000D1988 0000F4 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001656] ACPI: DSDT 0x00000000000CF040 002948 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001667] ACPI: FACS 0x00000000000CF000 000040
+[    0.001678] ACPI: APIC 0x00000000000D1A7C 000078 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001688] ACPI: HPET 0x00000000000D1AF4 000038 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001699] ACPI: SRAT 0x00000000000D1B2C 0000E0 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001710] ACPI: MCFG 0x00000000000D1C0C 00003C (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001721] ACPI: SSDT 0x00000000000D1C48 0011DF (v01 BOCHS  NVDIMM   00000001 BXPC 00000001)
+[    0.001732] ACPI: WAET 0x00000000000D2E27 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.001737] ACPI: Reserving FACP table memory at [mem 0xd1988-0xd1a7b]
+[    0.001738] ACPI: Reserving DSDT table memory at [mem 0xcf040-0xd1987]
+[    0.001739] ACPI: Reserving FACS table memory at [mem 0xcf000-0xcf03f]
+[    0.001739] ACPI: Reserving APIC table memory at [mem 0xd1a7c-0xd1af3]
+[    0.001739] ACPI: Reserving HPET table memory at [mem 0xd1af4-0xd1b2b]
+[    0.001740] ACPI: Reserving SRAT table memory at [mem 0xd1b2c-0xd1c0b]
+[    0.001740] ACPI: Reserving MCFG table memory at [mem 0xd1c0c-0xd1c47]
+[    0.001741] ACPI: Reserving SSDT table memory at [mem 0xd1c48-0xd2e26]
+[    0.001741] ACPI: Reserving WAET table memory at [mem 0xd2e27-0xd2e4e]
+[    0.001818] No NUMA configuration found
+[    0.001819] Faking a node at [mem 0x0000000000000000-0x000000007fffffff]
+[    0.001821] NODE_DATA(0) allocated [mem 0x7fffb000-0x7fffffff]
+[    0.001836] Zone ranges:
+[    0.001836]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.001838]   DMA32    [mem 0x0000000001000000-0x000000007fffffff]
+[    0.001839]   Normal   empty
+[    0.001839]   Device   empty
+[    0.001840] Movable zone start for each node
+[    0.001840] Early memory node ranges
+[    0.001841]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.001842]   node   0: [mem 0x0000000000100000-0x000000007fffffff]
+[    0.001843] Initmem setup node 0 [mem 0x0000000000001000-0x000000007fffffff]
+[    0.002064] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.002080] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.007222] ACPI: PM-Timer IO Port: 0x608
+[    0.007265] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.007298] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.007310] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.007312] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.007313] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.007314] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.007315] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.007328] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.007333] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+[    0.007337] TSC deadline timer available
+[    0.007338] smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+[    0.007356] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.007381] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.007382] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+[    0.007383] PM: hibernation: Registered nosave memory: [mem 0x000a0000-0x000cffff]
+[    0.007384] PM: hibernation: Registered nosave memory: [mem 0x000d0000-0x000effff]
+[    0.007385] PM: hibernation: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+[    0.007386] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+[    0.007387] Booting paravirtualized kernel on KVM
+[    0.007389] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    0.011389] setup_percpu: NR_CPUS:240 nr_cpumask_bits:1 nr_cpu_ids:1 nr_node_ids:1
+[    0.011727] percpu: Embedded 46 pages/cpu s157480 r0 d30936 u2097152
+[    0.011766] Kernel command line: console=ttyS0 rdinit=/bin/init myip=192.168.12.240/24 subcmd=default
+[    0.011794] Unknown kernel command line parameters "myip=192.168.12.240/24 subcmd=default", will be passed to user space.
+[    0.011807] random: crng init done
+[    0.012110] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.012157] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.012239] Fallback order for Node 0: 0 
+[    0.012242] Built 1 zonelists, mobility grouping on.  Total pages: 515840
+[    0.012243] Policy zone: DMA32
+[    0.012244] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.014279] Memory: 2030524K/2096760K available (12288K kernel code, 1526K rwdata, 1876K rodata, 3296K init, 1792K bss, 66192K reserved, 0K cma-reserved)
+[    0.014305] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.014316] Kernel/User page tables isolation: enabled
+[    0.014714] rcu: Hierarchical RCU implementation.
+[    0.014715] rcu: 	RCU event tracing is enabled.
+[    0.014715] rcu: 	RCU restricting CPUs from NR_CPUS=240 to nr_cpu_ids=1.
+[    0.014717] 	Tracing variant of Tasks RCU enabled.
+[    0.014718] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.014718] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.014723] NR_IRQS: 15616, nr_irqs: 256, preallocated irqs: 16
+[    0.014963] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.015024] Console: colour dummy device 80x25
+[    0.015095] printk: legacy console [ttyS0] enabled
+[    0.171325] ACPI: Core revision 20230628
+[    0.172434] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    0.174593] APIC: Switch to symmetric I/O mode setup
+[    0.175943] x2apic enabled
+[    0.176811] APIC: Switched APIC routing to: physical x2apic
+[    0.179078] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.180479] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x1cd42c7a813, max_idle_ns: 881590565951 ns
+[    0.182868] Calibrating delay loop (skipped) preset value.. 1999.99 BogoMIPS (lpj=3999996)
+[    0.186969] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.188544] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.190873] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    0.192351] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.194871] Spectre V2 : Mitigation: Retpolines
+[    0.195896] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.197757] Spectre V2 : Spectre v2 / SpectreRSB : Filling RSB on VMEXIT
+[    0.198870] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.200791] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+[    0.202870] Speculative Return Stack Overflow: IBPB-extending microcode not applied!
+[    0.204631] Speculative Return Stack Overflow: WARNING: See https://kernel.org/doc/html/latest/admin-guide/hw-vuln/srso.html for mitigation options.
+[    0.204632] Speculative Return Stack Overflow: WARNING: kernel not compiled with CPU_SRSO.
+[    0.208742] Speculative Return Stack Overflow: Vulnerable: No microcode
+[    0.210879] x86/fpu: x87 FPU will use FXSAVE
+[    0.264974] Freeing SMP alternatives memory: 36K
+[    0.266057] pid_max: default: 32768 minimum: 301
+[    0.266868] LSM: initializing lsm=capability,selinux
+[    0.266886] SELinux:  Initializing.
+[    0.267706] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.269391] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.271120] smpboot: CPU0: AMD EPYC 9654 96-Core Processor (family: 0x19, model: 0x11, stepping: 0x1)
+[    0.273418] RCU Tasks Trace: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1.
+[    6.420932] kvm: kvm [778]: vcpu0, guest rIP: 0xffffd97f8193c499 Unhandled WRMSR(0xc0010007) = 0xffff
+[    0.274895] Performance Events: PMU not available due to virtualization, using software events only.
+[    0.277790] signal: max sigframe size: 1440
+[    0.278782] rcu: Hierarchical SRCU implementation.
+[    0.278873] rcu: 	Max phase no-delay instances is 1000.
+[    0.280145] smp: Bringing up secondary CPUs ...
+[    0.281204] smp: Brought up 1 node, 1 CPU
+[    0.282139] smpboot: Max logical packages: 1
+[    0.282876] smpboot: Total of 1 processors activated (1999.99 BogoMIPS)
+[    0.284545] devtmpfs: initialized
+[    0.285366] x86/mm: Memory block size: 128MB
+[    0.286563] ACPI: PM: Registering ACPI NVS region [mem 0x000d0000-0x000effff] (131072 bytes)
+[    0.286908] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.289137] futex hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    0.290833] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.290954] audit: initializing netlink subsys (disabled)
+[    0.292316] thermal_sys: Registered thermal governor 'step_wise'
+[    0.292322] audit: type=2000 audit(1738729026.236:1): state=initialized audit_enabled=0 res=1
+[    0.294890] cpuidle: using governor menu
+[    0.296698] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.298290] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0xb0000000-0xbfffffff] (base 0xb0000000)
+[    0.298875] PCI: MMCONFIG at [mem 0xb0000000-0xbfffffff] reserved as E820 entry
+[    0.301119] PCI: Using configuration type 1 for base access
+[    0.302553] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.302874] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.304397] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.305941] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.306987] cryptd: max_cpu_qlen set to 1000
+[    0.308057] ACPI: Added _OSI(Module Device)
+[    0.309022] ACPI: Added _OSI(Processor Device)
+[    0.310047] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.310872] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.313152] ACPI: 2 ACPI AML tables successfully acquired and loaded
+[    0.315353] ACPI: _OSC evaluation for CPUs failed, trying _PDC
+[    0.316784] ACPI: Interpreter enabled
+[    0.317649] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.318651] ACPI: Using IOAPIC for interrupt routing
+[    0.318890] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.320969] PCI: Using E820 reservations for host bridge windows
+[    0.322452] ACPI: Enabled 4 GPEs in block 00 to 3F
+[    0.325169] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.326591] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+[    0.326899] acpi PNP0A08:00: _OSC: platform does not support [PCIeHotplug LTR]
+[    0.328598] acpi PNP0A08:00: _OSC: OS now controls [SHPCHotplug PME PCIeCapability]
+[    0.330460] PCI host bridge to bus 0000:00
+[    0.330874] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.332432] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.333997] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.334872] pci_bus 0000:00: root bus resource [mem 0x80000000-0xafffffff window]
+[    0.336584] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.338302] pci_bus 0000:00: root bus resource [mem 0x2280000000-0x2a7fffffff window]
+[    0.338873] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.340209] pci 0000:00:00.0: [8086:29c0] type 00 class 0x060000
+[    0.342220] pci 0000:00:01.0: [1234:1111] type 00 class 0x030000
+[    0.343009] pci 0000:00:01.0: reg 0x10: [mem 0x00000000-0x00ffffff pref]
+[    0.344657] pci 0000:00:01.0: reg 0x18: [mem 0x00000000-0x00000fff]
+[    0.346321] pci 0000:00:01.0: reg 0x30: [mem 0x00000000-0x0000ffff pref]
+[    0.347255] pci 0000:00:02.0: [1af4:1000] type 00 class 0x020000
+[    0.348787] pci 0000:00:02.0: reg 0x10: [io  0x0000-0x001f]
+[    0.350125] pci 0000:00:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+[    0.351091] pci 0000:00:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+[    0.352781] pci 0000:00:02.0: reg 0x30: [mem 0x00000000-0x0003ffff pref]
+[    0.355445] pci 0000:00:1f.0: [8086:2918] type 00 class 0x060100
+[    0.357391] pci 0000:00:1f.0: quirk: [io  0x0600-0x067f] claimed by ICH6 ACPI/GPIO/TCO
+[    0.359200] pci 0000:00:1f.2: [8086:2922] type 00 class 0x010601
+[    0.360955] pci 0000:00:1f.2: reg 0x20: [io  0x0000-0x001f]
+[    0.362307] pci 0000:00:1f.2: reg 0x24: [mem 0x00000000-0x00000fff]
+[    0.363422] pci 0000:00:1f.3: [8086:2930] type 00 class 0x0c0500
+[    0.365186] pci 0000:00:1f.3: reg 0x20: [io  0x0000-0x003f]
+[    0.366994] ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+[    0.368449] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    0.369914] ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+[    0.370946] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    0.372408] ACPI: PCI: Interrupt link LNKE configured for IRQ 10
+[    0.373854] ACPI: PCI: Interrupt link LNKF configured for IRQ 10
+[    0.374944] ACPI: PCI: Interrupt link LNKG configured for IRQ 11
+[    0.376404] ACPI: PCI: Interrupt link LNKH configured for IRQ 11
+[    0.377811] ACPI: PCI: Interrupt link GSIA configured for IRQ 16
+[    0.378876] ACPI: PCI: Interrupt link GSIB configured for IRQ 17
+[    0.380265] ACPI: PCI: Interrupt link GSIC configured for IRQ 18
+[    0.381644] ACPI: PCI: Interrupt link GSID configured for IRQ 19
+[    0.382875] ACPI: PCI: Interrupt link GSIE configured for IRQ 20
+[    0.384266] ACPI: PCI: Interrupt link GSIF configured for IRQ 21
+[    0.385622] ACPI: PCI: Interrupt link GSIG configured for IRQ 22
+[    0.386877] ACPI: PCI: Interrupt link GSIH configured for IRQ 23
+[    0.388689] iommu: Default domain type: Translated
+[    0.389796] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.390926] SCSI subsystem initialized
+[    0.391796] pps_core: LinuxPPS API ver. 1 registered
+[    0.392936] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.394873] PTP clock support registered
+[    0.395870] PCI: Using ACPI for IRQ routing
+[    0.488928] pci 0000:00:01.0: vgaarb: setting as boot VGA device
+[    0.490303] pci 0000:00:01.0: vgaarb: bridge control possible
+[    0.490868] pci 0000:00:01.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.490874] vgaarb: loaded
+[    0.491544] clocksource: Switched to clocksource kvm-clock
+[    0.492911] pnp: PnP ACPI init
+[    0.493725] system 00:05: [mem 0xb0000000-0xbfffffff window] has been reserved
+[    0.495198] pnp: PnP ACPI: found 6 devices
+[    0.501587] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.503632] NET: Registered PF_INET protocol family
+[    0.504792] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.506908] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.508872] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.510631] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.512462] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    0.514387] TCP: Hash tables configured (established 16384 bind 16384)
+[    0.515874] UDP hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.517411] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.519053] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.520385] pci 0000:00:01.0: BAR 0: assigned [mem 0x80000000-0x80ffffff pref]
+[    0.522046] pci 0000:00:02.0: BAR 6: assigned [mem 0x81000000-0x8103ffff pref]
+[    0.523687] resource: avoiding allocation from e820 entry [mem 0x0009fc00-0x000cffff]
+[    0.525482] pci 0000:00:01.0: BAR 6: assigned [mem 0x81040000-0x8104ffff pref]
+[    0.527133] pci 0000:00:02.0: BAR 4: assigned [mem 0x2280000000-0x2280003fff 64bit pref]
+[    0.529082] resource: avoiding allocation from e820 entry [mem 0x0009fc00-0x000cffff]
+[    0.530859] pci 0000:00:01.0: BAR 2: assigned [mem 0x81050000-0x81050fff]
+[    0.532493] resource: avoiding allocation from e820 entry [mem 0x0009fc00-0x000cffff]
+[    0.534267] pci 0000:00:02.0: BAR 1: assigned [mem 0x81051000-0x81051fff]
+[    0.535848] resource: avoiding allocation from e820 entry [mem 0x0009fc00-0x000cffff]
+[    0.537625] pci 0000:00:1f.2: BAR 5: assigned [mem 0x81052000-0x81052fff]
+[    0.539209] pci 0000:00:1f.3: BAR 4: assigned [io  0x1000-0x103f]
+[    0.540628] pci 0000:00:02.0: BAR 0: assigned [io  0x1040-0x105f]
+[    0.542041] pci 0000:00:1f.2: BAR 4: assigned [io  0x1060-0x107f]
+[    0.543458] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.544873] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.546284] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.547859] pci_bus 0000:00: resource 7 [mem 0x80000000-0xafffffff window]
+[    0.549433] pci_bus 0000:00: resource 8 [mem 0xc0000000-0xfebfffff window]
+[    0.551008] pci_bus 0000:00: resource 9 [mem 0x2280000000-0x2a7fffffff window]
+[    0.552764] PCI: CLS 0 bytes, default 64
+[    0.553691] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1cd42c7a813, max_idle_ns: 881590565951 ns
+[    0.556144] Trying to unpack rootfs image as initramfs...
+[    0.560079] sha256_ssse3: AVX detected but unusable.
+[    0.561220] sha256_ssse3: AVX detected but unusable.
+[    0.568022] workingset: timestamp_bits=40 max_order=19 bucket_order=0
+[    0.569602] fuse: init (API version 7.39)
+[    0.570613] SGI XFS with security attributes, no debug enabled
+[    0.579936] 9p: Installing v9fs 9p2000 file system support
+[    0.581300] NET: Registered PF_ALG protocol family
+[    0.582418] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 249)
+[    0.592724] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    0.594312] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    0.600086] ACPI: button: Power Button [PWRF]
+[    0.604081] virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
+[    0.606034] ACPI: \_SB_.GSIG: Enabled at IRQ 22
+[    0.608404] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[    0.610029] 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    0.620048] brd: module loaded
+[    0.621753] loop: module loaded
+[    0.627951] VFIO - User Level meta-driver version: 0.3
+[    0.629322] xt_time: kernel timezone is -0000
+[    0.630328] IPVS: Registered protocols (TCP, UDP, SCTP, AH, ESP)
+[    0.631683] IPVS: Connection hash table configured (size=4096, memory=32Kbytes)
+[    0.633219] IPVS: ipvs loaded.
+[    0.633921] IPVS: [rr] scheduler registered.
+[    0.634885] IPVS: [wrr] scheduler registered.
+[    0.635879] IPVS: [lc] scheduler registered.
+[    0.636862] IPVS: [wlc] scheduler registered.
+[    0.637851] IPVS: [fo] scheduler registered.
+[    0.638814] IPVS: [ovf] scheduler registered.
+[    0.639817] IPVS: [lblc] scheduler registered.
+[    0.640838] IPVS: [lblcr] scheduler registered.
+[    0.641868] IPVS: [dh] scheduler registered.
+[    0.642835] IPVS: [sh] scheduler registered.
+[    0.643814] IPVS: [sed] scheduler registered.
+[    0.644830] IPVS: [nq] scheduler registered.
+[    0.645802] IPVS: [sip] pe registered.
+[    0.646702] Initializing XFRM netlink socket
+[    0.647701] NET: Registered PF_INET6 protocol family
+[    0.660019] Segment Routing with IPv6
+[    0.660889] In-situ OAM (IOAM) with IPv6
+[    0.661823] NET: Registered PF_PACKET protocol family
+[    0.663002] 9pnet: Installing 9P2000 support
+[    0.668014] NET: Registered PF_VSOCK protocol family
+[    0.671938] IPI shorthand broadcast: enabled
+[    0.672931] AVX2 version of gcm_enc/dec engaged.
+[    0.674106] AES CTR mode by8 optimization enabled
+[    0.678939] Freeing initrd memory: 4840K
+[    0.683074] alg: No test for fips(ansi_cprng) (fips_ansi_cprng)
+[    0.687472] Freeing unused kernel image (initmem) memory: 3296K
+[    0.695927] Write protecting the kernel read-only data: 14336k
+[    0.697175] Freeing unused kernel image (rodata/data gap) memory: 172K
+[    0.734444] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    0.735486] x86/mm: Checking user space page tables
+[    0.772094] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    0.773137] Run /bin/init as init process
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 1 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 2/97/2 probes 6 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 40/0/40 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 0e:82:51:11:3e:e4 ref 1 used 40/10/40 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:       87958 ops,   87985 (avg:   87985) ops/sec, 27.13MB/sec (avg: 27.13MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 7%,   1 secs]  1 threads:      178190 ops,   90224 (avg:   89105) ops/sec, 33.36MB/sec (avg: 30.25MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 10%,   2 secs]  1 threads:      268644 ops,   90447 (avg:   89552) ops/sec, 37.22MB/sec (avg: 32.57MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 13%,   3 secs]  1 threads:      358596 ops,   89943 (avg:   89650) ops/sec, 39.59MB/sec (avg: 34.33MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 17%,   5 secs]  1 threads:      447080 ops,   88477 (avg:   89415) ops/sec, 40.73MB/sec (avg: 35.61MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 20%,   6 secs]  1 threads:      526799 ops,   79712 (avg:   87798) ops/sec, 37.51MB/sec (avg: 35.92MB/sec),  0.14 (avg:  0.12) msec latency[RUN #1 23%,   7 secs]  1 threads:      601919 ops,   75114 (avg:   85986) ops/sec, 35.58MB/sec (avg: 35.88MB/sec),  0.15 (avg:  0.13) msec latency[RUN #1 27%,   8 secs]  1 threads:      692546 ops,   90619 (avg:   86565) ops/sec, 42.96MB/sec (avg: 36.76MB/sec),  0.12 (avg:  0.13) msec latency[RUN #1 30%,   9 secs]  1 threads:      780531 ops,   87977 (avg:   86722) ops/sec, 41.86MB/sec (avg: 37.33MB/sec),  0.12 (avg:  0.13) msec latency[RUN #1 33%,  10 secs]  1 threads:      868946 ops,   88405 (avg:   86890) ops/sec, 42.03MB/sec (avg: 37.80MB/sec),  0.12 (avg:  0.13) msec latency[RUN #1 37%,  11 secs]  1 threads:      961397 ops,   92444 (avg:   87395) ops/sec, 44.11MB/sec (avg: 38.37MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 40%,  12 secs]  1 threads:     1053702 ops,   92297 (avg:   87804) ops/sec, 44.03MB/sec (avg: 38.84MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 43%,  13 secs]  1 threads:     1145335 ops,   91625 (avg:   88098) ops/sec, 43.67MB/sec (avg: 39.22MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 47%,  14 secs]  1 threads:     1236243 ops,   90900 (avg:   88298) ops/sec, 43.40MB/sec (avg: 39.51MB/sec),  0.12 (avg:  0.12) msec latency[RUN #1 50%,  15 secs]  1 threads:     1322477 ops,   86228 (avg:   88160) ops/sec, 41.18MB/sec (avg: 39.62MB/sec),  0.13 (avg:  0.12) msec latency[RUN #1 53%,  16 secs]  1 threads:     1400340 ops,   77856 (avg:   87516) ops/sec, 37.10MB/sec (avg: 39.47MB/sec),  0.14 (avg:  0.12) msec latency[RUN #1 57%,  17 secs]  1 threads:     1475593 ops,   75244 (avg:   86794) ops/sec, 35.90MB/sec (avg: 39.26MB/sec),  0.14 (avg:  0.13) msec latency[RUN #1 60%,  18 secs]  1 threads:     1550866 ops,   75266 (avg:   86153) ops/sec, 35.91MB/sec (avg: 39.07MB/sec),  0.14 (avg:  0.13) msec latency[RUN #1 63%,  19 secs]  1 threads:     1632762 ops,   81887 (avg:   85929) ops/sec, 39.05MB/sec (avg: 39.07MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 67%,  20 secs]  1 threads:     1718039 ops,   85269 (avg:   85896) ops/sec, 40.67MB/sec (avg: 39.15MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 70%,  21 secs]  1 threads:     1798673 ops,   80625 (avg:   85645) ops/sec, 38.42MB/sec (avg: 39.11MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 73%,  22 secs]  1 threads:     1878672 ops,   79990 (avg:   85388) ops/sec, 38.14MB/sec (avg: 39.07MB/sec),  0.14 (avg:  0.13) msec latency[RUN #1 77%,  23 secs]  1 threads:     1953044 ops,   74366 (avg:   84909) ops/sec, 35.34MB/sec (avg: 38.91MB/sec),  0.15 (avg:  0.13) msec latency[RUN #1 80%,  24 secs]  1 threads:     2033904 ops,   80851 (avg:   84739) ops/sec, 38.54MB/sec (avg: 38.89MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 83%,  25 secs]  1 threads:     2113527 ops,   79616 (avg:   84535) ops/sec, 37.97MB/sec (avg: 38.86MB/sec),  0.14 (avg:  0.13) msec latency[RUN #1 87%,  26 secs]  1 threads:     2198204 ops,   84668 (avg:   84540) ops/sec, 40.32MB/sec (avg: 38.91MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 90%,  27 secs]  1 threads:     2289462 ops,   91250 (avg:   84788) ops/sec, 43.52MB/sec (avg: 39.08MB/sec),  0.12 (avg:  0.13) msec latency[RUN #1 93%,  28 secs]  1 threads:     2382072 ops,   92600 (avg:   85067) ops/sec, 44.09MB/sec (avg: 39.26MB/sec),  0.12 (avg:  0.13) msec latency[RUN #1 97%,  29 secs]  1 threads:     2468840 ops,   86758 (avg:   85126) ops/sec, 41.30MB/sec (avg: 39.33MB/sec),  0.13 (avg:  0.13) msec latency[RUN #1 100%,  30 secs]  0 threads:     2549875 ops,   86758 (avg:   84995) ops/sec, 41.30MB/sec (avg: 39.31MB/sec),  0.13 (avg:  0.13) msec latency
+
+1         Threads
+1         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        42497.63          ---          ---         0.13331         0.13500         0.23100         0.29500     22327.86 
+Gets        42497.63     32627.63      9870.00         0.12384         0.11900         0.21500         0.27100     17924.89 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      84995.26     32627.63      9870.00         0.12858         0.12700         0.22300         0.28700     40252.74 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 2 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/90/1 probes 5 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 30/0/30 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      127242 ops,  127275 (avg:  127275) ops/sec, 41.09MB/sec (avg: 41.09MB/sec),  0.17 (avg:  0.17) msec latency[RUN #1 7%,   1 secs]  1 threads:      251635 ops,  124378 (avg:  125826) ops/sec, 49.54MB/sec (avg: 45.31MB/sec),  0.18 (avg:  0.17) msec latency[RUN #1 10%,   2 secs]  1 threads:      367553 ops,  115906 (avg:  122519) ops/sec, 50.99MB/sec (avg: 47.21MB/sec),  0.19 (avg:  0.18) msec latency[RUN #1 13%,   4 secs]  1 threads:      479650 ops,  112086 (avg:  119911) ops/sec, 51.87MB/sec (avg: 48.37MB/sec),  0.19 (avg:  0.18) msec latency[RUN #1 17%,   5 secs]  1 threads:      589905 ops,  110245 (avg:  117977) ops/sec, 52.20MB/sec (avg: 49.14MB/sec),  0.20 (avg:  0.19) msec latency[RUN #1 20%,   6 secs]  1 threads:      699261 ops,  109343 (avg:  116538) ops/sec, 51.95MB/sec (avg: 49.61MB/sec),  0.20 (avg:  0.19) msec latency[RUN #1 23%,   7 secs]  1 threads:      808699 ops,  109430 (avg:  115523) ops/sec, 52.06MB/sec (avg: 49.96MB/sec),  0.20 (avg:  0.19) msec latency[RUN #1 27%,   8 secs]  1 threads:      920921 ops,  112210 (avg:  115109) ops/sec, 53.49MB/sec (avg: 50.40MB/sec),  0.19 (avg:  0.19) msec latency[RUN #1 30%,   9 secs]  1 threads:     1019094 ops,   98166 (avg:  113226) ops/sec, 46.84MB/sec (avg: 50.00MB/sec),  0.22 (avg:  0.19) msec latency[RUN #1 33%,  10 secs]  1 threads:     1112343 ops,   93238 (avg:  111227) ops/sec, 44.46MB/sec (avg: 49.45MB/sec),  0.23 (avg:  0.20) msec latency[RUN #1 37%,  11 secs]  1 threads:     1204818 ops,   92466 (avg:  109522) ops/sec, 43.98MB/sec (avg: 48.95MB/sec),  0.24 (avg:  0.20) msec latency[RUN #1 40%,  12 secs]  1 threads:     1296877 ops,   92049 (avg:  108065) ops/sec, 43.86MB/sec (avg: 48.53MB/sec),  0.24 (avg:  0.20) msec latency[RUN #1 43%,  13 secs]  1 threads:     1387735 ops,   90851 (avg:  106741) ops/sec, 43.26MB/sec (avg: 48.12MB/sec),  0.24 (avg:  0.20) msec latency[RUN #1 47%,  14 secs]  1 threads:     1478885 ops,   91139 (avg:  105627) ops/sec, 43.43MB/sec (avg: 47.79MB/sec),  0.24 (avg:  0.21) msec latency[RUN #1 50%,  15 secs]  1 threads:     1576207 ops,   97314 (avg:  105073) ops/sec, 46.49MB/sec (avg: 47.70MB/sec),  0.22 (avg:  0.21) msec latency[RUN #1 53%,  16 secs]  1 threads:     1672802 ops,   96585 (avg:  104542) ops/sec, 46.04MB/sec (avg: 47.60MB/sec),  0.23 (avg:  0.21) msec latency[RUN #1 57%,  17 secs]  1 threads:     1766552 ops,   93743 (avg:  103907) ops/sec, 44.72MB/sec (avg: 47.43MB/sec),  0.23 (avg:  0.21) msec latency[RUN #1 60%,  18 secs]  1 threads:     1860022 ops,   93459 (avg:  103326) ops/sec, 44.60MB/sec (avg: 47.27MB/sec),  0.23 (avg:  0.21) msec latency[RUN #1 63%,  19 secs]  1 threads:     1951113 ops,   91084 (avg:  102682) ops/sec, 43.43MB/sec (avg: 47.07MB/sec),  0.24 (avg:  0.21) msec latency[RUN #1 67%,  20 secs]  1 threads:     2044276 ops,   93154 (avg:  102206) ops/sec, 44.42MB/sec (avg: 46.94MB/sec),  0.23 (avg:  0.21) msec latency[RUN #1 70%,  21 secs]  1 threads:     2135429 ops,   91146 (avg:  101679) ops/sec, 43.48MB/sec (avg: 46.77MB/sec),  0.24 (avg:  0.21) msec latency[RUN #1 73%,  22 secs]  1 threads:     2230763 ops,   95323 (avg:  101390) ops/sec, 45.39MB/sec (avg: 46.71MB/sec),  0.23 (avg:  0.22) msec latency[RUN #1 77%,  23 secs]  1 threads:     2331400 ops,  100629 (avg:  101357) ops/sec, 47.94MB/sec (avg: 46.76MB/sec),  0.22 (avg:  0.22) msec latency[RUN #1 80%,  24 secs]  1 threads:     2423939 ops,   92529 (avg:  100989) ops/sec, 44.09MB/sec (avg: 46.65MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 83%,  25 secs]  1 threads:     2516348 ops,   92402 (avg:  100646) ops/sec, 44.04MB/sec (avg: 46.55MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 87%,  26 secs]  1 threads:     2609026 ops,   92667 (avg:  100339) ops/sec, 44.15MB/sec (avg: 46.45MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 90%,  27 secs]  1 threads:     2699897 ops,   90864 (avg:   99988) ops/sec, 43.27MB/sec (avg: 46.34MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 93%,  28 secs]  1 threads:     2790775 ops,   90868 (avg:   99662) ops/sec, 43.30MB/sec (avg: 46.23MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 97%,  29 secs]  1 threads:     2882704 ops,   91922 (avg:   99395) ops/sec, 43.82MB/sec (avg: 46.14MB/sec),  0.24 (avg:  0.22) msec latency[RUN #1 100%,  30 secs]  0 threads:     2973428 ops,   91922 (avg:   99113) ops/sec, 43.82MB/sec (avg: 46.05MB/sec),  0.24 (avg:  0.22) msec latency
+
+1         Threads
+2         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        49556.80          ---          ---         0.22598         0.18300         0.75100         1.15100     26036.68 
+Gets        49556.80     38465.00     11091.80         0.21600         0.17500         0.73500         1.12700     21118.53 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      99113.60     38465.00     11091.80         0.22099         0.17500         0.74300         1.14300     47155.20 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 3 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/88/0 probes 4 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 30/0/30 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      108660 ops,  108698 (avg:  108698) ops/sec, 34.36MB/sec (avg: 34.36MB/sec),  0.30 (avg:  0.30) msec latency[RUN #1 7%,   1 secs]  1 threads:      211046 ops,  102377 (avg:  105537) ops/sec, 39.36MB/sec (avg: 36.86MB/sec),  0.32 (avg:  0.31) msec latency[RUN #1 10%,   2 secs]  1 threads:      315094 ops,  104040 (avg:  105038) ops/sec, 44.39MB/sec (avg: 39.37MB/sec),  0.32 (avg:  0.31) msec latency[RUN #1 13%,   3 secs]  1 threads:      414846 ops,   99742 (avg:  103714) ops/sec, 45.21MB/sec (avg: 40.83MB/sec),  0.33 (avg:  0.32) msec latency[RUN #1 17%,   5 secs]  1 threads:      511458 ops,   96601 (avg:  102291) ops/sec, 45.28MB/sec (avg: 41.72MB/sec),  0.34 (avg:  0.32) msec latency[RUN #1 20%,   6 secs]  1 threads:      605524 ops,   94057 (avg:  100919) ops/sec, 44.60MB/sec (avg: 42.20MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 23%,   7 secs]  1 threads:      701460 ops,   95929 (avg:  100206) ops/sec, 45.63MB/sec (avg: 42.69MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 27%,   8 secs]  1 threads:      797052 ops,   95583 (avg:   99628) ops/sec, 45.56MB/sec (avg: 43.05MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 30%,   9 secs]  1 threads:      895198 ops,   98136 (avg:   99462) ops/sec, 46.73MB/sec (avg: 43.46MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 33%,  10 secs]  1 threads:      997618 ops,  102411 (avg:   99757) ops/sec, 48.82MB/sec (avg: 44.00MB/sec),  0.32 (avg:  0.33) msec latency[RUN #1 37%,  11 secs]  1 threads:     1096628 ops,   99001 (avg:   99688) ops/sec, 47.20MB/sec (avg: 44.29MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 40%,  12 secs]  1 threads:     1205416 ops,  108778 (avg:  100446) ops/sec, 51.87MB/sec (avg: 44.92MB/sec),  0.30 (avg:  0.33) msec latency[RUN #1 43%,  13 secs]  1 threads:     1304134 ops,   98708 (avg:  100312) ops/sec, 47.07MB/sec (avg: 45.08MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 47%,  14 secs]  1 threads:     1399634 ops,   95491 (avg:   99968) ops/sec, 45.51MB/sec (avg: 45.12MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 50%,  15 secs]  1 threads:     1493539 ops,   93896 (avg:   99563) ops/sec, 44.72MB/sec (avg: 45.09MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 53%,  16 secs]  1 threads:     1588090 ops,   94541 (avg:   99249) ops/sec, 45.05MB/sec (avg: 45.09MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 57%,  17 secs]  1 threads:     1689026 ops,  100926 (avg:   99348) ops/sec, 48.15MB/sec (avg: 45.27MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 60%,  18 secs]  1 threads:     1785723 ops,   96687 (avg:   99200) ops/sec, 46.06MB/sec (avg: 45.31MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 63%,  19 secs]  1 threads:     1882961 ops,   97229 (avg:   99096) ops/sec, 46.30MB/sec (avg: 45.36MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 67%,  20 secs]  1 threads:     1979415 ops,   96444 (avg:   98963) ops/sec, 45.94MB/sec (avg: 45.39MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 70%,  21 secs]  1 threads:     2076126 ops,   96702 (avg:   98856) ops/sec, 46.13MB/sec (avg: 45.43MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 73%,  22 secs]  1 threads:     2171556 ops,   95421 (avg:   98700) ops/sec, 45.49MB/sec (avg: 45.43MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 77%,  23 secs]  1 threads:     2266187 ops,   94621 (avg:   98522) ops/sec, 45.14MB/sec (avg: 45.42MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 80%,  24 secs]  1 threads:     2360715 ops,   94519 (avg:   98356) ops/sec, 45.11MB/sec (avg: 45.40MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 83%,  25 secs]  1 threads:     2459990 ops,   99265 (avg:   98392) ops/sec, 47.27MB/sec (avg: 45.48MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 87%,  26 secs]  1 threads:     2554400 ops,   94401 (avg:   98238) ops/sec, 44.99MB/sec (avg: 45.46MB/sec),  0.35 (avg:  0.33) msec latency[RUN #1 90%,  27 secs]  1 threads:     2653245 ops,   98835 (avg:   98261) ops/sec, 47.06MB/sec (avg: 45.52MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 93%,  28 secs]  1 threads:     2751499 ops,   98245 (avg:   98260) ops/sec, 46.79MB/sec (avg: 45.56MB/sec),  0.33 (avg:  0.33) msec latency[RUN #1 97%,  29 secs]  1 threads:     2847136 ops,   95628 (avg:   98169) ops/sec, 45.51MB/sec (avg: 45.56MB/sec),  0.34 (avg:  0.33) msec latency[RUN #1 100%,  30 secs]  0 threads:     2946412 ops,   95628 (avg:   98213) ops/sec, 45.51MB/sec (avg: 45.63MB/sec),  0.34 (avg:  0.33) msec latency
+
+1         Threads
+3         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        49106.30          ---          ---         0.33675         0.26300         1.22300         1.99900     25799.99 
+Gets        49106.30     38103.28     11003.01         0.33320         0.26300         1.22300         2.00700     20920.31 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      98212.60     38103.28     11003.01         0.33498         0.26300         1.22300         2.00700     46720.30 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 4 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 1/89/2 probes 6 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+192.168.12.19 dev br-pk  ref 1 used 0/89/0 probes 4 INCOMPLETE
+
+*** Round 2, deleting 1 entries ***
+*** Flush is complete after 2 rounds ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      111892 ops,  111934 (avg:  111934) ops/sec, 35.54MB/sec (avg: 35.54MB/sec),  0.39 (avg:  0.39) msec latency[RUN #1 7%,   1 secs]  1 threads:      221899 ops,  109998 (avg:  110966) ops/sec, 42.65MB/sec (avg: 39.10MB/sec),  0.40 (avg:  0.40) msec latency[RUN #1 10%,   2 secs]  1 threads:      327409 ops,  105503 (avg:  109144) ops/sec, 45.38MB/sec (avg: 41.19MB/sec),  0.42 (avg:  0.40) msec latency[RUN #1 13%,   3 secs]  1 threads:      426782 ops,   99365 (avg:  106699) ops/sec, 45.18MB/sec (avg: 42.19MB/sec),  0.44 (avg:  0.41) msec latency[RUN #1 17%,   4 secs]  1 threads:      523824 ops,   97035 (avg:  104766) ops/sec, 45.61MB/sec (avg: 42.87MB/sec),  0.45 (avg:  0.42) msec latency[RUN #1 20%,   5 secs]  1 threads:      619667 ops,   95835 (avg:  103278) ops/sec, 45.41MB/sec (avg: 43.30MB/sec),  0.46 (avg:  0.42) msec latency[RUN #1 23%,   7 secs]  1 threads:      715608 ops,   95935 (avg:  102229) ops/sec, 45.62MB/sec (avg: 43.63MB/sec),  0.46 (avg:  0.43) msec latency[RUN #1 27%,   8 secs]  1 threads:      815254 ops,   99638 (avg:  101905) ops/sec, 47.44MB/sec (avg: 44.10MB/sec),  0.44 (avg:  0.43) msec latency[RUN #1 30%,   9 secs]  1 threads:      915735 ops,  100474 (avg:  101746) ops/sec, 47.87MB/sec (avg: 44.52MB/sec),  0.44 (avg:  0.43) msec latency[RUN #1 33%,  10 secs]  1 threads:     1010773 ops,   95030 (avg:  101074) ops/sec, 45.22MB/sec (avg: 44.59MB/sec),  0.46 (avg:  0.43) msec latency[RUN #1 37%,  11 secs]  1 threads:     1105950 ops,   95171 (avg:  100538) ops/sec, 45.36MB/sec (avg: 44.66MB/sec),  0.46 (avg:  0.44) msec latency[RUN #1 40%,  12 secs]  1 threads:     1195420 ops,   89463 (avg:   99615) ops/sec, 42.65MB/sec (avg: 44.49MB/sec),  0.49 (avg:  0.44) msec latency[RUN #1 43%,  13 secs]  1 threads:     1297005 ops,  101578 (avg:   99766) ops/sec, 48.51MB/sec (avg: 44.80MB/sec),  0.43 (avg:  0.44) msec latency[RUN #1 47%,  14 secs]  1 threads:     1396687 ops,   99674 (avg:   99759) ops/sec, 47.53MB/sec (avg: 45.00MB/sec),  0.44 (avg:  0.44) msec latency[RUN #1 50%,  15 secs]  1 threads:     1490518 ops,   93825 (avg:   99364) ops/sec, 44.72MB/sec (avg: 44.98MB/sec),  0.47 (avg:  0.44) msec latency[RUN #1 53%,  16 secs]  1 threads:     1577558 ops,   87033 (avg:   98593) ops/sec, 41.50MB/sec (avg: 44.76MB/sec),  0.50 (avg:  0.44) msec latency[RUN #1 57%,  17 secs]  1 threads:     1661959 ops,   84395 (avg:   97758) ops/sec, 40.20MB/sec (avg: 44.49MB/sec),  0.52 (avg:  0.45) msec latency[RUN #1 60%,  18 secs]  1 threads:     1750903 ops,   88937 (avg:   97268) ops/sec, 42.35MB/sec (avg: 44.37MB/sec),  0.49 (avg:  0.45) msec latency[RUN #1 63%,  19 secs]  1 threads:     1838789 ops,   87880 (avg:   96774) ops/sec, 41.81MB/sec (avg: 44.24MB/sec),  0.50 (avg:  0.45) msec latency[RUN #1 67%,  20 secs]  1 threads:     1930273 ops,   91476 (avg:   96509) ops/sec, 43.64MB/sec (avg: 44.21MB/sec),  0.48 (avg:  0.45) msec latency[RUN #1 70%,  21 secs]  1 threads:     2026939 ops,   96659 (avg:   96516) ops/sec, 46.00MB/sec (avg: 44.30MB/sec),  0.45 (avg:  0.45) msec latency[RUN #1 73%,  22 secs]  1 threads:     2125590 ops,   98643 (avg:   96613) ops/sec, 47.03MB/sec (avg: 44.42MB/sec),  0.44 (avg:  0.45) msec latency[RUN #1 77%,  23 secs]  1 threads:     2234818 ops,  109220 (avg:   97161) ops/sec, 51.99MB/sec (avg: 44.75MB/sec),  0.40 (avg:  0.45) msec latency[RUN #1 80%,  24 secs]  1 threads:     2336144 ops,  101316 (avg:   97334) ops/sec, 48.30MB/sec (avg: 44.90MB/sec),  0.43 (avg:  0.45) msec latency[RUN #1 83%,  25 secs]  1 threads:     2440667 ops,  104516 (avg:   97621) ops/sec, 49.80MB/sec (avg: 45.09MB/sec),  0.42 (avg:  0.45) msec latency[RUN #1 87%,  26 secs]  1 threads:     2542195 ops,  101518 (avg:   97771) ops/sec, 48.33MB/sec (avg: 45.22MB/sec),  0.43 (avg:  0.45) msec latency[RUN #1 90%,  27 secs]  1 threads:     2638695 ops,   96494 (avg:   97724) ops/sec, 45.97MB/sec (avg: 45.25MB/sec),  0.45 (avg:  0.45) msec latency[RUN #1 93%,  28 secs]  1 threads:     2739015 ops,  100312 (avg:   97816) ops/sec, 47.79MB/sec (avg: 45.34MB/sec),  0.44 (avg:  0.45) msec latency[RUN #1 97%,  29 secs]  1 threads:     2836792 ops,   97770 (avg:   97815) ops/sec, 46.51MB/sec (avg: 45.38MB/sec),  0.45 (avg:  0.45) msec latency[RUN #1 100%,  30 secs]  0 threads:     2936532 ops,   97770 (avg:   97883) ops/sec, 46.51MB/sec (avg: 45.45MB/sec),  0.45 (avg:  0.45) msec latency
+
+1         Threads
+4         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        48941.46          ---          ---         0.44561         0.32700         2.02300         3.31100     25713.38 
+Gets        48941.43     37931.33     11010.10         0.45137         0.33500         2.06300         3.31100     20827.28 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      97882.89     37931.33     11010.10         0.44849         0.33500         2.03900         3.31100     46540.67 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 5 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/89/1 probes 5 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 28/0/28 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      116438 ops,  116480 (avg:  116480) ops/sec, 37.15MB/sec (avg: 37.15MB/sec),  0.47 (avg:  0.47) msec latency[RUN #1 7%,   1 secs]  1 threads:      220572 ops,  104124 (avg:  110300) ops/sec, 40.46MB/sec (avg: 38.80MB/sec),  0.53 (avg:  0.50) msec latency[RUN #1 10%,   2 secs]  1 threads:      321248 ops,  100667 (avg:  107089) ops/sec, 43.18MB/sec (avg: 40.26MB/sec),  0.54 (avg:  0.51) msec latency[RUN #1 13%,   3 secs]  1 threads:      418686 ops,   97427 (avg:  104673) ops/sec, 44.15MB/sec (avg: 41.23MB/sec),  0.56 (avg:  0.52) msec latency[RUN #1 17%,   5 secs]  1 threads:      518397 ops,   99703 (avg:  103679) ops/sec, 46.83MB/sec (avg: 42.35MB/sec),  0.55 (avg:  0.53) msec latency[RUN #1 20%,   6 secs]  1 threads:      614560 ops,   96154 (avg:  102425) ops/sec, 45.63MB/sec (avg: 42.90MB/sec),  0.57 (avg:  0.54) msec latency[RUN #1 23%,   7 secs]  1 threads:      710225 ops,   95658 (avg:  101458) ops/sec, 45.51MB/sec (avg: 43.27MB/sec),  0.57 (avg:  0.54) msec latency[RUN #1 27%,   8 secs]  1 threads:      806284 ops,   96051 (avg:  100782) ops/sec, 45.75MB/sec (avg: 43.58MB/sec),  0.57 (avg:  0.54) msec latency[RUN #1 30%,   9 secs]  1 threads:      902415 ops,   96124 (avg:  100264) ops/sec, 45.74MB/sec (avg: 43.82MB/sec),  0.57 (avg:  0.55) msec latency[RUN #1 33%,  10 secs]  1 threads:      998263 ops,   95840 (avg:   99822) ops/sec, 45.78MB/sec (avg: 44.02MB/sec),  0.57 (avg:  0.55) msec latency[RUN #1 37%,  11 secs]  1 threads:     1094624 ops,   96353 (avg:   99506) ops/sec, 45.91MB/sec (avg: 44.19MB/sec),  0.57 (avg:  0.55) msec latency[RUN #1 40%,  12 secs]  1 threads:     1192822 ops,   98189 (avg:   99397) ops/sec, 46.86MB/sec (avg: 44.41MB/sec),  0.56 (avg:  0.55) msec latency[RUN #1 43%,  13 secs]  1 threads:     1286549 ops,   93719 (avg:   98960) ops/sec, 44.65MB/sec (avg: 44.43MB/sec),  0.59 (avg:  0.55) msec latency[RUN #1 47%,  14 secs]  1 threads:     1380246 ops,   93689 (avg:   98583) ops/sec, 44.60MB/sec (avg: 44.44MB/sec),  0.59 (avg:  0.56) msec latency[RUN #1 50%,  15 secs]  1 threads:     1476573 ops,   96319 (avg:   98432) ops/sec, 45.84MB/sec (avg: 44.54MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 53%,  16 secs]  1 threads:     1572481 ops,   95899 (avg:   98274) ops/sec, 45.63MB/sec (avg: 44.60MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 57%,  17 secs]  1 threads:     1668237 ops,   95748 (avg:   98125) ops/sec, 45.66MB/sec (avg: 44.67MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 60%,  18 secs]  1 threads:     1762842 ops,   94596 (avg:   97929) ops/sec, 45.11MB/sec (avg: 44.69MB/sec),  0.58 (avg:  0.56) msec latency[RUN #1 63%,  19 secs]  1 threads:     1860788 ops,   97935 (avg:   97930) ops/sec, 46.57MB/sec (avg: 44.79MB/sec),  0.56 (avg:  0.56) msec latency[RUN #1 67%,  20 secs]  1 threads:     1959109 ops,   98311 (avg:   97949) ops/sec, 46.82MB/sec (avg: 44.89MB/sec),  0.56 (avg:  0.56) msec latency[RUN #1 70%,  21 secs]  1 threads:     2067509 ops,  108391 (avg:   98446) ops/sec, 51.67MB/sec (avg: 45.21MB/sec),  0.51 (avg:  0.56) msec latency[RUN #1 73%,  22 secs]  1 threads:     2164154 ops,   96636 (avg:   98364) ops/sec, 46.08MB/sec (avg: 45.25MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 77%,  23 secs]  1 threads:     2260244 ops,   96082 (avg:   98265) ops/sec, 45.79MB/sec (avg: 45.28MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 80%,  24 secs]  1 threads:     2355926 ops,   95673 (avg:   98157) ops/sec, 45.67MB/sec (avg: 45.29MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 83%,  25 secs]  1 threads:     2447126 ops,   91193 (avg:   97878) ops/sec, 43.47MB/sec (avg: 45.22MB/sec),  0.60 (avg:  0.56) msec latency[RUN #1 87%,  26 secs]  1 threads:     2543902 ops,   96767 (avg:   97835) ops/sec, 46.14MB/sec (avg: 45.26MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 90%,  27 secs]  1 threads:     2646081 ops,  102170 (avg:   97996) ops/sec, 48.66MB/sec (avg: 45.38MB/sec),  0.54 (avg:  0.56) msec latency[RUN #1 93%,  28 secs]  1 threads:     2747008 ops,  100917 (avg:   98100) ops/sec, 48.18MB/sec (avg: 45.48MB/sec),  0.54 (avg:  0.56) msec latency[RUN #1 97%,  29 secs]  1 threads:     2843149 ops,   96133 (avg:   98032) ops/sec, 45.87MB/sec (avg: 45.50MB/sec),  0.57 (avg:  0.56) msec latency[RUN #1 100%,  30 secs]  0 threads:     2940008 ops,   96133 (avg:   97999) ops/sec, 45.87MB/sec (avg: 45.52MB/sec),  0.57 (avg:  0.56) msec latency
+
+1         Threads
+5         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        48999.11          ---          ---         0.56046         0.25500         3.61500         8.15900     25743.67 
+Gets        48999.11     38009.47     10989.64         0.55994         0.25500         3.61500         8.12700     20869.14 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      97998.22     38009.47     10989.64         0.56020         0.25500         3.61500         8.12700     46612.81 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 6 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/89/0 probes 4 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 30/0/30 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      114096 ops,  114136 (avg:  114136) ops/sec, 36.42MB/sec (avg: 36.42MB/sec),  0.58 (avg:  0.58) msec latency[RUN #1 7%,   1 secs]  1 threads:      219786 ops,  105678 (avg:  109906) ops/sec, 41.04MB/sec (avg: 38.73MB/sec),  0.62 (avg:  0.60) msec latency[RUN #1 10%,   2 secs]  1 threads:      326772 ops,  106978 (avg:  108930) ops/sec, 45.91MB/sec (avg: 41.13MB/sec),  0.62 (avg:  0.60) msec latency[RUN #1 13%,   3 secs]  1 threads:      429127 ops,  102347 (avg:  107284) ops/sec, 46.58MB/sec (avg: 42.49MB/sec),  0.64 (avg:  0.61) msec latency[RUN #1 17%,   4 secs]  1 threads:      535007 ops,  105869 (avg:  107001) ops/sec, 49.82MB/sec (avg: 43.96MB/sec),  0.62 (avg:  0.62) msec latency[RUN #1 20%,   6 secs]  1 threads:      638887 ops,  103871 (avg:  106480) ops/sec, 49.28MB/sec (avg: 44.84MB/sec),  0.63 (avg:  0.62) msec latency[RUN #1 23%,   7 secs]  1 threads:      738221 ops,   99327 (avg:  105458) ops/sec, 47.21MB/sec (avg: 45.18MB/sec),  0.66 (avg:  0.62) msec latency[RUN #1 27%,   8 secs]  1 threads:      837866 ops,   99637 (avg:  104730) ops/sec, 47.48MB/sec (avg: 45.47MB/sec),  0.66 (avg:  0.63) msec latency[RUN #1 30%,   9 secs]  1 threads:      943416 ops,  105539 (avg:  104820) ops/sec, 50.36MB/sec (avg: 46.01MB/sec),  0.62 (avg:  0.63) msec latency[RUN #1 33%,  10 secs]  1 threads:     1043499 ops,  100075 (avg:  104345) ops/sec, 47.71MB/sec (avg: 46.18MB/sec),  0.66 (avg:  0.63) msec latency[RUN #1 37%,  11 secs]  1 threads:     1143511 ops,  100004 (avg:  103951) ops/sec, 47.65MB/sec (avg: 46.32MB/sec),  0.66 (avg:  0.63) msec latency[RUN #1 40%,  12 secs]  1 threads:     1237775 ops,   94257 (avg:  103143) ops/sec, 45.00MB/sec (avg: 46.21MB/sec),  0.70 (avg:  0.64) msec latency[RUN #1 43%,  13 secs]  1 threads:     1340384 ops,  102597 (avg:  103101) ops/sec, 48.91MB/sec (avg: 46.41MB/sec),  0.64 (avg:  0.64) msec latency[RUN #1 47%,  14 secs]  1 threads:     1438001 ops,   97609 (avg:  102709) ops/sec, 46.49MB/sec (avg: 46.42MB/sec),  0.67 (avg:  0.64) msec latency[RUN #1 50%,  15 secs]  1 threads:     1536938 ops,   98929 (avg:  102457) ops/sec, 47.21MB/sec (avg: 46.47MB/sec),  0.67 (avg:  0.64) msec latency[RUN #1 53%,  16 secs]  1 threads:     1637290 ops,  100340 (avg:  102324) ops/sec, 47.77MB/sec (avg: 46.55MB/sec),  0.66 (avg:  0.64) msec latency[RUN #1 57%,  17 secs]  1 threads:     1748350 ops,  111047 (avg:  102838) ops/sec, 52.96MB/sec (avg: 46.93MB/sec),  0.59 (avg:  0.64) msec latency[RUN #1 60%,  18 secs]  1 threads:     1843302 ops,   94941 (avg:  102399) ops/sec, 45.30MB/sec (avg: 46.84MB/sec),  0.69 (avg:  0.64) msec latency[RUN #1 63%,  19 secs]  1 threads:     1950099 ops,  106786 (avg:  102630) ops/sec, 50.85MB/sec (avg: 47.05MB/sec),  0.62 (avg:  0.64) msec latency[RUN #1 67%,  20 secs]  1 threads:     2045162 ops,   95054 (avg:  102251) ops/sec, 45.28MB/sec (avg: 46.96MB/sec),  0.69 (avg:  0.64) msec latency[RUN #1 70%,  21 secs]  1 threads:     2141433 ops,   96260 (avg:  101966) ops/sec, 45.87MB/sec (avg: 46.91MB/sec),  0.68 (avg:  0.65) msec latency[RUN #1 73%,  22 secs]  1 threads:     2241674 ops,  100233 (avg:  101887) ops/sec, 47.74MB/sec (avg: 46.95MB/sec),  0.66 (avg:  0.65) msec latency[RUN #1 77%,  23 secs]  1 threads:     2337322 ops,   95637 (avg:  101615) ops/sec, 45.54MB/sec (avg: 46.89MB/sec),  0.69 (avg:  0.65) msec latency[RUN #1 80%,  24 secs]  1 threads:     2430920 ops,   93591 (avg:  101281) ops/sec, 44.51MB/sec (avg: 46.79MB/sec),  0.70 (avg:  0.65) msec latency[RUN #1 83%,  25 secs]  1 threads:     2530662 ops,   99731 (avg:  101219) ops/sec, 47.49MB/sec (avg: 46.82MB/sec),  0.66 (avg:  0.65) msec latency[RUN #1 87%,  26 secs]  1 threads:     2628615 ops,   97945 (avg:  101093) ops/sec, 46.57MB/sec (avg: 46.81MB/sec),  0.67 (avg:  0.65) msec latency[RUN #1 90%,  27 secs]  1 threads:     2731532 ops,  102909 (avg:  101160) ops/sec, 49.00MB/sec (avg: 46.89MB/sec),  0.64 (avg:  0.65) msec latency[RUN #1 93%,  28 secs]  1 threads:     2834339 ops,  102800 (avg:  101219) ops/sec, 49.02MB/sec (avg: 46.96MB/sec),  0.64 (avg:  0.65) msec latency[RUN #1 97%,  29 secs]  1 threads:     2933381 ops,   99032 (avg:  101143) ops/sec, 47.18MB/sec (avg: 46.97MB/sec),  0.66 (avg:  0.65) msec latency[RUN #1 100%,  30 secs]  0 threads:     3029922 ops,   99032 (avg:  100995) ops/sec, 47.18MB/sec (avg: 46.94MB/sec),  0.66 (avg:  0.65) msec latency
+
+1         Threads
+6         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        50497.80          ---          ---         0.65602         0.24700         4.22300         9.08700     26531.07 
+Gets        50497.73     39228.45     11269.28         0.64873         0.23900         4.19100         9.02300     21536.64 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     100995.53     39228.45     11269.28         0.65238         0.23900         4.19100         9.08700     48067.71 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 7 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/88/2 probes 6 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 28/0/28 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+192.168.12.19 dev br-pk  ref 1 used 0/88/0 probes 4 INCOMPLETE
+
+*** Round 2, deleting 1 entries ***
+*** Flush is complete after 2 rounds ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      110009 ops,  110050 (avg:  110050) ops/sec, 34.88MB/sec (avg: 34.88MB/sec),  0.70 (avg:  0.70) msec latency[RUN #1 7%,   1 secs]  1 threads:      213852 ops,  103835 (avg:  106942) ops/sec, 40.09MB/sec (avg: 37.49MB/sec),  0.74 (avg:  0.72) msec latency[RUN #1 10%,   2 secs]  1 threads:      313861 ops,   99997 (avg:  104626) ops/sec, 42.60MB/sec (avg: 39.19MB/sec),  0.77 (avg:  0.73) msec latency[RUN #1 13%,   3 secs]  1 threads:      413167 ops,   99298 (avg:  103294) ops/sec, 44.87MB/sec (avg: 40.61MB/sec),  0.77 (avg:  0.74) msec latency[RUN #1 17%,   4 secs]  1 threads:      511165 ops,   97987 (avg:  102233) ops/sec, 45.98MB/sec (avg: 41.69MB/sec),  0.78 (avg:  0.75) msec latency[RUN #1 20%,   6 secs]  1 threads:      608159 ops,   96986 (avg:  101358) ops/sec, 45.97MB/sec (avg: 42.40MB/sec),  0.79 (avg:  0.76) msec latency[RUN #1 23%,   7 secs]  1 threads:      705736 ops,   97565 (avg:  100816) ops/sec, 46.47MB/sec (avg: 42.98MB/sec),  0.79 (avg:  0.76) msec latency[RUN #1 27%,   8 secs]  1 threads:      803069 ops,   97325 (avg:  100380) ops/sec, 46.30MB/sec (avg: 43.40MB/sec),  0.79 (avg:  0.77) msec latency[RUN #1 30%,   9 secs]  1 threads:      899963 ops,   96882 (avg:   99991) ops/sec, 46.09MB/sec (avg: 43.69MB/sec),  0.79 (avg:  0.77) msec latency[RUN #1 33%,  10 secs]  1 threads:      997004 ops,   97033 (avg:   99695) ops/sec, 46.24MB/sec (avg: 43.95MB/sec),  0.79 (avg:  0.77) msec latency[RUN #1 37%,  11 secs]  1 threads:     1093392 ops,   96376 (avg:   99393) ops/sec, 45.93MB/sec (avg: 44.13MB/sec),  0.80 (avg:  0.77) msec latency[RUN #1 40%,  12 secs]  1 threads:     1188356 ops,   94956 (avg:   99024) ops/sec, 45.30MB/sec (avg: 44.23MB/sec),  0.81 (avg:  0.78) msec latency[RUN #1 43%,  13 secs]  1 threads:     1282998 ops,   94630 (avg:   98686) ops/sec, 45.04MB/sec (avg: 44.29MB/sec),  0.81 (avg:  0.78) msec latency[RUN #1 47%,  14 secs]  1 threads:     1380868 ops,   97863 (avg:   98627) ops/sec, 46.65MB/sec (avg: 44.46MB/sec),  0.78 (avg:  0.78) msec latency[RUN #1 50%,  15 secs]  1 threads:     1489843 ops,  108963 (avg:   99316) ops/sec, 51.98MB/sec (avg: 44.96MB/sec),  0.71 (avg:  0.77) msec latency[RUN #1 53%,  16 secs]  1 threads:     1586723 ops,   96873 (avg:   99163) ops/sec, 46.19MB/sec (avg: 45.04MB/sec),  0.79 (avg:  0.77) msec latency[RUN #1 57%,  17 secs]  1 threads:     1683999 ops,   97269 (avg:   99052) ops/sec, 46.38MB/sec (avg: 45.12MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 60%,  18 secs]  1 threads:     1776728 ops,   92719 (avg:   98700) ops/sec, 44.21MB/sec (avg: 45.07MB/sec),  0.83 (avg:  0.78) msec latency[RUN #1 63%,  19 secs]  1 threads:     1870791 ops,   94053 (avg:   98455) ops/sec, 44.77MB/sec (avg: 45.05MB/sec),  0.82 (avg:  0.78) msec latency[RUN #1 67%,  20 secs]  1 threads:     1967957 ops,   97157 (avg:   98390) ops/sec, 46.33MB/sec (avg: 45.11MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 70%,  21 secs]  1 threads:     2064914 ops,   96949 (avg:   98322) ops/sec, 46.28MB/sec (avg: 45.17MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 73%,  22 secs]  1 threads:     2164780 ops,   99857 (avg:   98392) ops/sec, 47.63MB/sec (avg: 45.28MB/sec),  0.77 (avg:  0.78) msec latency[RUN #1 77%,  23 secs]  1 threads:     2268912 ops,  104122 (avg:   98641) ops/sec, 49.58MB/sec (avg: 45.47MB/sec),  0.74 (avg:  0.78) msec latency[RUN #1 80%,  24 secs]  1 threads:     2368307 ops,   99387 (avg:   98672) ops/sec, 47.29MB/sec (avg: 45.54MB/sec),  0.77 (avg:  0.78) msec latency[RUN #1 83%,  25 secs]  1 threads:     2465988 ops,   97673 (avg:   98632) ops/sec, 46.42MB/sec (avg: 45.58MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 87%,  26 secs]  1 threads:     2563075 ops,   97078 (avg:   98572) ops/sec, 46.26MB/sec (avg: 45.61MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 90%,  27 secs]  1 threads:     2658674 ops,   95590 (avg:   98462) ops/sec, 45.48MB/sec (avg: 45.60MB/sec),  0.80 (avg:  0.78) msec latency[RUN #1 93%,  28 secs]  1 threads:     2755862 ops,   97177 (avg:   98416) ops/sec, 46.24MB/sec (avg: 45.62MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 97%,  29 secs]  1 threads:     2852795 ops,   96925 (avg:   98364) ops/sec, 46.17MB/sec (avg: 45.64MB/sec),  0.79 (avg:  0.78) msec latency[RUN #1 100%,  30 secs]  0 threads:     2949617 ops,   96925 (avg:   98319) ops/sec, 46.17MB/sec (avg: 45.66MB/sec),  0.79 (avg:  0.78) msec latency
+
+1         Threads
+7         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        47573.57          ---          ---         0.79174         0.23900         5.21500        10.23900     24994.71 
+Gets        47573.48     36893.35     10680.13         0.77256         0.22300         5.18300        10.11100     20256.65 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals      95147.05     36893.35     10680.13         0.78215         0.23100         5.21500        10.17500     45251.36 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 8 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 2/86/2 probes 6 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+192.168.12.19 dev br-pk  ref 1 used 0/86/0 probes 4 INCOMPLETE
+
+*** Round 2, deleting 1 entries ***
+*** Flush is complete after 2 rounds ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      116563 ops,  116602 (avg:  116602) ops/sec, 37.31MB/sec (avg: 37.31MB/sec),  0.75 (avg:  0.75) msec latency[RUN #1 7%,   1 secs]  1 threads:      230439 ops,  113868 (avg:  115235) ops/sec, 44.47MB/sec (avg: 40.89MB/sec),  0.77 (avg:  0.76) msec latency[RUN #1 10%,   2 secs]  1 threads:      338651 ops,  108200 (avg:  112889) ops/sec, 46.77MB/sec (avg: 42.85MB/sec),  0.81 (avg:  0.78) msec latency[RUN #1 13%,   3 secs]  1 threads:      442060 ops,  103401 (avg:  110517) ops/sec, 47.25MB/sec (avg: 43.95MB/sec),  0.85 (avg:  0.79) msec latency[RUN #1 17%,   5 secs]  1 threads:      545856 ops,  103784 (avg:  109170) ops/sec, 48.86MB/sec (avg: 44.93MB/sec),  0.85 (avg:  0.80) msec latency[RUN #1 20%,   6 secs]  1 threads:      655103 ops,  109238 (avg:  109182) ops/sec, 51.84MB/sec (avg: 46.08MB/sec),  0.80 (avg:  0.80) msec latency[RUN #1 23%,   7 secs]  1 threads:      761026 ops,  105911 (avg:  108714) ops/sec, 50.35MB/sec (avg: 46.69MB/sec),  0.83 (avg:  0.81) msec latency[RUN #1 27%,   8 secs]  1 threads:      865206 ops,  104168 (avg:  108146) ops/sec, 49.63MB/sec (avg: 47.06MB/sec),  0.84 (avg:  0.81) msec latency[RUN #1 30%,   9 secs]  1 threads:      974285 ops,  109067 (avg:  108248) ops/sec, 52.03MB/sec (avg: 47.61MB/sec),  0.81 (avg:  0.81) msec latency[RUN #1 33%,  10 secs]  1 threads:     1079226 ops,  104933 (avg:  107917) ops/sec, 50.05MB/sec (avg: 47.86MB/sec),  0.84 (avg:  0.81) msec latency[RUN #1 37%,  11 secs]  1 threads:     1179382 ops,  100145 (avg:  107210) ops/sec, 47.76MB/sec (avg: 47.85MB/sec),  0.88 (avg:  0.82) msec latency[RUN #1 40%,  12 secs]  1 threads:     1284641 ops,  105251 (avg:  107047) ops/sec, 50.15MB/sec (avg: 48.04MB/sec),  0.83 (avg:  0.82) msec latency[RUN #1 43%,  13 secs]  1 threads:     1388189 ops,  103536 (avg:  106777) ops/sec, 49.39MB/sec (avg: 48.14MB/sec),  0.85 (avg:  0.82) msec latency[RUN #1 47%,  14 secs]  1 threads:     1490449 ops,  102249 (avg:  106453) ops/sec, 48.73MB/sec (avg: 48.19MB/sec),  0.86 (avg:  0.83) msec latency[RUN #1 50%,  15 secs]  1 threads:     1593175 ops,  102714 (avg:  106204) ops/sec, 48.99MB/sec (avg: 48.24MB/sec),  0.86 (avg:  0.83) msec latency[RUN #1 53%,  16 secs]  1 threads:     1696289 ops,  103107 (avg:  106010) ops/sec, 49.12MB/sec (avg: 48.29MB/sec),  0.85 (avg:  0.83) msec latency[RUN #1 57%,  17 secs]  1 threads:     1796523 ops,  100222 (avg:  105670) ops/sec, 47.76MB/sec (avg: 48.26MB/sec),  0.88 (avg:  0.83) msec latency[RUN #1 60%,  18 secs]  1 threads:     1906094 ops,  109560 (avg:  105886) ops/sec, 52.27MB/sec (avg: 48.49MB/sec),  0.80 (avg:  0.83) msec latency[RUN #1 63%,  19 secs]  1 threads:     2005478 ops,   99372 (avg:  105543) ops/sec, 47.31MB/sec (avg: 48.42MB/sec),  0.88 (avg:  0.83) msec latency[RUN #1 67%,  20 secs]  1 threads:     2107474 ops,  101988 (avg:  105366) ops/sec, 48.54MB/sec (avg: 48.43MB/sec),  0.86 (avg:  0.83) msec latency[RUN #1 70%,  21 secs]  1 threads:     2206370 ops,   98885 (avg:  105057) ops/sec, 47.10MB/sec (avg: 48.37MB/sec),  0.89 (avg:  0.84) msec latency[RUN #1 73%,  22 secs]  1 threads:     2308543 ops,  102166 (avg:  104925) ops/sec, 48.71MB/sec (avg: 48.38MB/sec),  0.86 (avg:  0.84) msec latency[RUN #1 77%,  23 secs]  1 threads:     2409051 ops,  100497 (avg:  104733) ops/sec, 47.89MB/sec (avg: 48.36MB/sec),  0.87 (avg:  0.84) msec latency[RUN #1 80%,  24 secs]  1 threads:     2512423 ops,  103361 (avg:  104676) ops/sec, 49.27MB/sec (avg: 48.40MB/sec),  0.85 (avg:  0.84) msec latency[RUN #1 83%,  25 secs]  1 threads:     2614822 ops,  102387 (avg:  104584) ops/sec, 48.79MB/sec (avg: 48.41MB/sec),  0.86 (avg:  0.84) msec latency[RUN #1 87%,  26 secs]  1 threads:     2717360 ops,  102531 (avg:  104505) ops/sec, 48.91MB/sec (avg: 48.43MB/sec),  0.86 (avg:  0.84) msec latency[RUN #1 90%,  27 secs]  1 threads:     2821893 ops,  104525 (avg:  104506) ops/sec, 49.78MB/sec (avg: 48.48MB/sec),  0.84 (avg:  0.84) msec latency[RUN #1 93%,  28 secs]  1 threads:     2936013 ops,  114112 (avg:  104849) ops/sec, 54.33MB/sec (avg: 48.69MB/sec),  0.77 (avg:  0.84) msec latency[RUN #1 97%,  29 secs]  1 threads:     3041771 ops,  105750 (avg:  104880) ops/sec, 50.33MB/sec (avg: 48.75MB/sec),  0.83 (avg:  0.84) msec latency[RUN #1 100%,  30 secs]  0 threads:     3144406 ops,  105750 (avg:  104811) ops/sec, 50.33MB/sec (avg: 48.76MB/sec),  0.83 (avg:  0.84) msec latency
+
+1         Threads
+8         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        54212.69          ---          ---         0.84722         0.24700         6.11100        11.64700     28482.84 
+Gets        54212.65     42197.27     12015.38         0.82981         0.23100         6.04700        11.58300     23163.94 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     108425.34     42197.27     12015.38         0.83851         0.23900         6.07900        11.58300     51646.77 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 9 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 1/88/1 probes 5 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+192.168.12.19 dev br-pk  ref 1 used 0/88/0 probes 4 INCOMPLETE
+
+*** Round 2, deleting 1 entries ***
+*** Flush is complete after 2 rounds ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      118797 ops,  118813 (avg:  118813) ops/sec, 38.07MB/sec (avg: 38.07MB/sec),  0.83 (avg:  0.83) msec latency[RUN #1 7%,   1 secs]  1 threads:      226644 ops,  107834 (avg:  113322) ops/sec, 42.11MB/sec (avg: 40.09MB/sec),  0.92 (avg:  0.87) msec latency[RUN #1 10%,   3 secs]  1 threads:      332657 ops,  106001 (avg:  110882) ops/sec, 45.69MB/sec (avg: 41.96MB/sec),  0.93 (avg:  0.89) msec latency[RUN #1 13%,   4 secs]  1 threads:      437830 ops,  105165 (avg:  109452) ops/sec, 48.02MB/sec (avg: 43.47MB/sec),  0.94 (avg:  0.90) msec latency[RUN #1 17%,   5 secs]  1 threads:      548319 ops,  110476 (avg:  109657) ops/sec, 52.11MB/sec (avg: 45.20MB/sec),  0.89 (avg:  0.90) msec latency[RUN #1 20%,   6 secs]  1 threads:      648685 ops,  100354 (avg:  108107) ops/sec, 47.62MB/sec (avg: 45.60MB/sec),  0.99 (avg:  0.91) msec latency[RUN #1 23%,   7 secs]  1 threads:      752157 ops,  103461 (avg:  107443) ops/sec, 49.26MB/sec (avg: 46.13MB/sec),  0.96 (avg:  0.92) msec latency[RUN #1 27%,   8 secs]  1 threads:      851962 ops,   99797 (avg:  106487) ops/sec, 47.53MB/sec (avg: 46.30MB/sec),  0.99 (avg:  0.93) msec latency[RUN #1 30%,   9 secs]  1 threads:      952062 ops,  100088 (avg:  105776) ops/sec, 47.64MB/sec (avg: 46.45MB/sec),  0.99 (avg:  0.93) msec latency[RUN #1 33%,  10 secs]  1 threads:     1063665 ops,  111589 (avg:  106357) ops/sec, 53.24MB/sec (avg: 47.13MB/sec),  0.89 (avg:  0.93) msec latency[RUN #1 37%,  11 secs]  1 threads:     1162781 ops,   99104 (avg:  105698) ops/sec, 47.29MB/sec (avg: 47.14MB/sec),  1.00 (avg:  0.94) msec latency[RUN #1 40%,  12 secs]  1 threads:     1262540 ops,   99751 (avg:  105202) ops/sec, 47.52MB/sec (avg: 47.18MB/sec),  0.99 (avg:  0.94) msec latency[RUN #1 43%,  13 secs]  1 threads:     1362814 ops,  100262 (avg:  104822) ops/sec, 47.83MB/sec (avg: 47.23MB/sec),  0.98 (avg:  0.94) msec latency[RUN #1 47%,  14 secs]  1 threads:     1462490 ops,   99665 (avg:  104454) ops/sec, 47.53MB/sec (avg: 47.25MB/sec),  0.99 (avg:  0.95) msec latency[RUN #1 50%,  15 secs]  1 threads:     1563999 ops,  101497 (avg:  104257) ops/sec, 48.36MB/sec (avg: 47.32MB/sec),  0.97 (avg:  0.95) msec latency[RUN #1 53%,  16 secs]  1 threads:     1667644 ops,  103636 (avg:  104218) ops/sec, 49.43MB/sec (avg: 47.45MB/sec),  0.95 (avg:  0.95) msec latency[RUN #1 57%,  17 secs]  1 threads:     1769399 ops,  101742 (avg:  104072) ops/sec, 48.49MB/sec (avg: 47.51MB/sec),  0.97 (avg:  0.95) msec latency[RUN #1 60%,  18 secs]  1 threads:     1870939 ops,  101528 (avg:  103931) ops/sec, 48.35MB/sec (avg: 47.56MB/sec),  0.97 (avg:  0.95) msec latency[RUN #1 63%,  19 secs]  1 threads:     1969919 ops,   98968 (avg:  103670) ops/sec, 47.18MB/sec (avg: 47.54MB/sec),  1.00 (avg:  0.95) msec latency[RUN #1 67%,  20 secs]  1 threads:     2069111 ops,   99184 (avg:  103445) ops/sec, 47.22MB/sec (avg: 47.52MB/sec),  1.00 (avg:  0.96) msec latency[RUN #1 70%,  21 secs]  1 threads:     2167479 ops,   98356 (avg:  103203) ops/sec, 46.86MB/sec (avg: 47.49MB/sec),  1.00 (avg:  0.96) msec latency[RUN #1 73%,  22 secs]  1 threads:     2263686 ops,   96196 (avg:  102885) ops/sec, 45.86MB/sec (avg: 47.42MB/sec),  1.03 (avg:  0.96) msec latency[RUN #1 77%,  23 secs]  1 threads:     2365302 ops,  101603 (avg:  102829) ops/sec, 48.40MB/sec (avg: 47.46MB/sec),  0.98 (avg:  0.96) msec latency[RUN #1 80%,  24 secs]  1 threads:     2463597 ops,   98287 (avg:  102640) ops/sec, 46.93MB/sec (avg: 47.44MB/sec),  1.01 (avg:  0.96) msec latency[RUN #1 83%,  25 secs]  1 threads:     2563227 ops,   99618 (avg:  102519) ops/sec, 47.56MB/sec (avg: 47.44MB/sec),  0.99 (avg:  0.96) msec latency[RUN #1 87%,  26 secs]  1 threads:     2662138 ops,   98900 (avg:  102380) ops/sec, 47.12MB/sec (avg: 47.43MB/sec),  1.00 (avg:  0.97) msec latency[RUN #1 90%,  27 secs]  1 threads:     2768335 ops,  106183 (avg:  102520) ops/sec, 50.65MB/sec (avg: 47.55MB/sec),  0.93 (avg:  0.96) msec latency[RUN #1 93%,  28 secs]  1 threads:     2873129 ops,  104786 (avg:  102601) ops/sec, 49.99MB/sec (avg: 47.64MB/sec),  0.95 (avg:  0.96) msec latency[RUN #1 97%,  29 secs]  1 threads:     3001621 ops,  128477 (avg:  103494) ops/sec, 61.23MB/sec (avg: 48.11MB/sec),  0.77 (avg:  0.95) msec latency[RUN #1 100%,  30 secs]  0 threads:     3148722 ops,  128477 (avg:  104955) ops/sec, 61.23MB/sec (avg: 48.84MB/sec),  0.77 (avg:  0.94) msec latency
+
+1         Threads
+9         Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        54287.01          ---          ---         0.95448         0.26300         7.10300        13.24700     28521.88 
+Gets        54286.83     42293.75     11993.08         0.92987         0.25500         7.00700        13.11900     23215.68 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     108573.84     42293.75     11993.08         0.94217         0.26300         7.03900        13.18300     51737.57 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 10 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/86/0 probes 4 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      171789 ops,  171857 (avg:  171857) ops/sec, 58.01MB/sec (avg: 58.01MB/sec),  0.64 (avg:  0.64) msec latency[RUN #1 7%,   1 secs]  1 threads:      330543 ops,  158734 (avg:  165293) ops/sec, 66.91MB/sec (avg: 62.46MB/sec),  0.69 (avg:  0.66) msec latency[RUN #1 10%,   2 secs]  1 threads:      462256 ops,  131702 (avg:  154095) ops/sec, 60.33MB/sec (avg: 61.75MB/sec),  0.83 (avg:  0.71) msec latency[RUN #1 13%,   3 secs]  1 threads:      588218 ops,  125945 (avg:  147056) ops/sec, 59.57MB/sec (avg: 61.21MB/sec),  0.87 (avg:  0.75) msec latency[RUN #1 17%,   5 secs]  1 threads:      714809 ops,  126576 (avg:  142960) ops/sec, 60.16MB/sec (avg: 61.00MB/sec),  0.87 (avg:  0.77) msec latency[RUN #1 20%,   6 secs]  1 threads:      844083 ops,  129264 (avg:  140677) ops/sec, 61.64MB/sec (avg: 61.10MB/sec),  0.85 (avg:  0.78) msec latency[RUN #1 23%,   7 secs]  1 threads:      966961 ops,  122867 (avg:  138133) ops/sec, 58.56MB/sec (avg: 60.74MB/sec),  0.89 (avg:  0.79) msec latency[RUN #1 27%,   8 secs]  1 threads:     1093864 ops,  126892 (avg:  136728) ops/sec, 60.48MB/sec (avg: 60.71MB/sec),  0.86 (avg:  0.80) msec latency[RUN #1 30%,   9 secs]  1 threads:     1222005 ops,  128127 (avg:  135772) ops/sec, 60.96MB/sec (avg: 60.74MB/sec),  0.86 (avg:  0.81) msec latency[RUN #1 33%,  10 secs]  1 threads:     1349771 ops,  127756 (avg:  134970) ops/sec, 60.90MB/sec (avg: 60.75MB/sec),  0.86 (avg:  0.81) msec latency[RUN #1 37%,  11 secs]  1 threads:     1486749 ops,  136963 (avg:  135151) ops/sec, 65.30MB/sec (avg: 61.16MB/sec),  0.80 (avg:  0.81) msec latency[RUN #1 40%,  12 secs]  1 threads:     1635744 ops,  148976 (avg:  136304) ops/sec, 71.00MB/sec (avg: 61.98MB/sec),  0.74 (avg:  0.81) msec latency[RUN #1 43%,  13 secs]  1 threads:     1763544 ops,  127789 (avg:  135649) ops/sec, 61.05MB/sec (avg: 61.91MB/sec),  0.86 (avg:  0.81) msec latency[RUN #1 47%,  14 secs]  1 threads:     1890033 ops,  126479 (avg:  134994) ops/sec, 60.33MB/sec (avg: 61.80MB/sec),  0.87 (avg:  0.81) msec latency[RUN #1 50%,  15 secs]  1 threads:     2017070 ops,  127027 (avg:  134463) ops/sec, 60.54MB/sec (avg: 61.72MB/sec),  0.86 (avg:  0.82) msec latency[RUN #1 53%,  16 secs]  1 threads:     2144325 ops,  127243 (avg:  134011) ops/sec, 60.66MB/sec (avg: 61.65MB/sec),  0.86 (avg:  0.82) msec latency[RUN #1 57%,  17 secs]  1 threads:     2270745 ops,  126410 (avg:  133564) ops/sec, 60.24MB/sec (avg: 61.57MB/sec),  0.87 (avg:  0.82) msec latency[RUN #1 60%,  18 secs]  1 threads:     2397267 ops,  126512 (avg:  133172) ops/sec, 60.27MB/sec (avg: 61.49MB/sec),  0.87 (avg:  0.82) msec latency[RUN #1 63%,  19 secs]  1 threads:     2534913 ops,  137635 (avg:  133407) ops/sec, 65.49MB/sec (avg: 61.70MB/sec),  0.80 (avg:  0.82) msec latency[RUN #1 67%,  20 secs]  1 threads:     2679729 ops,  144803 (avg:  133977) ops/sec, 68.98MB/sec (avg: 62.07MB/sec),  0.76 (avg:  0.82) msec latency[RUN #1 70%,  21 secs]  1 threads:     2821689 ops,  141948 (avg:  134357) ops/sec, 67.62MB/sec (avg: 62.33MB/sec),  0.77 (avg:  0.82) msec latency[RUN #1 73%,  22 secs]  1 threads:     2946071 ops,  124372 (avg:  133903) ops/sec, 59.29MB/sec (avg: 62.19MB/sec),  0.88 (avg:  0.82) msec latency[RUN #1 77%,  23 secs]  1 threads:     3074388 ops,  128306 (avg:  133659) ops/sec, 61.14MB/sec (avg: 62.15MB/sec),  0.86 (avg:  0.82) msec latency[RUN #1 80%,  24 secs]  1 threads:     3215492 ops,  141087 (avg:  133969) ops/sec, 67.14MB/sec (avg: 62.36MB/sec),  0.78 (avg:  0.82) msec latency[RUN #1 83%,  25 secs]  1 threads:     3350473 ops,  134965 (avg:  134009) ops/sec, 64.28MB/sec (avg: 62.43MB/sec),  0.81 (avg:  0.82) msec latency[RUN #1 87%,  26 secs]  1 threads:     3474355 ops,  123874 (avg:  133619) ops/sec, 59.05MB/sec (avg: 62.30MB/sec),  0.89 (avg:  0.82) msec latency[RUN #1 90%,  27 secs]  1 threads:     3599737 ops,  125367 (avg:  133313) ops/sec, 59.87MB/sec (avg: 62.21MB/sec),  0.88 (avg:  0.82) msec latency[RUN #1 93%,  28 secs]  1 threads:     3726629 ops,  126880 (avg:  133084) ops/sec, 60.44MB/sec (avg: 62.15MB/sec),  0.87 (avg:  0.82) msec latency[RUN #1 97%,  29 secs]  1 threads:     3869124 ops,  142482 (avg:  133408) ops/sec, 67.91MB/sec (avg: 62.35MB/sec),  0.77 (avg:  0.82) msec latency[RUN #1 100%,  30 secs]  0 threads:     3998047 ops,  142482 (avg:  133265) ops/sec, 67.91MB/sec (avg: 62.32MB/sec),  0.77 (avg:  0.82) msec latency
+
+1         Threads
+10        Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        66632.61          ---          ---         0.83067         0.24700         6.11100        12.15900     35008.15 
+Gets        66632.41     52513.74     14118.68         0.81781         0.23900         6.04700        12.09500     28806.73 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     133265.03     52513.74     14118.68         0.82424         0.23900         6.07900        12.15900     63814.88 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 11 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 1/87/2 probes 6 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+192.168.12.19 dev br-pk  ref 1 used 0/87/0 probes 4 INCOMPLETE
+
+*** Round 2, deleting 1 entries ***
+*** Flush is complete after 2 rounds ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      164617 ops,  164678 (avg:  164678) ops/sec, 55.35MB/sec (avg: 55.35MB/sec),  0.73 (avg:  0.73) msec latency[RUN #1 7%,   1 secs]  1 threads:      304956 ops,  140327 (avg:  152500) ops/sec, 58.37MB/sec (avg: 56.86MB/sec),  0.86 (avg:  0.79) msec latency[RUN #1 10%,   2 secs]  1 threads:      452923 ops,  147955 (avg:  150985) ops/sec, 67.23MB/sec (avg: 60.32MB/sec),  0.82 (avg:  0.80) msec latency[RUN #1 13%,   3 secs]  1 threads:      590654 ops,  137714 (avg:  147666) ops/sec, 65.10MB/sec (avg: 61.51MB/sec),  0.88 (avg:  0.82) msec latency[RUN #1 17%,   5 secs]  1 threads:      727480 ops,  136810 (avg:  145495) ops/sec, 65.00MB/sec (avg: 62.21MB/sec),  0.88 (avg:  0.83) msec latency[RUN #1 20%,   6 secs]  1 threads:      868943 ops,  141449 (avg:  144821) ops/sec, 67.49MB/sec (avg: 63.09MB/sec),  0.86 (avg:  0.83) msec latency[RUN #1 23%,   7 secs]  1 threads:     1016025 ops,  147070 (avg:  145142) ops/sec, 70.15MB/sec (avg: 64.10MB/sec),  0.82 (avg:  0.83) msec latency[RUN #1 27%,   8 secs]  1 threads:     1148453 ops,  132417 (avg:  143551) ops/sec, 63.03MB/sec (avg: 63.96MB/sec),  0.91 (avg:  0.84) msec latency[RUN #1 30%,   9 secs]  1 threads:     1279137 ops,  130674 (avg:  142120) ops/sec, 62.26MB/sec (avg: 63.77MB/sec),  0.93 (avg:  0.85) msec latency[RUN #1 33%,  10 secs]  1 threads:     1416340 ops,  137190 (avg:  141627) ops/sec, 65.35MB/sec (avg: 63.93MB/sec),  0.88 (avg:  0.85) msec latency[RUN #1 37%,  11 secs]  1 threads:     1548209 ops,  131858 (avg:  140739) ops/sec, 62.87MB/sec (avg: 63.84MB/sec),  0.92 (avg:  0.86) msec latency[RUN #1 40%,  12 secs]  1 threads:     1673805 ops,  125587 (avg:  139476) ops/sec, 59.81MB/sec (avg: 63.50MB/sec),  0.96 (avg:  0.87) msec latency[RUN #1 43%,  13 secs]  1 threads:     1800317 ops,  126502 (avg:  138478) ops/sec, 60.25MB/sec (avg: 63.25MB/sec),  0.96 (avg:  0.87) msec latency[RUN #1 47%,  14 secs]  1 threads:     1937791 ops,  137459 (avg:  138405) ops/sec, 65.49MB/sec (avg: 63.41MB/sec),  0.88 (avg:  0.87) msec latency[RUN #1 50%,  15 secs]  1 threads:     2073064 ops,  135262 (avg:  138196) ops/sec, 64.36MB/sec (avg: 63.47MB/sec),  0.89 (avg:  0.87) msec latency[RUN #1 53%,  16 secs]  1 threads:     2219826 ops,  146750 (avg:  138731) ops/sec, 69.85MB/sec (avg: 63.87MB/sec),  0.82 (avg:  0.87) msec latency[RUN #1 57%,  17 secs]  1 threads:     2345968 ops,  126130 (avg:  137989) ops/sec, 60.02MB/sec (avg: 63.64MB/sec),  0.96 (avg:  0.88) msec latency[RUN #1 60%,  18 secs]  1 threads:     2476315 ops,  130336 (avg:  137564) ops/sec, 62.05MB/sec (avg: 63.56MB/sec),  0.93 (avg:  0.88) msec latency[RUN #1 63%,  19 secs]  1 threads:     2621759 ops,  145432 (avg:  137978) ops/sec, 69.29MB/sec (avg: 63.86MB/sec),  0.83 (avg:  0.88) msec latency[RUN #1 67%,  20 secs]  1 threads:     2765446 ops,  143676 (avg:  138263) ops/sec, 68.50MB/sec (avg: 64.09MB/sec),  0.84 (avg:  0.87) msec latency[RUN #1 70%,  21 secs]  1 threads:     2921880 ops,  156420 (avg:  139128) ops/sec, 74.56MB/sec (avg: 64.59MB/sec),  0.77 (avg:  0.87) msec latency[RUN #1 73%,  22 secs]  1 threads:     3069597 ops,  147704 (avg:  139518) ops/sec, 70.39MB/sec (avg: 64.85MB/sec),  0.82 (avg:  0.87) msec latency[RUN #1 77%,  23 secs]  1 threads:     3192535 ops,  122925 (avg:  138796) ops/sec, 58.63MB/sec (avg: 64.58MB/sec),  0.98 (avg:  0.87) msec latency[RUN #1 80%,  24 secs]  1 threads:     3321077 ops,  128533 (avg:  138369) ops/sec, 61.24MB/sec (avg: 64.44MB/sec),  0.94 (avg:  0.87) msec latency[RUN #1 83%,  25 secs]  1 threads:     3456829 ops,  135733 (avg:  138263) ops/sec, 64.72MB/sec (avg: 64.45MB/sec),  0.89 (avg:  0.87) msec latency[RUN #1 87%,  26 secs]  1 threads:     3585563 ops,  128722 (avg:  137896) ops/sec, 61.36MB/sec (avg: 64.34MB/sec),  0.94 (avg:  0.88) msec latency[RUN #1 90%,  27 secs]  1 threads:     3714896 ops,  129324 (avg:  137579) ops/sec, 61.62MB/sec (avg: 64.23MB/sec),  0.93 (avg:  0.88) msec latency[RUN #1 93%,  28 secs]  1 threads:     3842362 ops,  127455 (avg:  137217) ops/sec, 60.68MB/sec (avg: 64.11MB/sec),  0.95 (avg:  0.88) msec latency[RUN #1 97%,  29 secs]  1 threads:     3969651 ops,  127279 (avg:  136874) ops/sec, 60.71MB/sec (avg: 63.99MB/sec),  0.95 (avg:  0.88) msec latency[RUN #1 100%,  30 secs]  0 threads:     4109344 ops,  127279 (avg:  136975) ops/sec, 60.71MB/sec (avg: 64.08MB/sec),  0.95 (avg:  0.88) msec latency
+
+1         Threads
+11        Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        68487.57          ---          ---         0.89074         0.26300         7.10300        12.67100     35982.72 
+Gets        68487.23     54021.74     14465.50         0.87357         0.25500         6.97500        12.54300     29632.52 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     136974.80     54021.74     14465.50         0.88216         0.25500         7.03900        12.60700     65615.24 
+Benchmark done
+spawn docker rm -f memtier_benchmark
+Error response from daemon: No such container: memtier_benchmark
+spawn bash -c ./scripts/run_memtier_benchmark.sh memcached 12 192.168.12.240
+
+[sudo] password for sjc: 
+192.168.12.19 dev br-pk  ref 1 used 0/89/0 probes 4 INCOMPLETE
+192.168.12.1 dev br-pk lladdr 90:23:b4:ce:94:d8 ref 1 used 29/0/29 probes 4 REACHABLE
+192.168.12.240 dev br-pk lladdr 52:54:00:12:34:56 ref 1 used 30/0/30 probes 4 REACHABLE
+
+*** Round 1, deleting 3 entries ***
+*** Flush is complete after 1 round ***
+OK
+Writing results to stdout
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 3%,   0 secs]  1 threads:      152649 ops,  152697 (avg:  152697) ops/sec, 50.65MB/sec (avg: 50.65MB/sec),  0.86 (avg:  0.86) msec latency[RUN #1 7%,   1 secs]  1 threads:      294311 ops,  141644 (avg:  147169) ops/sec, 58.31MB/sec (avg: 54.48MB/sec),  0.93 (avg:  0.89) msec latency[RUN #1 10%,   2 secs]  1 threads:      430076 ops,  135750 (avg:  143362) ops/sec, 61.30MB/sec (avg: 56.75MB/sec),  0.97 (avg:  0.92) msec latency[RUN #1 13%,   4 secs]  1 threads:      560540 ops,  130448 (avg:  140133) ops/sec, 61.48MB/sec (avg: 57.93MB/sec),  1.01 (avg:  0.94) msec latency[RUN #1 17%,   5 secs]  1 threads:      691860 ops,  131302 (avg:  138367) ops/sec, 62.30MB/sec (avg: 58.81MB/sec),  1.00 (avg:  0.95) msec latency[RUN #1 20%,   6 secs]  1 threads:      823340 ops,  131464 (avg:  137216) ops/sec, 62.50MB/sec (avg: 59.42MB/sec),  1.00 (avg:  0.96) msec latency[RUN #1 23%,   7 secs]  1 threads:      962466 ops,  139109 (avg:  137487) ops/sec, 66.30MB/sec (avg: 60.40MB/sec),  0.95 (avg:  0.96) msec latency[RUN #1 27%,   8 secs]  1 threads:     1095453 ops,  132971 (avg:  136922) ops/sec, 63.43MB/sec (avg: 60.78MB/sec),  0.99 (avg:  0.96) msec latency[RUN #1 30%,   9 secs]  1 threads:     1229331 ops,  133862 (avg:  136582) ops/sec, 63.72MB/sec (avg: 61.11MB/sec),  0.98 (avg:  0.96) msec latency[RUN #1 33%,  10 secs]  1 threads:     1376560 ops,  147215 (avg:  137646) ops/sec, 70.19MB/sec (avg: 62.02MB/sec),  0.89 (avg:  0.96) msec latency[RUN #1 37%,  11 secs]  1 threads:     1503875 ops,  127301 (avg:  136705) ops/sec, 60.58MB/sec (avg: 61.89MB/sec),  1.04 (avg:  0.96) msec latency[RUN #1 40%,  12 secs]  1 threads:     1637517 ops,  133628 (avg:  136449) ops/sec, 63.65MB/sec (avg: 62.03MB/sec),  0.99 (avg:  0.97) msec latency[RUN #1 43%,  13 secs]  1 threads:     1772689 ops,  135157 (avg:  136349) ops/sec, 64.33MB/sec (avg: 62.21MB/sec),  0.97 (avg:  0.97) msec latency[RUN #1 47%,  14 secs]  1 threads:     1915598 ops,  142894 (avg:  136817) ops/sec, 68.17MB/sec (avg: 62.64MB/sec),  0.92 (avg:  0.96) msec latency[RUN #1 50%,  15 secs]  1 threads:     2047831 ops,  132218 (avg:  136510) ops/sec, 63.01MB/sec (avg: 62.66MB/sec),  1.00 (avg:  0.97) msec latency[RUN #1 53%,  16 secs]  1 threads:     2180103 ops,  132258 (avg:  136244) ops/sec, 62.99MB/sec (avg: 62.68MB/sec),  1.00 (avg:  0.97) msec latency[RUN #1 57%,  17 secs]  1 threads:     2311493 ops,  131376 (avg:  135958) ops/sec, 62.61MB/sec (avg: 62.68MB/sec),  1.00 (avg:  0.97) msec latency[RUN #1 60%,  18 secs]  1 threads:     2441190 ops,  129687 (avg:  135610) ops/sec, 61.82MB/sec (avg: 62.63MB/sec),  1.02 (avg:  0.97) msec latency[RUN #1 63%,  19 secs]  1 threads:     2570935 ops,  129730 (avg:  135300) ops/sec, 61.80MB/sec (avg: 62.59MB/sec),  1.02 (avg:  0.97) msec latency[RUN #1 67%,  20 secs]  1 threads:     2701779 ops,  130831 (avg:  135077) ops/sec, 62.44MB/sec (avg: 62.58MB/sec),  1.01 (avg:  0.98) msec latency[RUN #1 70%,  21 secs]  1 threads:     2830362 ops,  128568 (avg:  134767) ops/sec, 61.30MB/sec (avg: 62.52MB/sec),  1.03 (avg:  0.98) msec latency[RUN #1 73%,  22 secs]  1 threads:     2957225 ops,  126849 (avg:  134407) ops/sec, 60.44MB/sec (avg: 62.42MB/sec),  1.04 (avg:  0.98) msec latency[RUN #1 77%,  23 secs]  1 threads:     3086756 ops,  129517 (avg:  134194) ops/sec, 61.66MB/sec (avg: 62.39MB/sec),  1.02 (avg:  0.98) msec latency[RUN #1 80%,  24 secs]  1 threads:     3216279 ops,  129508 (avg:  133999) ops/sec, 61.75MB/sec (avg: 62.36MB/sec),  1.02 (avg:  0.98) msec latency[RUN #1 83%,  25 secs]  1 threads:     3343785 ops,  127491 (avg:  133739) ops/sec, 60.75MB/sec (avg: 62.30MB/sec),  1.03 (avg:  0.99) msec latency[RUN #1 87%,  26 secs]  1 threads:     3474109 ops,  130309 (avg:  133607) ops/sec, 62.14MB/sec (avg: 62.29MB/sec),  1.01 (avg:  0.99) msec latency[RUN #1 90%,  27 secs]  1 threads:     3613685 ops,  139559 (avg:  133827) ops/sec, 66.51MB/sec (avg: 62.45MB/sec),  0.94 (avg:  0.98) msec latency[RUN #1 93%,  28 secs]  1 threads:     3747729 ops,  134028 (avg:  133834) ops/sec, 63.80MB/sec (avg: 62.50MB/sec),  0.98 (avg:  0.98) msec latency[RUN #1 97%,  29 secs]  1 threads:     3877739 ops,  129995 (avg:  133702) ops/sec, 62.09MB/sec (avg: 62.48MB/sec),  1.01 (avg:  0.99) msec latency[RUN #1 100%,  30 secs]  0 threads:     4007741 ops,  129995 (avg:  133587) ops/sec, 62.09MB/sec (avg: 62.47MB/sec),  1.01 (avg:  0.99) msec latency
+
+1         Threads
+12        Connections per thread
+30        Seconds
+
+
+ALL STATS
+============================================================================================================================
+Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec 
+----------------------------------------------------------------------------------------------------------------------------
+Sets        64639.15          ---          ---         1.00015         0.27100         8.09500        13.95100     33960.80 
+Gets        64638.96     50942.75     13696.20         0.97363         0.25500         8.03100        13.88700     27944.95 
+Waits           0.00          ---          ---             ---             ---             ---             ---          --- 
+Totals     129278.11     50942.75     13696.20         0.98689         0.26300         8.06300        13.95100     61905.76 
+Benchmark done
+192.168.12.240/24
+QEMU: Terminated
+

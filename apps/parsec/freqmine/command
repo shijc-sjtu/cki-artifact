@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/time /bin/parsec/freqmine /var/parsec/freqmine/kosarak_990k.dat 790

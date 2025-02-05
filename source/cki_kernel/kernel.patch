@@ -1,0 +1,2507 @@
+diff --git a/arch/x86/Kbuild b/arch/x86/Kbuild
+index 5a83da703..72681220d 100644
+--- a/arch/x86/Kbuild
++++ b/arch/x86/Kbuild
+@@ -28,5 +28,7 @@ obj-y += net/
+ 
+ obj-$(CONFIG_KEXEC_FILE) += purgatory/
+ 
++obj-y += pkernel/
++
+ # for cleaning
+ subdir- += boot tools
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 40ad1425f..389c1a594 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -41,6 +41,7 @@
+ #include <asm/desc.h>
+ #include <asm/ldt.h>
+ #include <asm/unwind.h>
++#include <asm/pkernel.h>
+ 
+ #include "perf_event.h"
+ 
+@@ -2056,6 +2057,10 @@ static int __init init_hw_perf_events(void)
+ 	struct x86_pmu_quirk *quirk;
+ 	int err;
+ 
++	if (pk_in_cntr()) {
++		return 0;
++	}
++
+ 	pr_info("Performance Events: ");
+ 
+ 	switch (boot_cpu_data.x86_vendor) {
+diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
+index e41cbf2ec..cdc3f94b6 100644
+--- a/arch/x86/include/asm/hypervisor.h
++++ b/arch/x86/include/asm/hypervisor.h
+@@ -30,6 +30,7 @@ enum x86_hypervisor_type {
+ 	X86_HYPER_KVM,
+ 	X86_HYPER_JAILHOUSE,
+ 	X86_HYPER_ACRN,
++	X86_HYPER_PKM,
+ };
+ 
+ #ifdef CONFIG_HYPERVISOR_GUEST
+@@ -62,6 +63,7 @@ extern const struct hypervisor_x86 x86_hyper_vmware;
+ extern const struct hypervisor_x86 x86_hyper_ms_hyperv;
+ extern const struct hypervisor_x86 x86_hyper_xen_pv;
+ extern const struct hypervisor_x86 x86_hyper_kvm;
++extern const struct hypervisor_x86 x86_hyper_pkm;
+ extern const struct hypervisor_x86 x86_hyper_jailhouse;
+ extern const struct hypervisor_x86 x86_hyper_acrn;
+ extern struct hypervisor_x86 x86_hyper_xen_hvm;
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 762388424..fb101eb58 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -43,14 +43,18 @@
+ #include <asm/pgtable_types.h>
+ #include <asm/shared/io.h>
+ 
++extern bool pk_in_cntr(void);
++extern unsigned long pk_mmio_read(const volatile void __iomem *addr, const char *size);
++extern void pk_mmio_write(unsigned long val, volatile void __iomem *addr, const char *size);
++
+ #define build_mmio_read(name, size, type, reg, barrier) \
+ static inline type name(const volatile void __iomem *addr) \
+-{ type ret; asm volatile("mov" size " %1,%0":reg (ret) \
++{ type ret; if (pk_in_cntr()) return (type)pk_mmio_read(addr, size); asm volatile("mov" size " %1,%0":reg (ret) \
+ :"m" (*(volatile type __force *)addr) barrier); return ret; }
+ 
+ #define build_mmio_write(name, size, type, reg, barrier) \
+ static inline void name(type val, volatile void __iomem *addr) \
+-{ asm volatile("mov" size " %0,%1": :reg (val), \
++{ if (pk_in_cntr()) { pk_mmio_write((unsigned long)val, addr, size); return; } asm volatile("mov" size " %0,%1": :reg (val), \
+ "m" (*(volatile type __force *)addr) barrier); }
+ 
+ build_mmio_read(readb, "b", unsigned char, "=q", :"memory")
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 0b748ee16..321bc1198 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -54,7 +54,8 @@
+ #define _PAGE_ACCESSED	(_AT(pteval_t, 1) << _PAGE_BIT_ACCESSED)
+ #define _PAGE_DIRTY	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY)
+ #define _PAGE_PSE	(_AT(pteval_t, 1) << _PAGE_BIT_PSE)
+-#define _PAGE_GLOBAL	(_AT(pteval_t, 1) << _PAGE_BIT_GLOBAL)
++// #define _PAGE_GLOBAL	(_AT(pteval_t, 1) << _PAGE_BIT_GLOBAL)
++#define _PAGE_GLOBAL    (0)
+ #define _PAGE_SOFTW1	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW1)
+ #define _PAGE_SOFTW2	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW2)
+ #define _PAGE_SOFTW3	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW3)
+diff --git a/arch/x86/include/asm/pkernel.h b/arch/x86/include/asm/pkernel.h
+new file mode 100644
+index 000000000..d808e3af3
+--- /dev/null
++++ b/arch/x86/include/asm/pkernel.h
+@@ -0,0 +1,155 @@
++#ifndef _ASM_X86_PKERNEL_H
++#define _ASM_X86_PKERNEL_H
++
++#define PK_CTX_NLONGS           (60)
++#define PK_CTX_SIZE             (PK_CTX_NLONGS * 8)
++
++#define PK_CTX_R15		0x00
++#define PK_CTX_R14		0x08
++#define PK_CTX_R13		0x10
++#define PK_CTX_R12		0x18
++#define PK_CTX_RBP              0x20
++#define PK_CTX_RBX		0x28
++#define PK_CTX_R11		0x30
++#define PK_CTX_R10		0x38
++#define PK_CTX_R9		0x40
++#define PK_CTX_R8		0x48
++#define PK_CTX_RAX		0x50
++#define PK_CTX_RCX		0x58
++#define PK_CTX_RDX		0x60
++#define PK_CTX_RSI		0x68
++#define PK_CTX_RDI		0x70
++#define RK_CTX_ORIG_RAX         0x78
++#define PK_CTX_RIP		0x80
++#define PK_CTX_CS               0x88
++#define PK_CTX_EFLAGS		0x90
++#define PK_CTX_URSP		0x98
++#define PK_CTX_SS               0xA0
++#define PK_CTX_RSP              0xA8
++#define PK_CTX_FS		0xB0
++#define PK_CTX_GS		0xB8
++#define PK_CTX_KGS		0xC0
++#define PK_CTX_CR3		0xC8
++#define PK_CTX_CR4		0xD0
++#define PK_CTX_IDTR		0xD8
++#define PK_CTX_GDTR		0xE8
++#define PK_CTX_END              0xF8
++
++#define PK_RKCALL_DEBUG         0
++#define PK_RKCALL_SHUTDOWN      1
++#define PK_RKCALL_MEM_CHECK     2
++// #define PK_RKCALL_GET_RSDP      3
++#define PK_RKCALL_YIELD         3
++#define PK_RKCALL_INIT_LATE     4
++#define PK_RKCALL_NET_XMIT      5
++#define PK_RKCALL_NET_RECV      6
++#define PK_RKCALL_WRITE_CR3     7
++#define PK_RKCALL_NOP           8
++// #define PK_RKCALL_ENABLE_INTR   9
++#define PK_RKCALL_INTR          10
++#define PK_RKCALL_HALT          11
++#define PK_RKCALL_CPU_UP        12
++#define PK_RKCALL_MMIO_READ     13
++#define PK_RKCALL_MMIO_WRITE    14
++#define PK_RKCALL_PRINT         15
++
++
++#ifndef __ASSEMBLY__
++#include <linux/types.h>
++#include <linux/scatterlist.h>
++#include <linux/list.h>
++#include <asm/bootparam.h>
++
++#define PK_BOOT_MAGIC   12345
++
++struct pk_boot_params {
++        unsigned long n_cpus;
++	unsigned long magic;
++        unsigned long pcid;
++	unsigned long rk_cr3;
++        void *rk_ctx;
++} __attribute__((packed));
++
++static inline struct pk_boot_params *
++pk_get_boot_params(struct boot_params *boot_params) {
++        return (void *)boot_params->_pad4;
++}
++
++void pk_copy_boot_params(struct boot_params *boot_params);
++unsigned long pk_get_secondary_entry(void);
++unsigned long pk_get_init_top_pgt(void);
++unsigned long pk_get_boot_stack(void);
++
++struct pk_ctx_regs {
++        /* --- struct pt_regs --- */
++        unsigned long r15;
++        unsigned long r14;
++        unsigned long r13;
++        unsigned long r12;
++        unsigned long rbp;
++        unsigned long rbx;
++        unsigned long r11;
++        unsigned long r10;
++        unsigned long r9;
++        unsigned long r8;
++        unsigned long rax;
++        unsigned long rcx;
++        unsigned long rdx;
++        unsigned long rsi;
++        unsigned long rdi;
++        unsigned long orig_rax;
++        unsigned long rip;
++        unsigned long cs;
++        unsigned long eflags;
++        unsigned long ursp;
++        unsigned long ss;
++        /* --- struct pt_regs --- */
++        unsigned long rsp;
++        unsigned long fs;
++        unsigned long gs;
++        unsigned long kgs;
++        unsigned long cr3;
++        unsigned long cr4;
++        unsigned long idtr[2];
++        unsigned long gdtr[2];
++        char stack[PK_CTX_SIZE - PK_CTX_END];
++};
++
++struct pk_ctx {
++        struct pk_ctx_regs pmode;
++        struct pk_ctx_regs rmode;
++} __attribute__((packed));
++
++void pk_init(void);
++void pk_init_late(void);
++bool pk_in_cntr(void);
++
++typedef unsigned long pk_events_t;
++typedef void (*pk_event_handler_t)(void *);
++
++#define PK_EVENT_NET_RECV       (1UL << 1)
++#define PK_EVENT_VIRTIO_INTR    (1UL << 2)
++
++struct pk_skb_info {
++        unsigned long data_paddr;
++        unsigned long data_len;
++        unsigned long header_paddr;
++        unsigned int headroom;
++        unsigned int gso_type;
++        unsigned short gso_size;
++        struct scatterlist sg[];
++};
++
++unsigned long pk_rkcall0(unsigned long n);
++unsigned long pk_rkcall1(unsigned long n, unsigned long arg1);
++unsigned long pk_rkcall2(unsigned long n, unsigned long arg1, unsigned long arg2);
++unsigned long pk_rkcall3(unsigned long n, unsigned long arg1, unsigned long arg2, unsigned long arg3);
++void pk_rkret_slow(void *ctx);
++void pk_rkret_fast(void *ctx);
++
++void pk_register_event_handler(
++        unsigned long event, pk_event_handler_t handler, void *arg);
++
++#endif /* __ASSEMBLY__ */
++
++#endif /* _ASM_X86_PKERNEL_H */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 73be3931e..adc9a8e83 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -30,6 +30,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/paravirt.h>
+ #include <asm/asm-prototypes.h>
++#include <asm/pkernel.h>
+ 
+ int __read_mostly alternatives_patched;
+ 
+@@ -441,6 +442,10 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 			optimize_nops(instr, a->instrlen);
+ 			continue;
+ 		}
++		if (pk_in_cntr() && a->cpuid == X86_FEATURE_XENPV) {
++			optimize_nops(instr, a->instrlen);
++			continue;
++		}
+ 
+ 		DPRINTK(ALT, "feat: %s%d*32+%d, old: (%pS (%px) len: %d), repl: (%px, len: %d)",
+ 			(a->flags & ALT_FLAG_NOT) ? "!" : "",
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 41093cf20..ada0452c3 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -64,6 +64,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/irq_regs.h>
+ #include <asm/cpu.h>
++#include <asm/pkernel.h>
+ 
+ #include "local.h"
+ 
+@@ -1073,15 +1074,23 @@ static void local_apic_timer_interrupt(void)
+  * [ if a single-CPU system runs an SMP kernel then we call the local
+  *   interrupt as well. Thus we cannot inline the local irq ... ]
+  */
++extern void update_process_times(int user_tick);
+ DEFINE_IDTENTRY_SYSVEC(sysvec_apic_timer_interrupt)
+ {
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 
++	if (pk_in_cntr()) {
++		pk_rkcall1(PK_RKCALL_INTR, 236);
++		update_process_times(0);
++		goto out;
++	}
++
+ 	apic_eoi();
+ 	trace_local_timer_entry(LOCAL_TIMER_VECTOR);
+ 	local_apic_timer_interrupt();
+ 	trace_local_timer_exit(LOCAL_TIMER_VECTOR);
+ 
++out:
+ 	set_irq_regs(old_regs);
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
+index 553bfbfc3..36234d884 100644
+--- a/arch/x86/kernel/cpu/hypervisor.c
++++ b/arch/x86/kernel/cpu/hypervisor.c
+@@ -39,6 +39,7 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
+ #ifdef CONFIG_KVM_GUEST
+ 	&x86_hyper_kvm,
+ #endif
++	&x86_hyper_pkm,
+ #ifdef CONFIG_JAILHOUSE_GUEST
+ 	&x86_hyper_jailhouse,
+ #endif
+diff --git a/arch/x86/kernel/eisa.c b/arch/x86/kernel/eisa.c
+index e963344b0..48f290ba8 100644
+--- a/arch/x86/kernel/eisa.c
++++ b/arch/x86/kernel/eisa.c
+@@ -8,12 +8,16 @@
+ 
+ #include <xen/xen.h>
+ 
++#include <asm/pkernel.h>
++
+ static __init int eisa_bus_probe(void)
+ {
+ 	void __iomem *p;
+ 
+ 	if (xen_pv_domain() && !xen_initial_domain())
+ 		return 0;
++	if (pk_in_cntr())
++		return 0;
+ 
+ 	p = ioremap(0x0FFFD9, 4);
+ 	if (p && readl(p) == 'E' + ('I' << 8) + ('S' << 16) + ('A' << 24))
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 086a2c3aa..d0c883950 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -174,7 +174,7 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
+ 	 * here.
+ 	 */
+ 	movq	%cr4, %rcx
+-	andl	$X86_CR4_MCE, %ecx
++	andl	$(X86_CR4_MCE | X86_CR4_PCIDE), %ecx
+ #else
+ 	movl	$0, %ecx
+ #endif
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 11761c124..6e4f4aa3c 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -22,6 +22,7 @@
+ #include <asm/desc.h>
+ #include <asm/traps.h>
+ #include <asm/thermal.h>
++#include <asm/pkernel.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/irq_vectors.h>
+@@ -252,6 +253,11 @@ DEFINE_IDTENTRY_IRQ(common_interrupt)
+ 	/* entry code tells RCU that we're not quiescent.  Check it. */
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+ 
++	if (pk_in_cntr()) {
++		pk_rkcall1(PK_RKCALL_INTR, vector);
++		goto out;
++	}
++
+ 	desc = __this_cpu_read(vector_irq[vector]);
+ 	if (likely(!IS_ERR_OR_NULL(desc))) {
+ 		handle_irq(desc, regs);
+@@ -267,6 +273,7 @@ DEFINE_IDTENTRY_IRQ(common_interrupt)
+ 		}
+ 	}
+ 
++out:
+ 	set_irq_regs(old_regs);
+ }
+ 
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 33b268747..aa1382ae6 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -654,7 +654,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 		 */
+ 		unsigned short ss_sel;
+ 		savesegment(ss, ss_sel);
+-		if (ss_sel != __KERNEL_DS)
++		if (ss_sel == 0)
+ 			loadsegment(ss, __KERNEL_DS);
+ 	}
+ 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 1526747be..1d95edb6c 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -55,6 +55,7 @@
+ #include <asm/unwind.h>
+ #include <asm/vsyscall.h>
+ #include <linux/vmalloc.h>
++#include <asm/pkernel.h>
+ 
+ /*
+  * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
+@@ -755,18 +756,19 @@ void __init setup_arch(char **cmdline_p)
+ 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
+ #endif
+ 
++	if (pk_in_cntr())
++		init_hypervisor_platform();
++
+ 	/*
+ 	 * If we have OLPC OFW, we might end up relocating the fixmap due to
+ 	 * reserve_top(), so do this before touching the ioremap area.
+ 	 */
+ 	olpc_ofw_detect();
+-
+ 	idt_setup_early_traps();
+ 	early_cpu_init();
+ 	jump_label_init();
+ 	static_call_init();
+ 	early_ioremap_init();
+-
+ 	setup_olpc_ofw_pgd();
+ 
+ 	ROOT_DEV = old_decode_dev(boot_params.hdr.root_dev);
+@@ -912,7 +914,8 @@ void __init setup_arch(char **cmdline_p)
+ 	 * For some guest types (Xen PV, SEV-SNP, TDX) it is required to be
+ 	 * called before cache_bp_init() for setting up MTRR state.
+ 	 */
+-	init_hypervisor_platform();
++	if (!pk_in_cntr())
++		init_hypervisor_platform();
+ 
+ 	tsc_early_init();
+ 	x86_init.resources.probe_roms();
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 96a771f9f..15a01254c 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -35,6 +35,7 @@
+ #include <asm/trace/irq_vectors.h>
+ #include <asm/kexec.h>
+ #include <asm/reboot.h>
++#include <asm/pkernel.h>
+ 
+ /*
+  *	Some notes on x86 processor bugs affecting SMP operation:
+@@ -243,6 +244,11 @@ static void native_stop_other_cpus(int wait)
+  */
+ DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_reschedule_ipi)
+ {
++	if (pk_in_cntr()) {
++		pk_rkcall1(PK_RKCALL_INTR, RESCHEDULE_VECTOR);
++		return;
++	}
++
+ 	apic_eoi();
+ 	trace_reschedule_entry(RESCHEDULE_VECTOR);
+ 	inc_irq_stat(irq_resched_count);
+@@ -252,6 +258,11 @@ DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_reschedule_ipi)
+ 
+ DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
+ {
++	if (pk_in_cntr()) {
++		pk_rkcall1(PK_RKCALL_INTR, CALL_FUNCTION_VECTOR);
++		return;
++	}
++
+ 	apic_eoi();
+ 	trace_call_function_entry(CALL_FUNCTION_VECTOR);
+ 	inc_irq_stat(irq_call_count);
+@@ -261,6 +272,11 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
+ 
+ DEFINE_IDTENTRY_SYSVEC(sysvec_call_function_single)
+ {
++	if (pk_in_cntr()) {
++		pk_rkcall1(PK_RKCALL_INTR, CALL_FUNCTION_SINGLE_VECTOR);
++		return;
++	}
++
+ 	apic_eoi();
+ 	trace_call_function_single_entry(CALL_FUNCTION_SINGLE_VECTOR);
+ 	inc_irq_stat(irq_call_count);
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 679893ea5..54d402e78 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -647,7 +647,7 @@ static void __init memory_map_top_down(unsigned long map_start,
+ 	real_end = addr + PMD_SIZE;
+ 
+ 	/* step_size need to be small so pgt_buf from BRK could cover it */
+-	step_size = PMD_SIZE;
++	step_size = PAGE_SIZE;
+ 	max_pfn_mapped = 0; /* will get exact value next */
+ 	min_pfn_mapped = real_end >> PAGE_SHIFT;
+ 	last_start = real_end;
+diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
+index 631512f7e..1215cf5a9 100644
+--- a/arch/x86/pci/amd_bus.c
++++ b/arch/x86/pci/amd_bus.c
+@@ -10,6 +10,8 @@
+ 
+ #include <asm/pci-direct.h>
+ 
++#include <asm/pkernel.h>
++
+ #include "bus_numa.h"
+ 
+ #define AMD_NB_F0_NODE_ID			0x60
+@@ -384,6 +386,9 @@ static int __init pci_io_ecs_init(void)
+ 	if (boot_cpu_data.x86 < 0x10)
+ 		return 0;
+ 
++	if (pk_in_cntr())
++		return 0;
++
+ 	/* Try the PCI method first. */
+ 	if (early_pci_allowed())
+ 		pci_enable_pci_io_ecs();
+diff --git a/arch/x86/pkernel/Makefile b/arch/x86/pkernel/Makefile
+new file mode 100644
+index 000000000..54d930428
+--- /dev/null
++++ b/arch/x86/pkernel/Makefile
+@@ -0,0 +1 @@
++obj-y += pkernel-asm.o pkernel-monitor.o pkernel.o
+\ No newline at end of file
+diff --git a/arch/x86/pkernel/pk_mcall.h b/arch/x86/pkernel/pk_mcall.h
+new file mode 100644
+index 000000000..9c1f885d6
+--- /dev/null
++++ b/arch/x86/pkernel/pk_mcall.h
+@@ -0,0 +1,28 @@
++#include <asm/special_insns.h>
++
++void pk_mcall_nopkru(void *fn, long arg1, long arg2);
++void pk_mcall_pkru(void *fn, long arg1, long arg2);
++
++void __pkm_init(void);
++
++void __pkm_write_cr3(unsigned long val);
++
++void __pkm_set_pte(pte_t *ptep, pte_t pte);
++void __pkm_set_pmd(pmd_t *pmdp, pmd_t pmd);
++void __pkm_set_pud(pud_t *pudp, pud_t pud);
++void __pkm_set_p4d(p4d_t *p4dp, p4d_t p4d);
++
++void __pkm_alloc_pte(unsigned long pfn);
++void __pkm_alloc_pmd(unsigned long pfn);
++void __pkm_alloc_pud(unsigned long pfn);
++// void __pkm_alloc_p4d(unsigned long pfn);
++void __pkm_alloc_pgd(unsigned long pfn);
++
++void __pkm_release_pte(unsigned long pfn);
++void __pkm_release_pmd(unsigned long pfn);
++void __pkm_release_pud(unsigned long pfn);
++// void __pkm_release_p4d(unsigned long pfn);
++void __pkm_release_pgd(unsigned long pfn);
++
++void __pkm_flush_tlb_user(void);
++void __pkm_empty_call(void);
+diff --git a/arch/x86/pkernel/pkernel-asm.S b/arch/x86/pkernel/pkernel-asm.S
+new file mode 100644
+index 000000000..973586490
+--- /dev/null
++++ b/arch/x86/pkernel/pkernel-asm.S
+@@ -0,0 +1,264 @@
++#include <linux/linkage.h>
++#include <asm/pkernel.h>
++#include <asm/frame.h>
++#include <asm/processor-flags.h>
++#include <asm/msr-index.h>
++#include <linux/export.h>
++#include <asm/page_types.h>
++#include <asm/percpu.h>
++
++.macro write_cr3_slow reg1, reg2, reg3
++	movq	\reg1, %cr3
++
++	movq	%cr4, \reg2
++	movq	\reg2, \reg3
++	xorq	$X86_CR4_PGE, \reg3
++	movq	\reg3, %cr4
++	movq	\reg2, %cr4
++.endm
++
++.macro write_cr3_fast reg1, reg2, reg3
++	movq	$1, \reg2
++	shlq	$63, \reg2
++	orq	\reg2, \reg1
++	movq	\reg1, %cr3
++.endm
++
++.macro write_msr reg, addr
++	pushq	%rcx
++	pushq	%rax
++	pushq	%rdx
++	movl	\addr, %ecx
++	movq	\reg, %rax
++	movq	%rax, %rdx
++	shrq	$0x20, %rdx
++	wrmsr
++	popq	%rdx
++	popq	%rax
++	popq	%rcx
++.endm
++
++.macro read_msr reg, addr
++	pushq	%rcx
++	pushq	%rax
++	pushq	%rdx
++	movl	\addr, %ecx
++	rdmsr
++	shlq	$0x20,%rdx
++	movl	%eax,%eax
++	orq	%rax,%rdx
++	movq	%rdx, \reg
++	popq	%rdx
++	popq	%rax
++	popq	%rcx
++.endm
++
++.macro save_ctx_slow base, temp
++	movq		%rsp, PK_CTX_RSP(\base)
++	leaq		PK_CTX_SIZE(\base), %rsp
++	movq		%rbx, PK_CTX_RBX(\base)
++	movq		%rbp, PK_CTX_RBP(\base)
++	movq		%r12, PK_CTX_R12(\base)
++	movq		%r13, PK_CTX_R13(\base)
++	movq		%r14, PK_CTX_R14(\base)
++	movq		%r15, PK_CTX_R15(\base)
++	read_msr 	\temp, $MSR_FS_BASE
++	movq		\temp, PK_CTX_FS(\base)
++	read_msr 	\temp, $MSR_GS_BASE
++	movq		\temp, PK_CTX_GS(\base)
++	read_msr 	\temp, $MSR_KERNEL_GS_BASE
++	movq		\temp, PK_CTX_KGS(\base)
++	sidt		PK_CTX_IDTR(\base)
++	sgdt		PK_CTX_GDTR(\base)
++	movq		%cr4, \temp
++	movq		\temp, PK_CTX_CR4(\base)
++.endm
++
++.macro rstor_ctx_slow base, temp
++	movq		PK_CTX_RBX(\base), %rbx
++	movq		PK_CTX_RBP(\base), %rbp
++	movq		PK_CTX_R12(\base), %r12
++	movq		PK_CTX_R13(\base), %r13
++	movq		PK_CTX_R14(\base), %r14
++	movq		PK_CTX_R15(\base), %r15
++	movq		PK_CTX_CR4(\base), \temp
++	movq		\temp, %cr4
++	lidt		PK_CTX_IDTR(\base)
++	lgdt		PK_CTX_GDTR(\base)
++	movq		PK_CTX_FS(\base), \temp
++	write_msr 	\temp, $MSR_FS_BASE
++	movq		PK_CTX_GS(\base), \temp
++	write_msr 	\temp, $MSR_GS_BASE
++	movq		PK_CTX_KGS(\base), \temp
++	write_msr 	\temp, $MSR_KERNEL_GS_BASE
++	movq		PK_CTX_RSP(\base), %rsp
++.endm
++
++.macro save_ctx_fast base, temp
++	movq		%rsp, PK_CTX_RSP(\base)
++	movq		%rbx, PK_CTX_RBX(\base)
++	movq		%rbp, PK_CTX_RBP(\base)
++	movq		%r12, PK_CTX_R12(\base)
++	movq		%r13, PK_CTX_R13(\base)
++	movq		%r14, PK_CTX_R14(\base)
++	movq		%r15, PK_CTX_R15(\base)
++	sgdt		PK_CTX_GDTR(\base)
++	rdfsbase 	\temp
++	movq		\temp, PK_CTX_FS(\base)
++	rdgsbase 	\temp
++	movq		\temp, PK_CTX_GS(\base)
++.endm
++
++.macro rstor_ctx_fast base, temp
++	movq		PK_CTX_RBX(\base), %rbx
++	movq		PK_CTX_RBP(\base), %rbp
++	movq		PK_CTX_R12(\base), %r12
++	movq		PK_CTX_R13(\base), %r13
++	movq		PK_CTX_R14(\base), %r14
++	movq		PK_CTX_R15(\base), %r15
++	lgdt		PK_CTX_GDTR(\base)
++	movq		PK_CTX_FS(\base), \temp
++	wrfsbase 	\temp
++	movq		PK_CTX_GS(\base), \temp
++	wrgsbase 	\temp
++	movq		PK_CTX_RSP(\base), %rsp
++.endm
++
++.macro pk_rkret_template type
++// RDI = CTX
++SYM_FUNC_START(pk_rkret_\type)
++	leaq    	PK_CTX_SIZE(%rdi), %rax
++	save_ctx_\type	%rax, %r11
++	leaq		1f(%rip), %r8
++	movq		%r8, PK_CTX_RIP(%rax)
++
++	rstor_ctx_\type	%rdi, %r11
++	movq		PK_CTX_RSI(%rdi), %rsi // retval
++	movq		PK_CTX_RDX(%rdi), %rdx // events
++	movq		PK_CTX_CR3(%rdi), %rax
++	movq		PK_CTX_RIP(%rdi), %rcx
++
++	write_cr3_\type	%rax, %r9, %r10
++	jmp		*%rcx
++
++1:
++	ret
++SYM_FUNC_END(pk_rkret_\type)
++EXPORT_SYMBOL(pk_rkret_\type)
++.endm
++
++pk_rkret_template slow
++pk_rkret_template fast
++
++.macro __pk_rkcall_template type
++// RDI = CR3, RSI = CTX
++// RDX = ARG1, RCX = ARG2, R8 = ARG3, R9 = ARG4
++SYM_FUNC_START(__pk_rkcall_\type)
++	pushfq
++	cli
++
++	movq		%cr3, %rax
++	
++        write_cr3_\type	%rdi, %r10, %r11
++
++	save_ctx_\type	%rsi, %r11
++	movq		%rdx, PK_CTX_RDX(%rsi)
++	movq		%rcx, PK_CTX_RCX(%rsi)
++	movq		%r8, PK_CTX_R8(%rsi)
++	movq		%r9, PK_CTX_R9(%rsi)
++        movq		%rax, PK_CTX_CR3(%rsi)
++	leaq		1f(%rip), %rax
++	movq		%rax, PK_CTX_RIP(%rsi)
++
++	leaq    	PK_CTX_SIZE(%rsi), %rcx
++        rstor_ctx_\type	%rcx, %r11
++	movq		PK_CTX_RIP(%rcx), %rcx
++	
++	jmp		*%rcx
++
++1:
++	popfq
++	pushq		%rsi
++
++	movq		%rdx, %rdi
++	call		pk_handle_events
++
++	popq		%rax
++	ret
++SYM_FUNC_END(__pk_rkcall_\type)
++.endm
++
++__pk_rkcall_template slow
++__pk_rkcall_template fast
++
++SYM_FUNC_START(__pk_rkcall_noevent)
++	pushfq
++	cli
++
++	movq		%cr3, %rax
++	
++        write_cr3_fast	%rdi, %r10, %r11
++
++	save_ctx_fast	%rsi, %r11
++	movq		%rdx, PK_CTX_RDX(%rsi)
++	movq		%rcx, PK_CTX_RCX(%rsi)
++	movq		%r8, PK_CTX_R8(%rsi)
++	movq		%r9, PK_CTX_R9(%rsi)
++        movq		%rax, PK_CTX_CR3(%rsi)
++	leaq		1f(%rip), %rax
++	movq		%rax, PK_CTX_RIP(%rsi)
++
++	leaq    	PK_CTX_SIZE(%rsi), %rcx
++        rstor_ctx_fast	%rcx, %r11
++	movq		PK_CTX_RIP(%rcx), %rcx
++	
++	jmp		*%rcx
++
++1:
++	popfq
++	pushq		%rsi
++	popq		%rax
++	ret
++SYM_FUNC_END(__pk_rkcall_noevent)
++
++SYM_FUNC_START(pk_mcall_nopkru)
++	movq	%rdi, %rax
++	movq	%rsi, %rdi
++	movq	%rdx, %rsi
++	call	*%rax
++	ret
++SYM_FUNC_END(pk_mcall_nopkru)
++
++SYM_FUNC_START(pk_mcall_pkru)
++	// pushfq
++	// cli
++
++	movq	%rdi, %r8
++	movq	%rsi, %rdi
++	movq	%rdx, %rsi
++
++	movl	$0, %edx
++	movl	$0, %ecx
++	movl	$0x55555550, %eax
++	wrpkru
++	cmpl	$0x55555550, %eax
++	jne	.
++	
++	movq	%rsp, %rax
++	movq	%rax, %rsp
++
++	call	*%r8
++
++	movq	%rsp, %rax
++	movq	%rax, %rsp
++
++	movl	$0, %edx
++	movl	$0, %ecx
++	movl	$0x55555554, %eax
++	wrpkru
++	cmpl	$0x55555554, %eax
++	jne	.
++	
++	// popfq
++	ret
++SYM_FUNC_END(pk_mcall_pkru)
+diff --git a/arch/x86/pkernel/pkernel-monitor.c b/arch/x86/pkernel/pkernel-monitor.c
+new file mode 100644
+index 000000000..7e641efe8
+--- /dev/null
++++ b/arch/x86/pkernel/pkernel-monitor.c
+@@ -0,0 +1,505 @@
++#include "pk_mcall.h"
++#include <asm/special_insns.h>
++#include <linux/pgtable.h>
++#include <linux/spinlock.h>
++#include <linux/string.h>
++#include <asm/io.h>
++
++/*
++ * Frame usage constants
++ */
++/* Enum representing the four page types */
++enum page_type_t {
++    PG_UNUSED = 0,
++    PG_L1,          /*  1: Defines a page being used as an L1 PTP */
++    PG_L2,          /*  2: Defines a page being used as an L2 PTP */
++    PG_L3,          /*  3: Defines a page being used as an L3 PTP */
++    PG_L4,          /*  4: Defines a page being used as an L4 PTP */
++};
++
++// TODO: implement reference counting
++typedef struct page_desc_t {
++    enum page_type_t type;
++} page_desc_t;
++
++/* MMU Flags ---- Intel Nomenclature ---- */
++#define PG_V        0x001   /* P    Valid               */
++#define PG_RW       0x002   /* R/W  Read/Write          */
++#define PG_U        0x004   /* U/S  User/Supervisor     */
++#define PG_NC_PWT   0x008   /* PWT  Write through       */
++#define PG_NC_PCD   0x010   /* PCD  Cache disable       */
++#define PG_A        0x020   /* A    Accessed            */
++#define PG_M        0x040   /* D    Dirty               */
++#define PG_PS       0x080   /* PS   Page size (0=4k,1=2M)   */
++#define PG_PTE_PAT  0x080   /* PAT  PAT index           */
++#define PG_G        0x100   /* G    Global              */
++#define PG_AVAIL1   0x200   /*    / Available for system    */
++#define PG_AVAIL2   0x400   /*   <  programmers use     */
++#define PG_AVAIL3   0x800   /*    \                     */
++#define PG_PDE_PAT  0x1000  /* PAT  PAT index           */
++#define PG_NX       (1ul<<63) /* No-execute             */
++
++/* Various interpretations of the above */
++#define PG_W        PG_AVAIL1   /* "Wired" pseudoflag */
++#define PG_MANAGED  PG_AVAIL2
++#define PG_FRAME    (0x000ffffffffff000ul)
++#define PG_PS_FRAME (0x000fffffffe00000ul)
++#define PG_PROT     (PG_RW|PG_U)    /* all protection bits . */
++#define PG_N        (PG_NC_PWT|PG_NC_PCD)   /* Non-cacheable */
++
++#define NPTEPG      512
++
++/* Flags bits in x86_64 PTE entries */
++static const unsigned PTE_PRESENT  = 0x0001u;
++static const unsigned PTE_CANWRITE = 0x0002u;
++static const unsigned PTE_CANUSER  = 0x0004u;
++static const unsigned PTE_PS       = 0x0080u;
++
++/* Size of the smallest page frame in bytes */
++static const uintptr_t X86_PAGE_SIZE = 4096u;
++
++/* Number of bits to shift to get the page number out of a PTE entry */
++static const unsigned PAGESHIFT = 12;
++
++/* Size of the physical memory and page size in bytes */
++static const unsigned long memSize = 0x0000000800000000u;
++static const unsigned long pageSize = 4096;
++static const unsigned long numPageDescEntries = memSize / pageSize;
++/* Mask to get the proper number of bits from the virtual address */
++static const uintptr_t vmask = 0x0000000000000ff8u;
++
++/* Array describing the physical pages */
++/* The index is the physical page number */
++static page_desc_t page_desc[8388608]; // numPageDescEntries
++
++
++DEFINE_SPINLOCK(MMULock);
++
++static int mmuIsInitialized = 0;
++
++static inline void assert_page_in_range(unsigned long paddr, unsigned long size)
++{
++        // TODO: get range from host kernel
++        BUG_ON(paddr + size < paddr);
++        BUG_ON(paddr + size >= memSize); // 16 GB
++}
++
++static inline void
++sva_mm_flush_tlb (void * address) {
++  __asm__ __volatile__ ("invlpg %0" : : "m" (*((char *)address)) : "memory");
++  return;
++}
++
++static inline void _load_cr3(unsigned long data)
++{ 
++    __asm__ __volatile__("movq %0,%%cr3" : : "r" (data) : "memory"); 
++}
++
++static inline uintptr_t setMappingReadOnly(uintptr_t mapping) {
++        // Just an emulation
++        return mapping; 
++}
++
++static inline uintptr_t setMappingReadWrite(uintptr_t mapping) {
++        // Just an emulation
++        return mapping; 
++}
++
++static inline unsigned char *
++getVirtual (uintptr_t physical) {
++        return phys_to_virt(physical);
++}
++
++static inline uintptr_t *
++get_pml4eVaddr (unsigned char * cr3, uintptr_t vaddr) {
++        /* Offset into the page table */
++        uintptr_t offset = (vaddr >> (39 - 3)) & vmask;
++        return (uintptr_t *) getVirtual (((uintptr_t)cr3) | offset);
++}
++
++static inline uintptr_t *
++get_pdpteVaddr (uintptr_t * pml4e, uintptr_t vaddr) {
++        uintptr_t base   = (*pml4e) & 0x000ffffffffff000u;
++        uintptr_t offset = (vaddr >> (30 - 3)) & vmask;
++        return (uintptr_t *) getVirtual (base | offset);
++}
++
++static inline uintptr_t *
++get_pdeVaddr (uintptr_t * pdpte, uintptr_t vaddr) {
++        uintptr_t base   = (*pdpte) & 0x000ffffffffff000u;
++        uintptr_t offset = (vaddr >> (21 - 3)) & vmask;
++        return (uintptr_t *) getVirtual (base | offset);
++}
++
++static inline uintptr_t *
++get_pteVaddr (uintptr_t * pde, uintptr_t vaddr) {
++        uintptr_t base   = (*pde) & 0x000ffffffffff000u;
++        uintptr_t offset = (vaddr >> (12 - 3)) & vmask;
++        return (uintptr_t *) getVirtual (base | offset);
++}
++
++static inline unsigned char *
++get_pagetable (void) {
++        /* Value of the CR3 register */
++        uintptr_t cr3;
++
++        /* Get the page table value out of CR3 */
++        __asm__ __volatile__ ("movq %%cr3, %0\n" : "=r" (cr3));
++
++        /*
++        * Shift the value over 12 bits.  The lower-order 12 bits of the page table
++        * pointer are assumed to be zero, and so they are reserved or used by the
++        * hardware.
++        */
++        return (unsigned char *)((((uintptr_t)cr3) & 0x000ffffffffff000u));
++}
++
++static inline void page_entry_store (unsigned long *page_entry, uintptr_t newVal) {
++        *page_entry = newVal;
++}
++
++static inline uintptr_t * 
++get_pgeVaddr (uintptr_t vaddr) {
++  /* Pointer to the page table entry for the virtual address */
++  uintptr_t *pge = 0;
++
++  /* Get the base of the pml4 to traverse */
++  uintptr_t cr3 = get_pagetable();
++  if ((cr3 & 0xfffffffffffff000u) == 0)
++    return 0;
++
++  /* Get the VA of the pml4e for this vaddr */
++  uintptr_t *pml4e = get_pml4eVaddr (cr3, vaddr);
++
++  if (*pml4e & PG_V) {
++    /* Get the VA of the pdpte for this vaddr */
++    uintptr_t *pdpte = get_pdpteVaddr (pml4e, vaddr);
++    if (*pdpte & PG_V) {
++      /* 
++       * The PDPE can be configurd in large page mode. If it is then we have the
++       * entry corresponding to the given vaddr If not then we go deeper in the
++       * page walk.
++       */
++      if (*pdpte & PG_PS) {
++        pge = pdpte;
++      } else {
++        /* Get the pde associated with this vaddr */
++        uintptr_t *pde = get_pdeVaddr (pdpte, vaddr);
++        if (*pde & PG_V) {
++          /* 
++           * As is the case with the pdpte, if the pde is configured for large
++           * page size then we have the corresponding entry. Otherwise we need
++           * to traverse one more level, which is the last. 
++           */
++          if (*pde & PG_PS) {
++            pge = pde;
++          } else {
++            pge = get_pteVaddr (pde, vaddr);
++          }
++        }
++      }
++    }
++  }
++
++  /* Return the entry corresponding to this vaddr */
++  return pge;
++}
++
++/*
++ * Function: getPhysicalAddr()
++ *
++ * Description:
++ *  Find the physical page number of the specified virtual address.
++ */
++uintptr_t
++getPhysicalAddr (void * v) {
++        return virt_to_phys(v);
++}
++
++static inline void MMULock_Acquire(void)
++{
++        spin_lock(&MMULock);
++}
++
++static inline void MMULock_Release(void)
++{
++        spin_unlock(&MMULock);
++}
++
++static inline void 
++initDeclaredPage (unsigned long frameAddr) {
++        unsigned char * vaddr = getVirtual (frameAddr);
++
++        // Zeroing leads to crash ...
++        memcpy (vaddr, vaddr, X86_PAGE_SIZE);
++
++        uintptr_t *page_entry = get_pgeVaddr (vaddr);
++        if (page_entry) {
++                // Just an emulation for performance evaluation
++                // TODO: BUG_ON(((*page_entry) & PG_PS) == 0);
++                page_entry_store(page_entry, setMappingReadOnly(*page_entry));
++                sva_mm_flush_tlb(vaddr);
++        }
++
++        return;
++}
++
++page_desc_t * getPageDescPtr(unsigned long mapping) {
++        unsigned long frameIndex = (mapping & PG_FRAME) / pageSize;
++        if (frameIndex >= numPageDescEntries)
++                return NULL;
++        return page_desc + frameIndex;
++}
++
++void 
++declare_ptp_and_walk_pt_entries(uintptr_t *pageEntry, unsigned long numPgEntries, enum page_type_t pageLevel)
++{
++        int i;
++        int traversedPTEAlready;
++        enum page_type_t subLevelPgType;
++        unsigned long numSubLevelPgEntries;
++        page_desc_t *thisPg;
++        uintptr_t pageMapping; 
++        uintptr_t *pagePtr;
++        uintptr_t pagePhysAddr;
++
++        pageMapping = *pageEntry;
++
++        pagePhysAddr = pageMapping & PG_FRAME;
++        pagePtr = (uintptr_t *)getVirtual(pagePhysAddr);
++
++        thisPg = getPageDescPtr(pageMapping);
++
++        traversedPTEAlready = (thisPg->type != PG_UNUSED);
++
++        switch (pageLevel) {
++        case PG_L4:
++                thisPg->type = PG_L4; 
++                subLevelPgType = PG_L3;
++                numSubLevelPgEntries = NPTEPG;
++                break;
++        case PG_L3:
++                thisPg->type = PG_L3;
++                subLevelPgType = PG_L2;
++                numSubLevelPgEntries = NPTEPG;
++                break;
++        case PG_L2:
++                if (pageMapping & PG_PS)
++                        return;
++                thisPg->type = PG_L2;
++                subLevelPgType = PG_L1;
++                numSubLevelPgEntries = NPTEPG;
++                break;
++        case PG_L1:
++                if (pageMapping & PG_PS)
++                        return;
++                thisPg->type = PG_L1;
++                subLevelPgType = PG_UNUSED;
++                numSubLevelPgEntries = NPTEPG;
++                break;
++        default:
++                BUG_ON(1);
++        }
++
++        if (traversedPTEAlready) {
++                return;
++        }
++
++        for (i = 0; i < numSubLevelPgEntries; i++) {
++                uintptr_t *nextEntry = &pagePtr[i];
++                if (*nextEntry & PG_V && pageLevel != PG_L1) {
++                        declare_ptp_and_walk_pt_entries(nextEntry, numSubLevelPgEntries, subLevelPgType); 
++                }
++        }
++}
++
++void sva_mmu_init(void)
++{
++        uintptr_t pageEntry = (uintptr_t)get_pagetable() & PG_FRAME;
++
++        declare_ptp_and_walk_pt_entries(&pageEntry, NPTEPG, PG_L4);
++
++        mmuIsInitialized = 1;
++}
++
++void sva_mm_load_pgtable(uintptr_t cr3)
++{
++        MMULock_Acquire();
++
++        if (mmuIsInitialized)
++                BUG_ON(getPageDescPtr(cr3 & ~(1UL << 63))->type != PG_L4);
++
++        _load_cr3(cr3);
++
++        MMULock_Release();
++}
++
++void sva_declare_page(uintptr_t paddr, enum page_type_t type)
++{
++        MMULock_Acquire();
++
++        page_desc_t *pgDesc = getPageDescPtr(paddr);
++        BUG_ON(pgDesc == NULL);
++        BUG_ON(pgDesc->type != PG_UNUSED && pgDesc->type != type);
++        pgDesc->type = type;
++        initDeclaredPage(paddr);
++
++        MMULock_Release();
++}
++
++void sva_remove_page(uintptr_t paddr)
++{
++        MMULock_Acquire();
++
++        /* Get the entry controlling the permissions for this pte PTP */
++        uintptr_t *pte = get_pgeVaddr(getVirtual (paddr));
++
++        /* Get the page_desc for the l1 page frame */
++        page_desc_t *pgDesc = getPageDescPtr(paddr);
++
++        // if ((pgDesc->count == 1) || (pgDesc->count == 0))
++        pgDesc->type = PG_UNUSED;
++        page_entry_store ((uintptr_t *) pte, setMappingReadWrite(*pte));
++        sva_mm_flush_tlb (getVirtual (paddr));
++        
++        MMULock_Release();
++}
++
++static inline unsigned char
++pt_update_is_valid (uintptr_t *page_entry, uintptr_t newVal)
++{
++        unsigned long newPA = newVal & PG_FRAME;
++        unsigned long newFrame = newPA >> PAGESHIFT;
++        uintptr_t ptePAddr = getPhysicalAddr(page_entry);
++        page_desc_t *ptePG = getPageDescPtr(ptePAddr);
++        page_desc_t *newPG;
++
++        if (!(newVal & PG_V)) {
++                return 1;
++        }
++
++        // Rare case
++        if (ptePG == NULL) {
++                return 1;
++        }
++
++        switch (ptePG->type) {
++        case PG_L1:
++                assert_page_in_range(newPA, (1UL << 12));
++                newPG = getPageDescPtr(newVal);
++                BUG_ON((newPG->type >= PG_L1) && (newPG->type <= PG_L4)); // TODO: avoid huge page mapping of PTPs.
++                break;
++        case PG_L2:
++                if (newVal & PG_PS) {
++                        assert_page_in_range(newPA, (1UL << 21));
++                } else {
++                        newPG = getPageDescPtr(newVal);
++                        BUG_ON(newPG->type != PG_L1);
++                }
++                break;
++        case PG_L3:
++                if (newVal & PG_PS) {
++                        assert_page_in_range(newPA, (1UL << 30));
++                } else {
++                        newPG = getPageDescPtr(newVal);
++                        BUG_ON(newPG->type != PG_L2);
++                }
++                break;
++        case PG_L4:
++                BUG_ON(newVal & PG_PS);
++                newPG = getPageDescPtr(newVal);
++                BUG_ON(newPG->type != PG_L3);
++                break;
++        default:
++                BUG_ON(1);
++                break;
++        }
++
++        return 1;
++}
++
++static inline void update_mapping(uintptr_t * pageEntryPtr, uintptr_t val) {
++        if (mmuIsInitialized)
++                BUG_ON(!pt_update_is_valid(pageEntryPtr, val));
++
++        page_entry_store(pageEntryPtr, val);
++}
++
++void __pkm_init(void)
++{
++        sva_mmu_init();
++}
++
++void __pkm_write_cr3(unsigned long val)
++{
++        sva_mm_load_pgtable(val);
++}
++
++void __pkm_alloc_pte(unsigned long pfn)
++{
++        sva_declare_page(pfn << 12, PG_L1);
++}
++
++void __pkm_alloc_pmd(unsigned long pfn)
++{
++        sva_declare_page(pfn << 12, PG_L2);
++}
++
++void __pkm_alloc_pud(unsigned long pfn)
++{
++        sva_declare_page(pfn << 12, PG_L3);
++}
++	
++void __pkm_alloc_pgd(unsigned long pfn)
++{
++        sva_declare_page(pfn << 12, PG_L4);
++}
++
++void __pkm_release_pte(unsigned long pfn)
++{
++        sva_remove_page(pfn << 12);
++}
++
++void __pkm_release_pmd(unsigned long pfn)
++{
++        sva_remove_page(pfn << 12);
++}
++
++void __pkm_release_pud(unsigned long pfn)
++{
++        sva_remove_page(pfn << 12);
++}
++
++void __pkm_release_pgd(unsigned long pfn)
++{
++        sva_remove_page(pfn << 12);
++}
++
++void __pkm_set_pte(pte_t *ptep, pte_t pte)
++{
++        update_mapping((uintptr_t *)ptep, pte.pte);
++}
++
++void __pkm_set_pmd(pmd_t *pmdp, pmd_t pmd)
++{
++        update_mapping((uintptr_t *)pmdp, pmd.pmd);
++}
++
++void __pkm_set_pud(pud_t *pudp, pud_t pud)
++{
++        update_mapping((uintptr_t *)pudp, pud.pud);
++}
++
++void __pkm_set_p4d(p4d_t *p4dp, p4d_t p4d)
++{
++        update_mapping((uintptr_t *)p4dp, p4d.pgd.pgd);
++}
++
++void __pkm_flush_tlb_user(void)
++{
++        native_flush_tlb_local();
++}
++
++void __pkm_empty_call(void)
++{
++}
+diff --git a/arch/x86/pkernel/pkernel.c b/arch/x86/pkernel/pkernel.c
+new file mode 100644
+index 000000000..c50a8fd8c
+--- /dev/null
++++ b/arch/x86/pkernel/pkernel.c
+@@ -0,0 +1,840 @@
++#include <asm/pkernel.h>
++#include <asm/hypervisor.h>
++#include <asm/paravirt.h>
++#include <asm/desc.h>
++#include <asm/io.h>
++#include <asm/processor.h>
++#include <asm/debugreg.h>
++#include <asm/special_insns.h>
++#include <asm/msr.h>
++#include <asm/io_bitmap.h>
++#include <asm/irqflags.h>
++#include <asm/e820/types.h>
++#include <asm/x86_init.h>
++#include <asm/apic.h>
++#include <asm/cpufeature.h>
++#include <asm/smp.h>
++#include <asm/spec-ctrl.h>
++#include <asm/realmode.h>
++#include <linux/pgtable.h>
++#include <linux/types.h>
++#include <linux/init.h>
++#include <linux/gfp.h>
++#include <linux/sched/task_stack.h>
++#include <linux/sched/task.h>
++#include <linux/sched.h>
++#include <linux/netdevice.h>
++#include <linux/semaphore.h>
++#include <linux/interrupt.h>
++#include <linux/cpuhotplug.h>
++#include <linux/cpu.h>
++#include <linux/spinlock.h>
++#include <linux/list.h>
++#include <linux/interrupt.h>
++#include <linux/tick.h>
++#include <net/net_namespace.h>
++
++#include "pk_mcall.h"
++
++// #define ENABLE_MEM_CHECK
++#define MPK_MCALL
++
++extern struct boot_params boot_params;
++
++typedef unsigned long (*__pk_rkcall_fn_t)(unsigned long cr3, void *ctx,
++                                unsigned long arg1, unsigned long arg2,
++                                unsigned long arg3, unsigned long arg4);
++extern unsigned long __pk_rkcall_slow(unsigned long cr3, void *ctx,
++                                unsigned long arg1, unsigned long arg2,
++                                unsigned long arg3, unsigned long arg4);
++extern unsigned long __pk_rkcall_fast(unsigned long cr3, void *ctx,
++                                unsigned long arg1, unsigned long arg2,
++                                unsigned long arg3, unsigned long arg4);
++extern unsigned long __pk_rkcall_noevent(unsigned long cr3, void *ctx,
++                                unsigned long arg1, unsigned long arg2,
++                                unsigned long arg3, unsigned long arg4);
++
++static __pk_rkcall_fn_t __pk_rkcall = __pk_rkcall_slow;
++
++typedef void (*pk_mcall_fn_t)(void *fn, long arg1, long arg2);
++
++static pk_mcall_fn_t pk_mcall = pk_mcall_nopkru;
++
++bool pk_cntr_flag;
++static unsigned long pcid;
++static unsigned long rk_cr3;
++static void *cpu0_rk_ctx;
++static unsigned long n_cpus;
++static DEFINE_PER_CPU(void *, rk_ctx);
++static bool per_cpu_init_done;
++
++#define PK_MAX_EVENTS   2
++static struct {
++        unsigned long event;
++        pk_event_handler_t handler;
++        void *arg;
++} event_registry[PK_MAX_EVENTS];
++
++extern struct boot_params boot_params;
++void pk_copy_boot_params(struct boot_params *bp)
++{
++        memcpy(bp, &boot_params, sizeof(*bp));
++}
++EXPORT_SYMBOL(pk_copy_boot_params);
++
++unsigned long pk_get_secondary_entry(void)
++{
++        return (unsigned long)secondary_startup_64;
++}
++EXPORT_SYMBOL(pk_get_secondary_entry);
++
++unsigned long pk_get_init_top_pgt(void)
++{
++        return (unsigned long)init_top_pgt - __START_KERNEL_map;
++}
++EXPORT_SYMBOL(pk_get_init_top_pgt);
++
++unsigned long pk_get_boot_stack(void)
++{
++        static char boot_stack[PAGE_SIZE];
++        return (unsigned long)boot_stack;
++}
++EXPORT_SYMBOL(pk_get_boot_stack);
++
++static void pk_init_per_cpu(void *__rk_ctx)
++{
++        *this_cpu_ptr(&rk_ctx) = __rk_ctx;
++}
++
++void pk_init(void)
++{
++        struct pk_boot_params *pk_boot_params;
++        
++        pk_boot_params = pk_get_boot_params(&boot_params);
++
++        pk_cntr_flag = pk_boot_params->magic == PK_BOOT_MAGIC;
++
++        if (!pk_cntr_flag) {
++                return;
++        }
++
++        pcid = pk_boot_params->pcid;
++        rk_cr3 = pk_boot_params->rk_cr3;
++        n_cpus = pk_boot_params->n_cpus;
++        cpu0_rk_ctx = pk_boot_params->rk_ctx;
++}
++
++static void eval_op_rkcall(void)
++{
++        pk_rkcall0(PK_RKCALL_NOP);
++}
++
++static void eval_op_mcall(void)
++{
++        pk_mcall(__pkm_empty_call, 0, 0);
++}
++
++// static void eval_op_hypercall(void)
++// {
++//         asm volatile("vmmcall" :: "a"(20) : "memory");
++// }
++
++static unsigned long eval_call_latency(void (*eval_op)(void))
++{
++        int n_warmup = 10000;
++        int n_eval = 1000000;
++        int i;
++        unsigned long t_before, t_after;
++
++        // pk_rkcall1(PK_RKCALL_ENABLE_INTR, 0);
++
++        for (i = 0; i < n_warmup; i++) {
++                eval_op();
++        }
++
++        t_before = ktime_get_ns();
++        for (i = 0; i < n_eval; i++) {
++                eval_op();
++        }
++        t_after = ktime_get_ns();
++
++        // pk_rkcall1(PK_RKCALL_ENABLE_INTR, 1);
++
++        return (t_after - t_before) / n_eval;
++}
++
++#ifndef MPK_MCALL
++static void pk_mcall_rkcall(void *fn, long arg1, long arg2)
++{
++        void (*__fn)(long, long) = fn;
++        
++        pk_rkcall0(PK_RKCALL_NOP);
++        __fn(arg1, arg2);
++}
++#endif /* MPK_MCALL */
++
++void pk_init_late(void)
++{       
++        if (!pk_in_cntr()) {
++                // printk("hypercall: %lu nanoseconds\n",
++                //        eval_call_latency(eval_op_hypercall));
++                return;
++        }
++
++        pk_rkcall0(PK_RKCALL_INIT_LATE);
++
++        __pk_rkcall = __pk_rkcall_fast;
++#ifdef MPK_MCALL
++        pk_mcall = pk_mcall_pkru;
++#else /* MPK_MCALL */
++        pk_mcall = pk_mcall_rkcall;
++#endif /* MPK_MCALL */
++
++        printk("rkcall: %lu nanoseconds\n", eval_call_latency(eval_op_rkcall));
++        printk("mcall: %lu nanoseconds\n", eval_call_latency(eval_op_mcall));
++
++        __pkm_init();
++}
++
++bool pk_in_cntr(void)
++{
++        return pk_cntr_flag;
++}
++EXPORT_SYMBOL(pk_in_cntr);
++
++void pk_register_event_handler(
++        unsigned long event, pk_event_handler_t handler, void *arg)
++{
++        int i;
++
++        for (i = 0; i < PK_MAX_EVENTS; i++) {
++                if (!event_registry[i].event) {
++                        event_registry[i].event = event;
++                        event_registry[i].handler = handler;
++                        event_registry[i].arg = arg;
++                        break;
++                }
++        }
++}
++
++static int size_str2int(const char *size)
++{
++        switch (size[0]) {
++        case 'b':
++                return 1;
++        case 'w':
++                return 2;
++        case 'l':
++                return 4;
++        case 'q':
++                return 8;
++        default:
++                return 0;
++        }
++}
++
++unsigned long pk_mmio_read(const volatile void __iomem *addr, const char *size)
++{
++        return pk_rkcall2(PK_RKCALL_MMIO_READ,
++                offset_in_page(addr), size_str2int(size));
++}
++EXPORT_SYMBOL(pk_mmio_read);
++
++void pk_mmio_write(unsigned long val, volatile void __iomem *addr, const char *size)
++{
++        pk_rkcall3(PK_RKCALL_MMIO_WRITE,
++                val, offset_in_page(addr), size_str2int(size));
++}
++EXPORT_SYMBOL(pk_mmio_write);
++
++static unsigned long pk_rkcall(unsigned long n,
++                               unsigned long arg1,
++                               unsigned long arg2,
++                               unsigned long arg3)
++{
++        unsigned long r;
++        void *__rk_ctx;
++        
++        if (!per_cpu_init_done) {
++                return __pk_rkcall(rk_cr3, cpu0_rk_ctx, n, arg1, arg2, arg3);
++        }
++
++        __rk_ctx = get_cpu_var(rk_ctx);
++        r = __pk_rkcall(rk_cr3, __rk_ctx, n, arg1, arg2, arg3);
++        put_cpu_var(rk_ctx);
++        
++        return r;
++}
++
++unsigned long pk_rkcall0(unsigned long n)
++{
++        return pk_rkcall(n, 0, 0, 0);
++}
++
++unsigned long pk_rkcall1(unsigned long n, unsigned long arg1)
++{
++        return pk_rkcall(n, arg1, 0, 0);
++}
++
++unsigned long pk_rkcall2(unsigned long n, unsigned long arg1, unsigned long arg2)
++{
++        return pk_rkcall(n, arg1, arg2, 0);
++}
++
++unsigned long pk_rkcall3(unsigned long n, unsigned long arg1, unsigned long arg2, unsigned long arg3)
++{
++        return pk_rkcall(n, arg1, arg2, arg3);
++}
++
++void pk_handle_events(pk_events_t events)
++{
++        int i;
++        int cpu = smp_processor_id();
++        unsigned long flags;
++
++        if (!events)
++                return;
++
++        for (i = 0; i < PK_MAX_EVENTS; i++) {
++                if (events & event_registry[i].event) {
++                        event_registry[i].handler(event_registry[i].arg);
++                }
++        }
++
++        if (!in_interrupt() && local_softirq_pending())
++		do_softirq();
++
++        local_irq_save(flags);
++	/* Make sure that timer wheel updates are propagated */
++	if ((idle_cpu(cpu) && !need_resched()) || tick_nohz_full_cpu(cpu)) {
++		if (!in_irq())
++			tick_nohz_irq_exit();
++	}
++        local_irq_restore(flags);
++}
++
++static uint32_t __init pkm_detect(void)
++{
++	return pk_in_cntr() ? 0xffffffffU : 0;
++}
++
++static void pkm_io_delay(void)
++{
++        native_io_delay();
++}
++
++static void pkm_cpuid(unsigned int *eax, unsigned int *ebx,
++		      unsigned int *ecx, unsigned int *edx)
++{
++        unsigned int a = *eax;
++        unsigned int c = *ecx;
++
++        native_cpuid(eax, ebx, ecx, edx);
++
++        if (a == 0x80000001) {
++                *edx &= ~BIT(27);
++                *ecx &= ~BIT(23);
++        } else if (a == 0x1) {
++                *edx &= ~BIT(7);
++                *edx &= ~BIT(14);
++        } else if (a == 0x7 && c == 0x0) {
++                *ecx &= ~BIT(22);
++        }
++}
++
++static unsigned long pkm_get_debugreg(int regno)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 2);
++        return native_get_debugreg(regno);
++}
++
++static void pkm_set_debugreg(int regno, unsigned long value)
++{
++        // pk_rkcall1(PK_RKCALL_DEBUG, 3);
++        // native_set_debugreg(regno, value);
++}
++
++static unsigned long pkm_read_cr0(void)
++{
++        return native_read_cr0();
++}
++
++static void pkm_write_cr0(unsigned long val)
++{
++        if (val != CR0_STATE) {
++                pk_rkcall2(PK_RKCALL_DEBUG, 5, val);
++                pk_rkcall0(PK_RKCALL_SHUTDOWN);
++        }
++        // native_write_cr0(val);
++}
++
++static void pkm_write_cr4(unsigned long val)
++{
++        native_write_cr4(val);
++}
++
++static void pkm_wbinvd(void)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 7);
++        native_wbinvd();
++}
++
++static unsigned long long pkm_read_msr(unsigned int msr)
++{
++        return native_read_msr(msr);
++}
++
++static void pkm_write_msr(unsigned int msr, u32 low, u32 high)
++{
++        if (msr == MSR_GS_BASE || msr == MSR_KERNEL_GS_BASE || msr == MSR_FS_BASE) {
++                native_write_msr(msr, low, high);
++        } else if (msr == MSR_CSTAR || msr == MSR_IA32_SYSENTER_CS ||
++                   msr == MSR_IA32_SYSENTER_ESP || msr == MSR_IA32_SYSENTER_EIP) {
++                /* nothing */
++        } else if (msr != MSR_IA32_XSS && msr != MSR_STAR && msr != MSR_LSTAR && msr != MSR_SYSCALL_MASK) {
++                pk_rkcall2(PK_RKCALL_DEBUG, 9, msr);
++                pk_rkcall0(PK_RKCALL_SHUTDOWN);
++        } else if (native_read_msr(msr) != ((u64)high << 32) + low) {
++                pk_rkcall2(PK_RKCALL_DEBUG, 9, msr);
++                pk_rkcall0(PK_RKCALL_SHUTDOWN);
++        }
++}
++
++static unsigned long long pkm_read_msr_safe(unsigned int msr, int *err)
++{
++        return native_read_msr_safe(msr, err);
++}
++
++static int pkm_write_msr_safe(unsigned int msr, u32 low, u32 high)
++{
++        pkm_write_msr(msr, low, high);
++        return 0;
++}
++
++static unsigned long long pkm_read_pmc(int counter)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 12);
++        return native_read_pmc(counter);
++}
++
++static void pkm_load_tr_desc(void)
++{
++        // pk_rkcall1(PK_RKCALL_DEBUG, 13);
++        // native_load_tr_desc();
++}
++
++static void pkm_set_ldt(const void *addr, unsigned int entries)
++{
++        native_set_ldt(addr, entries);
++}
++
++static void pkm_load_gdt(const struct desc_ptr *dtr)
++{
++        native_load_gdt(dtr);
++}
++
++static void pkm_load_idt(const struct desc_ptr *dtr)
++{
++        native_load_idt(dtr);
++}
++
++static unsigned long pkm_store_tr(void)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 17);
++        return native_store_tr();
++}
++
++static void pkm_load_tls(struct thread_struct *t, unsigned int cpu)
++{
++        native_load_tls(t, cpu);
++}
++
++static void pkm_load_gs_index(unsigned int selector)
++{
++        // pk_rkcall1(PK_RKCALL_DEBUG, 19);
++        // native_load_gs_index(selector);
++}
++
++static void pkm_write_ldt_entry(struct desc_struct *ldt, int entry, const void *desc)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 20);
++        native_write_ldt_entry(ldt, entry, desc);
++}
++
++static void pkm_write_gdt_entry(struct desc_struct *gdt, int entry, const void *desc, int type)
++{
++        native_write_gdt_entry(gdt, entry, desc, type);
++}
++
++static void pkm_write_idt_entry(gate_desc *idt, int entry, const gate_desc *gate)
++{
++        native_write_idt_entry(idt, entry, gate);
++}
++
++static void pkm_load_sp0(unsigned long sp0)
++{
++        native_load_sp0(sp0);
++}
++
++static void pkm_tss_invalidate_io_bitmap(void)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 24);
++        native_tss_invalidate_io_bitmap();
++}
++
++static void pkm_tss_update_io_bitmap(void)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 25);
++        native_tss_update_io_bitmap();
++}
++
++unsigned long pkm_intr_flag = 0;
++
++static void pkm_safe_halt(void)
++{
++        native_irq_enable();
++        pk_rkcall0(PK_RKCALL_HALT);
++}
++
++static void pkm_halt(void)
++{
++        pk_rkcall0(PK_RKCALL_HALT);
++}
++
++static void pkm_write_cr2(unsigned long val)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 31);
++        native_write_cr2(val);
++}
++
++static void pkm_write_cr3(unsigned long val)
++{
++        val &= ~X86_CR3_PCID_MASK;
++        val |= pcid;
++
++        // pk_mcall(__pkm_write_cr3, val, 0);
++        native_write_cr3(val);
++}
++
++static void pkm_set_pte(pte_t *ptep, pte_t pte)
++{
++        if (pte.pte && pte_pfn(pte) < ISA_END_ADDRESS) {
++                pte.pte = 0;
++        }
++
++        pk_mcall(__pkm_set_pte, (long)ptep, pte_val(pte));
++        // native_set_pte(ptep, pte);
++}
++
++static void pkm_set_pmd(pmd_t *pmdp, pmd_t pmd)
++{
++        pk_mcall(__pkm_set_pmd, (long)pmdp, pmd_val(pmd));
++        // native_set_pmd(pmdp, pmd);
++}
++
++static void pkm_set_pud(pud_t *pudp, pud_t pud)
++{
++        pk_mcall(__pkm_set_pud, (long)pudp, pud_val(pud));
++        // native_set_pud(pudp, pud);
++}
++
++static void pkm_set_p4d(p4d_t *p4dp, p4d_t p4d)
++{
++        pk_mcall(__pkm_set_p4d, (long)p4dp, p4d_val(p4d));
++        // native_set_p4d(p4dp, p4d);
++}
++
++void pkm_alloc_pte(struct mm_struct *mm, unsigned long pfn)
++{
++        pk_mcall(__pkm_alloc_pte, pfn, 0);
++}
++
++void pkm_alloc_pmd(struct mm_struct *mm, unsigned long pfn)
++{
++        pk_mcall(__pkm_alloc_pmd, pfn, 0);
++}
++
++void pkm_alloc_pud(struct mm_struct *mm, unsigned long pfn)
++{
++        pk_mcall(__pkm_alloc_pud, pfn, 0);
++}
++
++int pkm_pgd_alloc(struct mm_struct *mm)
++{
++        pk_mcall(__pkm_alloc_pgd, virt_to_phys(mm->pgd) >> 12, 0);
++        return 0;
++}
++
++void pkm_pgd_free(struct mm_struct *mm, pgd_t *pgd)
++{
++        pk_mcall(__pkm_release_pgd, virt_to_phys(mm->pgd) >> 12, 0);
++}
++
++void pkm_release_pte(unsigned long pfn)
++{
++        pk_mcall(__pkm_release_pte, pfn, 0);
++}
++
++void pkm_release_pmd(unsigned long pfn)
++{
++        pk_mcall(__pkm_release_pte, pfn, 0);
++}
++
++void pkm_release_pud(unsigned long pfn)
++{
++        pk_mcall(__pkm_release_pte, pfn, 0);
++}
++
++void pkm_release_p4d(unsigned long pfn)
++{
++        pk_mcall(__pkm_release_pte, pfn, 0);
++}
++
++static void pkm_flush_tlb_user(void)
++{
++        pk_mcall(__pkm_flush_tlb_user, 0, 0);
++}
++
++u64 pkm_get_root_pointer(void)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 37);
++        pk_rkcall0(PK_RKCALL_SHUTDOWN);
++        return 0;
++}
++
++static int pkm_madt_oem_check(char *oem_id, char *oem_table_id)
++{
++	return 1;
++}
++
++static bool pkm_id_always_registered(void)
++{
++	return 1;
++}
++
++static void pkm_noop(void)
++{
++}
++
++static u32 pkm_cpu_present_to_apicid(int cpu)
++{
++	if (cpu_present(cpu))
++		return cpu_data(cpu).topo.apicid;
++	else
++		return BAD_APICID;
++}
++
++static u32 pkm_phys_pkg_id(u32 initial_apic_id, int index_msb)
++{
++	return initial_apic_id >> index_msb;
++}
++
++static u32 pkm_get_apic_id(u32 x)
++{
++	return ((x)>>24) & 0xFFu;
++}
++
++static u32 pkm_set_apic_id(unsigned int x)
++{
++	pk_rkcall1(PK_RKCALL_DEBUG, 38);
++	return x;
++}
++
++void pkm_send_IPI_mask(const struct cpumask *mask, int vector)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 39);
++}
++
++void pkm_send_IPI_mask_allbutself(const struct cpumask *mask, int vector)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 40);
++}
++
++void pkm_send_IPI_allbutself(int vector)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 41);
++}
++
++void pkm_send_IPI_all(int vector)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 42);
++}
++
++void pkm_send_IPI_self(int vector)
++{
++        pk_rkcall1(PK_RKCALL_DEBUG, 43);
++}
++
++static u32 pkm_apic_read(u32 reg)
++{
++	if (reg == APIC_LVR)
++		return 0x14;
++	if (reg != APIC_ID)
++		return 0;
++
++	return 0;
++}
++
++static void pkm_apic_write(u32 reg, u32 val)
++{
++        while (1);
++        pk_rkcall1(PK_RKCALL_DEBUG, 44);
++}
++
++static void pkm_apic_icr_write(u32 low, u32 id)
++{
++	pk_rkcall1(PK_RKCALL_DEBUG, 45);
++}
++
++extern void pkm_iret(void);
++
++static struct apic pkm_pv_apic = {
++	.name 				= "PKM PV",
++	.probe 				= NULL,
++	.acpi_madt_oem_check		= pkm_madt_oem_check,
++	// .apic_id_valid 			= pkm_id_always_valid,
++	.apic_id_registered 		= pkm_id_always_registered,
++
++	/* .delivery_mode and .dest_mode_logical not used by pkmPV */
++
++	.disable_esr			= 0,
++
++	.check_apicid_used		= NULL, /* Used on 32-bit */
++	.init_apic_ldr			= pkm_noop, /* setup_local_APIC calls it */
++	.ioapic_phys_id_map		= NULL, /* Used on 32-bit */
++	// .setup_apic_routing		= NULL,
++	.cpu_present_to_apicid		= pkm_cpu_present_to_apicid,
++	// .apicid_to_cpu_present		= physid_set_mask_of_physid, /* Used on 32-bit */
++	// .check_phys_apicid_present	= default_check_phys_apicid_present, /* smp_sanity_check needs it */
++	.phys_pkg_id			= pkm_phys_pkg_id, /* detect_ht */
++
++	.get_apic_id 			= pkm_get_apic_id,
++	.set_apic_id 			= pkm_set_apic_id, /* Can be NULL on 32-bit. */
++
++	.calc_dest_apicid		= apic_flat_calc_apicid,
++
++	.send_IPI_mask 			= pkm_send_IPI_mask,
++	.send_IPI_mask_allbutself 	= pkm_send_IPI_mask_allbutself,
++	.send_IPI_allbutself 		= pkm_send_IPI_allbutself,
++	.send_IPI_all 			= pkm_send_IPI_all,
++	.send_IPI_self 			= pkm_send_IPI_self,
++
++	/* .wait_for_init_deassert- used  by AP bootup - smp_callin which we don't use */
++	// .inquire_remote_apic		= pkm_silent_inquire,
++
++	.read				= pkm_apic_read,
++	.write				= pkm_apic_write,
++	// .eoi_write			= pkm_apic_write,
++
++	// .icr_read 			= pkm_apic_icr_read,
++	.icr_write 			= pkm_apic_icr_write,
++	.wait_icr_idle 			= pkm_noop,
++	// .safe_wait_icr_idle 		= pkm_safe_apic_wait_icr_idle,
++};
++
++static void pkm_apic_check(void)
++{
++	apic = &pkm_pv_apic;
++}
++
++static void _get_smp_config(unsigned int early)
++{
++	unsigned int cpu;
++        
++        if (early)
++		return;
++
++	num_processors = 1;
++	disabled_cpus = 0;
++
++        for (cpu = 0; cpu < num_processors; cpu++) {
++                set_cpu_possible(cpu, true);
++                set_cpu_present(cpu, true);
++        }
++}
++
++static void __init pkm_init_platform(void)
++{
++	pv_ops.cpu.io_delay		= pkm_io_delay;
++
++	pv_ops.cpu.cpuid		= pkm_cpuid;
++	pv_ops.cpu.get_debugreg	        = pkm_get_debugreg;
++	pv_ops.cpu.set_debugreg	        = pkm_set_debugreg;
++	pv_ops.cpu.read_cr0		= pkm_read_cr0;
++	pv_ops.cpu.write_cr0		= pkm_write_cr0;
++	pv_ops.cpu.write_cr4		= pkm_write_cr4;
++	pv_ops.cpu.wbinvd		= pkm_wbinvd;
++	pv_ops.cpu.read_msr		= pkm_read_msr;
++	pv_ops.cpu.write_msr		= pkm_write_msr;
++	pv_ops.cpu.read_msr_safe	= pkm_read_msr_safe;
++	pv_ops.cpu.write_msr_safe	= pkm_write_msr_safe;
++	pv_ops.cpu.read_pmc		= pkm_read_pmc;
++	pv_ops.cpu.load_tr_desc         = pkm_load_tr_desc;
++	pv_ops.cpu.set_ldt		= pkm_set_ldt;
++	pv_ops.cpu.load_gdt		= pkm_load_gdt;
++	pv_ops.cpu.load_idt		= pkm_load_idt;
++	pv_ops.cpu.store_tr		= pkm_store_tr;
++	pv_ops.cpu.load_tls		= pkm_load_tls;
++	pv_ops.cpu.load_gs_index	= pkm_load_gs_index;
++	pv_ops.cpu.write_ldt_entry	= pkm_write_ldt_entry;
++	pv_ops.cpu.write_gdt_entry	= pkm_write_gdt_entry;
++	pv_ops.cpu.write_idt_entry	= pkm_write_idt_entry;
++
++	pv_ops.cpu.alloc_ldt		= paravirt_nop;
++	pv_ops.cpu.free_ldt		= paravirt_nop;
++
++	pv_ops.cpu.load_sp0		= pkm_load_sp0;
++
++	pv_ops.cpu.invalidate_io_bitmap	= pkm_tss_invalidate_io_bitmap;
++	pv_ops.cpu.update_io_bitmap	= pkm_tss_update_io_bitmap;
++
++	pv_ops.cpu.start_context_switch	= paravirt_nop;
++	pv_ops.cpu.end_context_switch	= paravirt_nop;
++
++	pv_ops.irq.safe_halt		= pkm_safe_halt;
++	pv_ops.irq.halt		        = pkm_halt;
++
++        pv_ops.mmu.write_cr2		= pkm_write_cr2;
++	pv_ops.mmu.write_cr3		= pkm_write_cr3;
++
++        pv_ops.mmu.alloc_pte            = pkm_alloc_pte;
++        pv_ops.mmu.alloc_pmd            = pkm_alloc_pmd;
++        pv_ops.mmu.alloc_pud            = pkm_alloc_pud;
++        // pv_ops.mmu.alloc_p4d            = pkm_alloc_p4d;
++        pv_ops.mmu.pgd_alloc            = pkm_pgd_alloc;
++        pv_ops.mmu.release_pte          = pkm_release_pte;
++        pv_ops.mmu.release_pmd          = pkm_release_pmd;
++        pv_ops.mmu.release_pud          = pkm_release_pud;
++        // pv_ops.mmu.release_p4d          = pkm_release_p4d;
++        pv_ops.mmu.pgd_free             = pkm_pgd_free;
++
++        pv_ops.mmu.set_pte		= pkm_set_pte;
++	pv_ops.mmu.set_pmd		= pkm_set_pmd;
++        pv_ops.mmu.set_pud		= pkm_set_pud;
++        pv_ops.mmu.set_p4d		= pkm_set_p4d;
++
++        pv_ops.mmu.flush_tlb_user	= pkm_flush_tlb_user;
++
++        // paravirt_iret = pkm_iret;
++
++        x86_init.acpi.get_root_pointer  = pkm_get_root_pointer;
++        x86_init.irqs.intr_mode_select	= x86_init_noop;
++	x86_init.irqs.intr_mode_init	= x86_init_noop;
++        x86_init.mpparse.find_smp_config = x86_init_noop;
++	x86_init.mpparse.get_smp_config = _get_smp_config;
++        // x86_init.pci.init_irq = x86_init_noop;
++        x86_init.irqs.pre_vector_init        = x86_init_noop;
++        x86_platform.apic_post_init     = pkm_apic_check;
++
++        apic = &pkm_pv_apic;
++
++        // SMP not implemented 
++        // smp_ops = pkm_smp_ops;
++}
++
++const __initconst struct hypervisor_x86 x86_hyper_pkm = {
++        .name                           = "PKM",
++        .detect                         = pkm_detect,
++        .type                           = X86_HYPER_PKM,
++        .init.init_platform             = pkm_init_platform,
++};
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 788e55595..436b5e285 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -206,7 +206,8 @@ static void __init set_real_mode_permissions(void)
+ void __init init_real_mode(void)
+ {
+ 	if (!real_mode_header)
+-		panic("Real mode trampoline was not allocated");
++		// panic("Real mode trampoline was not allocated");
++		return;
+ 
+ 	setup_real_mode();
+ 	set_real_mode_permissions();
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 9fbb8d315..21a48c463 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -24,6 +24,7 @@
+ #include <linux/property.h>
+ 
+ #include <asm/io.h>
++#include <asm/pkernel.h>
+ 
+ MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
+ MODULE_DESCRIPTION("i8042 keyboard and mouse controller driver");
+@@ -1613,6 +1614,9 @@ static int __init i8042_init(void)
+ 
+ 	dbg_init();
+ 
++	if (pk_in_cntr())
++		return 0;
++
+ 	err = i8042_platform_init();
+ 	if (err)
+ 		return (err == -ENODEV) ? 0 : err;
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 912733151..dbba3337e 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -40,6 +40,7 @@
+ #endif
+ 
+ #include <asm/irq.h>
++#include <asm/pkernel.h>
+ 
+ #include "8250.h"
+ 
+@@ -1222,6 +1223,8 @@ static int __init serial8250_init(void)
+ 
+ 	if (nr_uarts == 0)
+ 		return -ENODEV;
++	if (pk_in_cntr())
++		return -ENODEV;
+ 
+ 	serial8250_isa_init_ports();
+ 
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index f1348a509..fae4063f9 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -325,6 +325,9 @@ static int uart_startup(struct tty_struct *tty, struct uart_state *state,
+ 	struct tty_port *port = &state->port;
+ 	int retval;
+ 
++	if (pk_in_cntr())
++		return 0;
++
+ 	if (tty_port_initialized(port))
+ 		return 0;
+ 
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 06414e43e..d9abe14a7 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -111,6 +111,8 @@
+ #include <linux/nsproxy.h>
+ #include "tty.h"
+ 
++#include <asm/pkernel.h>
++
+ #undef TTY_DEBUG_HANGUP
+ #ifdef TTY_DEBUG_HANGUP
+ # define tty_debug_hangup(tty, f, args...)	tty_debug(tty, f, ##args)
+@@ -170,7 +172,7 @@ static void free_tty_struct(struct tty_struct *tty)
+ {
+ 	tty_ldisc_deinit(tty);
+ 	put_device(tty->dev);
+-	kvfree(tty->write_buf);
++	kfree(tty->write_buf);
+ 	kfree(tty);
+ }
+ 
+@@ -1000,12 +1002,12 @@ static ssize_t iterate_tty_write(struct tty_ldisc *ld, struct tty_struct *tty,
+ 		if (chunk < 1024)
+ 			chunk = 1024;
+ 
+-		buf_chunk = kvmalloc(chunk, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
++		buf_chunk = kmalloc(chunk, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
+ 		if (!buf_chunk) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-		kvfree(tty->write_buf);
++		kfree(tty->write_buf);
+ 		tty->write_cnt = chunk;
+ 		tty->write_buf = buf_chunk;
+ 	}
+@@ -1018,7 +1020,14 @@ static ssize_t iterate_tty_write(struct tty_ldisc *ld, struct tty_struct *tty,
+ 		if (copy_from_iter(tty->write_buf, size, from) != size)
+ 			break;
+ 
+-		ret = ld->ops->write(tty, file, tty->write_buf, size);
++		if (pk_in_cntr()) {
++			pk_rkcall2(PK_RKCALL_PRINT,
++				   virt_to_phys(tty->write_buf), size);
++			ret = size;
++		} else {
++			ret = ld->ops->write(tty, file, tty->write_buf, size);
++		}
++
+ 		if (ret <= 0)
+ 			break;
+ 
+diff --git a/drivers/tty/ttynull.c b/drivers/tty/ttynull.c
+index e4c427399..f028d7a53 100644
+--- a/drivers/tty/ttynull.c
++++ b/drivers/tty/ttynull.c
+@@ -9,6 +9,7 @@
+ #include <linux/console.h>
+ #include <linux/module.h>
+ #include <linux/tty.h>
++#include <asm/pkernel.h>
+ 
+ static const struct tty_port_operations ttynull_port_ops;
+ static struct tty_driver *ttynull_driver;
+@@ -54,9 +55,16 @@ static struct tty_driver *ttynull_device(struct console *c, int *index)
+ 	return ttynull_driver;
+ }
+ 
++static void ttynull_console_write(struct console *console, const char *string,
++				  unsigned len)
++{
++}
++
+ static struct console ttynull_console = {
+ 	.name = "ttynull",
+ 	.device = ttynull_device,
++	.write = ttynull_console_write,
++	.flags = CON_PRINTBUFFER | CON_ANYTIME,
+ };
+ 
+ static int __init ttynull_init(void)
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index 59892a31c..0e5cc6ced 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -70,6 +70,7 @@
+ #include <linux/virtio_config.h>
+ #include <uapi/linux/virtio_mmio.h>
+ #include <linux/virtio_ring.h>
++#include <asm/pkernel.h>
+ 
+ 
+ 
+@@ -487,6 +488,18 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
+ 	return ERR_PTR(err);
+ }
+ 
++static void pk_handle_virtio_event(void *arg)
++{
++	struct virtio_mmio_device *vm_dev = arg;
++	struct virtio_mmio_vq_info *info;
++	unsigned long flags;
++
++	spin_lock_irqsave(&vm_dev->lock, flags);
++	list_for_each_entry(info, &vm_dev->virtqueues, node)
++		vring_interrupt(0, info->vq);
++	spin_unlock_irqrestore(&vm_dev->lock, flags);
++}
++
+ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 		       struct virtqueue *vqs[],
+ 		       vq_callback_t *callbacks[],
+@@ -501,10 +514,16 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 	if (irq < 0)
+ 		return irq;
+ 
++	if (pk_in_cntr()) {
++		pk_register_event_handler(
++			PK_EVENT_VIRTIO_INTR, pk_handle_virtio_event, vm_dev);
++		goto skip_request_irq;
++	}
+ 	err = request_irq(irq, vm_interrupt, IRQF_SHARED,
+ 			dev_name(&vdev->dev), vm_dev);
+ 	if (err)
+ 		return err;
++skip_request_irq:
+ 
+ 	if (of_property_read_bool(vm_dev->pdev->dev.of_node, "wakeup-source"))
+ 		enable_irq_wake(irq);
+diff --git a/init/main.c b/init/main.c
+index e24b0780f..8e58a3c87 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -105,6 +105,7 @@
+ #include <asm/setup.h>
+ #include <asm/sections.h>
+ #include <asm/cacheflush.h>
++#include <asm/pkernel.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/initcall.h>
+@@ -876,6 +877,8 @@ void start_kernel(void)
+ 	char *command_line;
+ 	char *after_dashes;
+ 
++	pk_init();
++
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
+@@ -1463,6 +1466,8 @@ static int __ref kernel_init(void *unused)
+ 
+ 	do_sysctl_args();
+ 
++	pk_init_late();
++
+ 	if (ramdisk_execute_command) {
+ 		ret = run_init_process(ramdisk_execute_command);
+ 		if (!ret)
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index b481c48a3..8b198e45a 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -12,6 +12,7 @@
+ #include <linux/set_memory.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
++#include <asm/pkernel.h>
+ 
+ static struct gen_pool *atomic_pool_dma __ro_after_init;
+ static unsigned long pool_size_dma;
+@@ -209,7 +210,10 @@ static int __init dma_atomic_pool_init(void)
+ 		if (!atomic_pool_dma)
+ 			ret = -ENOMEM;
+ 	}
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32)) {
++	if (pk_in_cntr()) {
++		atomic_pool_dma32 = NULL;
++		ret = -ENOMEM;
++	} else if (IS_ENABLED(CONFIG_ZONE_DMA32)) {
+ 		atomic_pool_dma32 = __dma_atomic_pool_init(atomic_pool_size,
+ 						GFP_KERNEL | GFP_DMA32);
+ 		if (!atomic_pool_dma32)
+diff --git a/kernel/exit.c b/kernel/exit.c
+index aedc0832c..72a116f6f 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -73,6 +73,7 @@
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+ #include <asm/mmu_context.h>
++#include <asm/pkernel.h>
+ 
+ #include "exit.h"
+ 
+@@ -834,9 +835,12 @@ void __noreturn do_exit(long code)
+ 		 * If the last thread of global init has exited, panic
+ 		 * immediately to get a useable coredump.
+ 		 */
+-		if (unlikely(is_global_init(tsk)))
++		if (unlikely(is_global_init(tsk))) {
++			if (pk_in_cntr())
++				pk_rkcall0(PK_RKCALL_SHUTDOWN);
+ 			panic("Attempted to kill init! exitcode=0x%08x\n",
+ 				tsk->signal->group_exit_code ?: (int)code);
++		}
+ 
+ #ifdef CONFIG_POSIX_TIMERS
+ 		hrtimer_cancel(&tsk->signal->real_timer);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index f2444b581..a46e229ab 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -50,6 +50,7 @@
+ 
+ #include <linux/uaccess.h>
+ #include <asm/sections.h>
++#include <asm/pkernel.h>
+ 
+ #include <trace/events/initcall.h>
+ #define CREATE_TRACE_POINTS
+@@ -2898,7 +2899,10 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
+ 	stop_critical_timings();
+ 
+ 	/* Write everything out to the hardware. */
+-	con->write(con, outbuf, pmsg.outbuf_len);
++	if (pk_in_cntr())
++		pk_rkcall2(PK_RKCALL_PRINT, __pa(outbuf), pmsg.outbuf_len);
++	else
++		con->write(con, outbuf, pmsg.outbuf_len);
+ 
+ 	start_critical_timings();
+ 

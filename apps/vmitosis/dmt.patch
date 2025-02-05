@@ -1,0 +1,195 @@
+diff --git a/btree/btree.c b/btree/btree.c
+index 0db605c..437ba93 100644
+--- a/btree/btree.c
++++ b/btree/btree.c
+@@ -58,18 +58,10 @@
+ #define CONFIG_SHM_FILE_NAME "/tmp/alloctest-bench"
+ 
+ 
+-#ifdef _OPENMP
+-///< the number of elements in the tree
+-//#define NELEMENTS (8UL << 30)
+-#define NELEMENTS   (3400UL << 20)
+-///< the number of lookups
+-#define NLOOKUP 2000000000UL
+-#else
+ ///< the number of elements in the tree
+-#define NELEMENTS (3400UL << 20)
++#define NELEMENTS 10000000
+ ///< the number of lookups
+-#define NLOOKUP 50000000
+-#endif
++#define NLOOKUP 1000000
+ 
+ 
+ 
+@@ -1537,9 +1529,13 @@ int real_main(int argc, char ** argv) {
+ 	char * input_file;
+ 	FILE * fp;
+ 	node * root;
++	long nlookup = NLOOKUP;
++
++	if (argc == 2)
++		nlookup = atoi(argv[1]) * 1000000;
+ 
+ 	printf("BTree Elements: %zuM\n", NELEMENTS/1000000);
+-	printf("BTree #Lookups: %zuM\n", NLOOKUP/1000000);
++	printf("BTree #Lookups: %zuM\n", nlookup/1000000);
+ 	root = NULL;
+ 	verbose_output = false;
+ 
+@@ -1575,7 +1571,7 @@ int real_main(int argc, char ** argv) {
+ 		exit(-1);
+ 	}
+ 
+-	usleep(250);
++	// usleep(250);
+ 
+ 
+ 	uint64_t sum = 0;
+@@ -1585,7 +1581,7 @@ int real_main(int argc, char ** argv) {
+ #ifdef _OPENMP
+ #pragma omp parallel for
+ #endif
+-	for (size_t i = 0; i < NLOOKUP; i++) {
++	for (size_t i = 0; i < nlookup; i++) {
+ 		size_t rdn = redisLrand48();
+ 		record * r = find(root, rdn % NELEMENTS, false, NULL);
+ 		if (r) {
+diff --git a/common/main-st.c b/common/main-st.c
+index f40da69..c517997 100644
+--- a/common/main-st.c
++++ b/common/main-st.c
+@@ -104,7 +104,7 @@ void signalhandler( int sig ) {
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+         
+     fprintf(opt_file_out, "</benchmark>\n");
+     
+@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+ #endif
+ 
+     /* start with output */
+@@ -308,13 +308,16 @@ int main(int argc, char *argv[])
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+ 
+     gettimeofday(&tend, NULL);
+-    printf("Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
+-                            (tend.tv_usec - tstart.tv_usec) / 1000);
+-    fprintf(opt_file_out, "Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
+-                            (tend.tv_usec - tstart.tv_usec) / 1000);
++    // printf("Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
++    //                         (tend.tv_usec - tstart.tv_usec) / 1000);
++    // fprintf(opt_file_out, "Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
++    //                         (tend.tv_usec - tstart.tv_usec) / 1000);
++    printf("Took: %f\n",
++           (tend.tv_sec + tend.tv_usec / 1000000.0) -
++           (tstart.tv_sec + tstart.tv_usec / 1000000.0));
+         
+     fprintf(opt_file_out, "</benchmark>\n");
+     return 0;
+diff --git a/common/main-mt.c b/common/main-mt.c
+index 28c08cd..0515b4e 100644
+--- a/common/main-mt.c
++++ b/common/main-mt.c
+@@ -111,7 +111,7 @@ void signalhandler( int sig ) {
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+ 
+     fprintf(opt_file_out, "</benchmark>\n");
+ 
+@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+ #endif
+ 
+     /* start with output */
+@@ -279,13 +279,16 @@ int main(int argc, char *argv[])
+         exit(-1);
+     }
+ 
+-    usleep(250);
++    // usleep(250);
+ 
+     gettimeofday(&tend, NULL);
+-    printf("Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
+-                            (tend.tv_usec - tstart.tv_usec) / 1000);
+-    fprintf(opt_file_out, "Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
+-                            (tend.tv_usec - tstart.tv_usec) / 1000);
++    // printf("Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
++    //                         (tend.tv_usec - tstart.tv_usec) / 1000);
++    // fprintf(opt_file_out, "Took: %zu.%03zu\n", tend.tv_sec - tstart.tv_sec, 
++    //                         (tend.tv_usec - tstart.tv_usec) / 1000);
++    printf("Took: %f\n",
++           (tend.tv_sec + tend.tv_usec / 1000000.0) -
++           (tstart.tv_sec + tstart.tv_usec / 1000000.0));
+ 
+     fprintf(opt_file_out, "</benchmark>\n");
+     fflush(opt_file_out);
+diff --git a/redis/src/server.c b/redis/src/server.c
+index 9c8ce69..3949fc5 100644
+--- a/redis/src/server.c
++++ b/redis/src/server.c
+@@ -3720,8 +3720,8 @@ int redisIsSupervised(int mode) {
+ #define ITER_MAX (50000000000UL)
+ 
+ #else
+-#define KEY_MAX (1UL << 30)
+-#define ITER_MAX (60000000UL)
++#define KEY_MAX (1UL << 20)
++#define ITER_MAX (10000000UL)
+ #endif
+ 
+ 
+diff --git a/xsbench/src/Simulation.c b/xsbench/src/Simulation.c
+index bf27f29..74c4475 100644
+--- a/xsbench/src/Simulation.c
++++ b/xsbench/src/Simulation.c
+@@ -34,10 +34,10 @@ void run_event_based_simulation(Inputs in, GridPoint * energy_grid, NuclideGridP
+ 		for( int i = 0; i < in.lookups; i++ )
+ 		{
+ 			// Status text
+-			if( INFO && mype == 0 && thread == 0 && i % 2000 == 0 )
+-				printf("\rCalculating XS's... (%.0lf%% completed)",
+-						(i / ( (double) in.lookups / (double) in.nthreads ))
+-						/ (double) in.nthreads * 100.0);
++			// if( INFO && mype == 0 && thread == 0 && i % 2000 == 0 )
++			// 	printf("\rCalculating XS's... (%.0lf%% completed)",
++			// 			(i / ( (double) in.lookups / (double) in.nthreads ))
++			// 			/ (double) in.nthreads * 100.0);
+ 			// Particles are seeded by their particle ID
+ 			unsigned long seed = ((unsigned long) i+ (unsigned long)1)* (unsigned long) 13371337;
+ 
+@@ -145,10 +145,10 @@ void run_history_based_simulation(Inputs in, GridPoint * energy_grid, NuclideGri
+ 			int mat      = pick_mat(&seed); 
+ 
+ 			// Status text
+-			if( INFO && mype == 0 && thread == 0 && p % 100 == 0 )
+-				printf("\rCalculating XS's... (%.0lf%% completed)",
+-						(p / ( (double)in.particles / (double) in.nthreads ))
+-						/ (double) in.nthreads * 100.0);
++			// if( INFO && mype == 0 && thread == 0 && p % 100 == 0 )
++			// 	printf("\rCalculating XS's... (%.0lf%% completed)",
++			// 			(p / ( (double)in.particles / (double) in.nthreads ))
++			// 			/ (double) in.nthreads * 100.0);
+ 
+ 			// XS Lookup Loop
+ 			// This loop is dependent!

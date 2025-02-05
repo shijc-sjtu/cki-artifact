@@ -1,0 +1,69 @@
+#!/usr/bin/expect -f
+
+set kernel [lindex $argv 0]
+set runtime [lindex $argv 1]
+set launcher [lindex $argv 2]
+set qemu [lindex $argv 3]
+set password [lindex $argv 4]
+
+set timeout 300
+
+log_file -noappend log/run_fig14_$runtime.log
+
+proc boot {} {
+    global spawn_id
+    global kernel
+    global password
+    global qemu
+
+    spawn bash -c "QEMU=$qemu ./scripts/simulate.sh $kernel"
+
+    expect "password for"
+    send "$password\n"
+
+    expect "login: "
+    send "root\n"
+
+    expect "Password: "
+    send "123\n"
+
+    expect "root@ubuntu"
+    send "cd split-kernel/tender\n"
+
+    expect "root@ubuntu"
+}
+
+proc shutdown {} {
+    global spawn_id
+
+    send "\x01"
+    send "x"
+    expect "QEMU: Terminated"
+    sleep 2
+}
+
+proc loop {command times} {
+    global spawn_id
+
+    for {set x 0} {$x<$times} {incr x} {
+        send $command
+        expect {
+            "kvm run failed Input/output error" {
+                incr x -1
+                shutdown
+                boot
+            }
+            "failed to create shim task" {
+                incr x -1
+                expect "root@ubuntu"
+            }
+            "root@ubuntu" {
+                # Do nothing
+            }
+        }
+    }
+}
+
+boot
+loop "$launcher sqlite\n" 5
+shutdown

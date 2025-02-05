@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+TMPFS=/tmp/
+
+run() {
+    /bin/sqlite-bench --db=$TMPFS --benchmarks=$1
+    rm $TMPFS/dbbench*
+}
+
+run fillseq
+run fillseq
+run fillseqbatch
+run fillrandom
+run fillrandbatch
+run overwritebatch
+run readseq
+run readrandom

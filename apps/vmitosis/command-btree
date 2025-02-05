@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/bin/bench_btree_st -- ${1:-2}

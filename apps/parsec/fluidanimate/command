@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/time /bin/parsec/fluidanimate 1 5 /var/parsec/fluidanimate/in_300K.fluid /tmp/out.fluid
