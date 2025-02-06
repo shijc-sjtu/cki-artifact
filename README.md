@@ -22,7 +22,7 @@ Memcached and Redis are evaluated using memtier\_benchmark, which can be fetched
 
 ## Set-up
 
-Step 1-4 is required for all experiments:
+Steps 1-4 are required for all experiments:
 
 1. Download the image tarball from [link](https://www.dropbox.com/scl/fo/iedumaw4y9fg7tlx0ogde/ANYVteAdU3NT6ND-5PnTSC8?rlkey=x64edtal07735983yl6ah4zjt&st=6d0ktjv4&dl=0) and extract the images (`ubuntu-22.04.qcow2`, `bzImage-cki` and `bzImage-pvm`) into the `prebulit` directory.
 
@@ -39,12 +39,12 @@ make -j$(nproc)
 
 4. Configure the password in `config.json` (`password` field), as some evaluation steps require superuser permissions (starting VM and running network configuration commands).
 
-Step 4-6 is only required for experiment *E3*.
+Steps 5-6 are required only for experiment *E3*:
 
 5. Create a tap device on the host kernel with the following instruction, with `eth0` replaced with the name of your physical network card.
 
 ```Bash
-./scripts/init_tap.sh eth0
+sudo ./scripts/init_tap.sh eth0
 ```
 
 6. Configure a static IP for the secure container in your local network in `config.json` (`container_ip` field).
@@ -76,17 +76,17 @@ Saving file "/tmp/out.fluid"...
 
 ## Major Claims 
 
-* *C1*: Compared with HVM-NST and PVM, CKI reduces the latencies of page-fault-intensive applications (from PARSEC/vmitosis) by up to 70% and 44%, respectively. This is proven by experiment *E1* whose results are reported in Figure 12.
+Claim *C1*: Compared with HVM-NST and PVM, CKI reduces the latencies of page-fault-intensive applications (from PARSEC/vmitosis) by up to 70% and 44%, respectively. This is proven by experiment *E1* whose results are reported in Figure 12.
 
-* *C2*: Compared with PVM, CKI increases the throughput of sqlite benchmark by up to 24%. This is proven by experiment *E2* whose results are reported in Figure 14.
+Claim *C2*: Compared with PVM, CKI increases the throughput of sqlite benchmark by up to 24%. This is proven by experiment *E2* whose results are reported in Figure 14.
 
-* *C3*: Compared with HVM-NST, CKI-NST obtains 6.8x throughput for memcached and 2.0x throughput for Redis. This is proven by experiment *E3* whose results are reported in Figure 16.
+Claim *C3*: Compared with HVM-NST, CKI-NST obtains 6.8x throughput for memcached and 2.0x throughput for Redis. This is proven by experiment *E3* whose results are reported in Figure 16.
 
 ## Experiments
 
-Experiment *E1* [15 compute-minutes]: Run script `scripts/run_fig12.sh`, which executes the page-fault-intensive applications using HVM-NST, PVM, and CKI. The latency results will be displayed in `plots/fig12.pdf`.
+Experiment *E1* [20 compute-minutes]: Run script `scripts/run_fig12.sh`, which executes the page-fault-intensive applications using HVM-NST, PVM, and CKI. The latency results will be displayed in `plots/fig12.pdf`.
 
-Experiment *E2* [15 compute-minutes]: Run script `scripts/run_fig14.sh`, which executes the sqlite benchmark using HVM, PVM, and CKI. The throughput results will be displayed in `plots/fig14.pdf`.
+Experiment *E2* [20 compute-minutes]: Run script `scripts/run_fig14.sh`, which executes the sqlite benchmark using HVM, PVM, and CKI. The throughput results will be displayed in `plots/fig14.pdf`.
 
 Experiment *E3* [40 compute-minutes]: Run script `scripts/run_fig16.sh`, which evaluates the throughput of Redis and memcached using HVM, PVM, and CKI with different number of clients. The results will be displayed in `plots/fig16.pdf`.
 

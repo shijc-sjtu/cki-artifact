@@ -10,6 +10,19 @@ index 5a83da703..72681220d 100644
 +
  # for cleaning
  subdir- += boot tools
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index de6469dff..1e1743aa9 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -601,6 +601,8 @@ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ 	/* Restore RDI. */
+ 	popq	%rdi
+ 	swapgs
++	cmpq	$0, pk_cntr_flag
++	jnz		pkm_iret
+ 	jmp	.Lnative_iret
+ 
+ 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
 index 40ad1425f..389c1a594 100644
 --- a/arch/x86/events/core.c
@@ -575,10 +588,10 @@ index 000000000..9c1f885d6
 +void __pkm_empty_call(void);
 diff --git a/arch/x86/pkernel/pkernel-asm.S b/arch/x86/pkernel/pkernel-asm.S
 new file mode 100644
-index 000000000..973586490
+index 000000000..ddd773d57
 --- /dev/null
 +++ b/arch/x86/pkernel/pkernel-asm.S
-@@ -0,0 +1,264 @@
+@@ -0,0 +1,289 @@
 +#include <linux/linkage.h>
 +#include <asm/pkernel.h>
 +#include <asm/frame.h>
@@ -801,6 +814,31 @@ index 000000000..973586490
 +	popq		%rax
 +	ret
 +SYM_FUNC_END(__pk_rkcall_noevent)
++
++// Emulate the performance overhead
++SYM_FUNC_START(pkm_iret)
++
++	pushq	%rdx
++	pushq	%rcx
++	pushq	%rax
++
++	movl	$0, %edx
++	movl	$0, %ecx
++	movl	$0x55555550, %eax
++	wrpkru
++
++	movl	$0, %edx
++	movl	$0, %ecx
++	movl	$0x55555554, %eax
++	wrpkru
++
++	popq	%rax
++	popq	%rcx
++	popq	%rdx
++
++	iretq
++SYM_FUNC_END(pkm_iret)
++
 +
 +SYM_FUNC_START(pk_mcall_nopkru)
 +	movq	%rdi, %rax

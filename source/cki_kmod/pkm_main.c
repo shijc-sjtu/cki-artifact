@@ -199,7 +199,7 @@ static struct boot_params *create_boot_params(struct pkm_cntr *cntr,
                 goto out_free_boot_params;
         }
 
-        snprintf(cmdline, COMMAND_LINE_SIZE, "initrd=0x%llx,0x%lx rdinit=/bin/init ip=%s subcmd=%s", page_to_phys(cntr->initrd_hpage), args->initrd_size, args->ip, args->subcmd);
+        snprintf(cmdline, COMMAND_LINE_SIZE, "initrd=0x%llx,0x%lx rdinit=/bin/init ctrip=%s subcmd=%s", page_to_phys(cntr->initrd_hpage), args->initrd_size, args->ip, args->subcmd);
 	strlcat(cmdline, " norandmaps nokaslr pci=off console=null acpi=off rodata=off mce=off nmi_watchdog=0 nowatchdog nosoftlockup nopcid virtio_mmio.device=1K@0x10000:48", COMMAND_LINE_SIZE);
         boot_params->hdr.cmd_line_ptr = (unsigned int)virt_to_phys(cmdline);
 	boot_params->ext_cmd_line_ptr = (unsigned int)(virt_to_phys(cmdline) >> 32);
@@ -728,7 +728,7 @@ static int virtio_wakeup(wait_queue_entry_t *wait, unsigned mode, int sync, void
         __poll_t flags = key_to_poll(key);
 
         if (flags & EPOLLIN) {
-                int ret;
+                // int ret;
                 __sync_fetch_and_add(&cntr->cpus[0].virtio_event_cnt, 1);
                 // ret = rcuwait_wake_up(&cntr->cpus[0].wait);
         }
