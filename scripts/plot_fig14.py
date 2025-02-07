@@ -48,10 +48,24 @@ names = [
 
 def collect(log_file):
     data = []
+    data_tmp = []
+    cur = 0
+    expected_names = ["fillseq"] + names
     with open(log_file) as file:
         for line in file.readlines():
-            if line.split() and line.split()[0] in names:
-                data.append(float(line.split()[2]))
+            if not line.split():
+                continue
+            elif line.split()[0] == expected_names[cur]:
+                cur += 1
+                data_tmp.append(float(line.split()[2]))
+            elif line.split()[0] == expected_names[0]:
+                cur = 1
+                data_tmp = [float(line.split()[2])]
+            if len(data_tmp) == 8:
+                data += data_tmp
+                cur = 0
+                data_tmp = []
+    assert(len(data) == 40)
     avg_data = []
     for i in range(1, 8):
         avg_data.append(sum(data[i:40:8]) / 5)

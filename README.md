@@ -24,7 +24,7 @@ Memcached and Redis are evaluated using memtier\_benchmark, which can be fetched
 
 Steps 1-4 are required for all experiments:
 
-1. Download the image tarball from [link](https://www.dropbox.com/scl/fo/iedumaw4y9fg7tlx0ogde/ANYVteAdU3NT6ND-5PnTSC8?rlkey=x64edtal07735983yl6ah4zjt&st=6d0ktjv4&dl=0) and extract the images (`ubuntu-22.04.qcow2`, `bzImage-cki` and `bzImage-pvm`) into the `prebulit` directory.
+1. Download the prebuilt images (`ubuntu-22.04.qcow2`, `bzImage-cki` and `bzImage-pvm`) from [link](https://www.dropbox.com/scl/fo/iedumaw4y9fg7tlx0ogde/ANYVteAdU3NT6ND-5PnTSC8?rlkey=x64edtal07735983yl6ah4zjt&st=6d0ktjv4&dl=0) and save the images in the `prebulit` directory.
 
 2. Download and build QEMU v6.2.0.
 

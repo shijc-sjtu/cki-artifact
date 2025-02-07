@@ -42,13 +42,16 @@ proc shutdown {} {
     sleep 2
 }
 
-proc loop {command times} {
+proc loop {command done times} {
     global spawn_id
 
     for {set x 0} {$x<$times} {incr x} {
         send $command
         expect {
-            "kvm run failed Input/output error" {
+            $done {
+                expect "root@ubuntu"
+            }
+            "root@ubuntu" {
                 incr x -1
                 shutdown
                 boot
@@ -57,18 +60,25 @@ proc loop {command times} {
                 incr x -1
                 expect "root@ubuntu"
             }
-            "root@ubuntu" {
-                # Do nothing
+            "kvm run failed Input/output error" {
+                incr x -1
+                shutdown
+                boot
+            }
+            timeout {
+                incr x -1
+                shutdown
+                boot
             }
         }
     }
 }
 
 boot
-loop "$launcher dmt btree 1\n" 5
-loop "$launcher dmt xsbench 50000\n" 5
-loop "$launcher parsec/canneal\n" 5
-loop "$launcher parsec/dedup\n" 5
-loop "$launcher parsec/fluidanimate\n" 5
-loop "$launcher parsec/freqmine\n" 5
+loop "$launcher dmt btree 1\n" "</benchmark>" 5
+loop "$launcher dmt xsbench 50000\n" "</benchmark>" 5
+loop "$launcher parsec/canneal\n" "Final routing is" 5
+loop "$launcher parsec/dedup\n" "Output overhead" 5
+loop "$launcher parsec/fluidanimate\n" "Saving file" 5
+loop "$launcher parsec/freqmine\n" "the data preparation cost" 5
 shutdown

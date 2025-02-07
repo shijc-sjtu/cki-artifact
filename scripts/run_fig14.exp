@@ -42,13 +42,16 @@ proc shutdown {} {
     sleep 2
 }
 
-proc loop {command times} {
+proc loop {command done times} {
     global spawn_id
 
     for {set x 0} {$x<$times} {incr x} {
         send $command
         expect {
-            "kvm run failed Input/output error" {
+            $done {
+                expect "root@ubuntu"
+            }
+            "root@ubuntu" {
                 incr x -1
                 shutdown
                 boot
@@ -57,13 +60,20 @@ proc loop {command times} {
                 incr x -1
                 expect "root@ubuntu"
             }
-            "root@ubuntu" {
-                # Do nothing
+            "kvm run failed Input/output error" {
+                incr x -1
+                shutdown
+                boot
+            }
+            timeout {
+                incr x -1
+                shutdown
+                boot
             }
         }
     }
 }
 
 boot
-loop "$launcher sqlite\n" 5
+loop "$launcher sqlite\n" "readrandom" 5
 shutdown
