@@ -39,7 +39,7 @@ make -j$(nproc)
 
 4. Configure the password in `config.json` (`password` field), as some evaluation steps require superuser permissions (starting VM and running network configuration commands).
 
-Steps 5-6 are required only for experiment *E3*:
+Steps 5-7 are only required for experiment *E3*:
 
 5. Create a tap device on the host kernel with the following instruction, with `eth0` replaced with the name of your physical network card.
 
