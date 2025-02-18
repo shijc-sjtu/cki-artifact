@@ -24,6 +24,6 @@ echo "6" > /proc/sys/kernel/printk
 subcmd=${2:-default}
 [[ $3 ]] && subcmd=${subcmd},$3
 [[ $4 ]] && subcmd=${subcmd},$4
-./launch.sh $1 $subcmd $IP
+./cki_launcher.sh $1 $subcmd $IP
 
 echo "4" > /proc/sys/kernel/printk

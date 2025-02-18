@@ -11,4 +11,4 @@ ip="${3:-192.168.12.240/24}"
 tap="tap-pk1"
 
 
-./tender ../vmlinux ../vmlinux.seg ../initramfs/${app}.cpio.gz $ip $tap $subcmd
+./cki_launcher ../vmlinux ../vmlinux.seg ../initramfs/${app}.cpio.gz $ip $tap $subcmd
