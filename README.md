@@ -93,6 +93,34 @@ Experiment *E3* [40 compute-minutes]: Run script `scripts/run_fig16.sh`, which e
 
 Before running these scripts, the `log` and `plots` directories contain the script output and figures generated on our local machine.
 
+## Custom Application
+
+To run a custom application with a CKI container, please follow these steps:
+
+1. Create a new sub-directory under the `apps` directory and place the Dockerfile and application code under this sub-directory. `apps/hello` is a simple example.
+
+2. Run the script `scripts/build_app.sh` with the application name (sub-directory name). This script builds the container image and installs it into the VM image at `/root/split-kernel/initramfs`.
+
+```Bash
+# Build the container image
+scripts/build_app.sh hello
+```
+
+3. Start the VM using the command: `scripts/simulate.sh cki tap`. Launch the CKI container in the VM with the following commands (replace `hello` with the application name).
+
+```Bash
+# Run a CKI container
+cd /root/split-kernel/tender
+./runpk_test.sh hello
+```
+
+4. If the custom application is a network server, configure its IP address with `IP` environment variable. When connecting to the container, first flush the ARP table (`sudo ip -s -s neigh flush all`) as the MAC address in the container is random.
+
+```Bash
+# Run a CKI container with specfic IP address
+IP=192.168.12.240/24 ./runpk_test.sh hello
+```
+
 ## Source Code
 
 `source/cki_kernel`: CKI guest/host kernel and KSM.

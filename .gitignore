@@ -2,3 +2,4 @@ prebuilt/bzImage*
 prebuilt/*.qcow2
 __pycache__
 scripts/upload_prebuilt*
+.rootfs
