@@ -1,6 +1,7 @@
 # CKI Artifact
 
-This repository contains the artifact of the paper "A Hardware-Software Co-Design for Efficient Secure Containers".
+This repository contains the artifact of the EuroSys '25 paper "A Hardware-Software Co-Design for Efficient Secure Containers". Author: Jiacheng Shi, Yang Yu, Jinyu Gu, and Yubin Xia (Shanghai Jiao Tong University).
+
 The artifact includes the source code of our prototype system (`source`), the scripts for running experiments in the paper (`scripts`), and the applications used for the experiments (`apps`).
 Additionally, the artifact also includes a prebuilt VM image for running the experiments with a nested virtualization setting (containers running inside the VM).
 
