@@ -1,19 +1,20 @@
 #!/usr/bin/expect -f
 
-set kernel [lindex $argv 0]
-set runtime [lindex $argv 1]
-set launcher [lindex $argv 2]
-set qemu [lindex $argv 3]
-set password [lindex $argv 4]
-set container_ip [lindex $argv 5]
-set server_ip [lindex $argv 6]
-set app [lindex $argv 7]
+set kernel [lindex $argv 0]         # VM kernel version (cki/pvm)
+set runtime [lindex $argv 1]        # Container runtime (cki/pvm/hvm)
+set launcher [lindex $argv 2]       # Container launcher script
+set qemu [lindex $argv 3]           # QEMU path
+set password [lindex $argv 4]       # Host OS sudo password
+set container_ip [lindex $argv 5]   # Container IP (with prefix length)
+set server_ip [lindex $argv 6]      # Server IP (Container IP without prefix length)
+set app [lindex $argv 7]            # Applicatin (redis/memcached)
 
 set timeout 300
 
+# Log all output in a file
 log_file -noappend log/run_fig16_${runtime}_${app}.log
 
-
+# Launch the VM, log in, and then start the K/V store container
 proc __start_server {} {
     global app
     global kernel
@@ -22,26 +23,32 @@ proc __start_server {} {
     global launcher
     global qemu
 
+    # Launch the QEMU VM with a tap device
     spawn bash -c "QEMU=$qemu ./scripts/simulate.sh $kernel tap"
 
+    # QEMU/KVM requires sudo password
     expect "password for"
     send "$password\n"
 
+    # Log in as the root user in the VM
     expect "login: "
     send "root\n"
 
     expect "Password: "
     send "123\n"
 
+    # Enter the directory for launcher scripts
     expect "root@ubuntu"
     send "cd split-kernel/tender\n"
 
+    # Launch the K/V store container with the specified IP
     expect "root@ubuntu"
     send "IP=$container_ip $launcher $app\n"
 
     return $spawn_id
 }
 
+# Shut down the VM by sending Ctrl-A + X 
 proc shutdown_qemu {spawn_id} {
     send "\x01"
     send "x"
@@ -49,15 +56,19 @@ proc shutdown_qemu {spawn_id} {
     sleep 2
 }
 
+# Launch the K/V store container and retry if it fails
 proc start_server {} {
     set started 0
     while {$started != 1} {
+        # Launch the VM and the K/V store container
         set spawn_id [__start_server]
         expect {
+            # Container is started
             "Run /bin/init as init process" {
                 sleep 1
                 set started 1
             }
+            # VM crashes (nested HVM), retry
             "kvm run failed Input/output error" {
                 shutdown_qemu $spawn_id
             }
@@ -66,6 +77,8 @@ proc start_server {} {
     return $spawn_id
 }
 
+# Run memtier_benchmark
+# clients: number of clients
 proc run_benchmark {clients} {
     global password
     global server_ip
@@ -74,27 +87,34 @@ proc run_benchmark {clients} {
     spawn docker rm -f memtier_benchmark
     expect eof
 
+    # Run memtier_benchmark
     spawn bash -c "./scripts/run_memtier_benchmark.sh $app $clients $server_ip\n"
 
     expect "password for"
     send "$password\n"
 
     expect {
+        # Benchmark is done
         "Benchmark done" {
             return 1
         }
+        # Connection fails
         "0.00KB/sec" {
             return 0
         }
     }
 }
 
+# Launch the VM and the K/V store container
 set qemu_id [start_server]
+# Run memtier_benchmark with different number of clients
 for {set x 1} {$x<=12} {incr x} {
     if {[run_benchmark $x] != 1} {
+        # If the benchmark fails, restart the K/V store and retry
         incr x -1
         shutdown_qemu $qemu_id
         set qemu_id [start_server]
     }
 }
+# Shut down the VM
 shutdown_qemu $qemu_id

@@ -1,38 +1,45 @@
 #!/usr/bin/expect -f
 
-set kernel [lindex $argv 0]
-set runtime [lindex $argv 1]
-set launcher [lindex $argv 2]
-set qemu [lindex $argv 3]
-set password [lindex $argv 4]
+set kernel [lindex $argv 0]     # VM kernel version (cki/pvm)
+set runtime [lindex $argv 1]    # Container runtime (cki/pvm/hvm)
+set launcher [lindex $argv 2]   # Container launcher script
+set qemu [lindex $argv 3]       # QEMU path
+set password [lindex $argv 4]   # Host OS sudo password
 
 set timeout 60
 
+# Log all output in a file
 log_file -noappend log/run_fig12_$runtime.log
 
+# Launch the VM and log in
 proc boot {} {
     global spawn_id
     global kernel
     global password
     global qemu
 
+    # Launch the QEMU VM without a tap device
     spawn bash -c "QEMU=$qemu ./scripts/simulate.sh $kernel"
 
+    # QEMU/KVM requires sudo password
     expect "password for"
     send "$password\n"
 
+    # Log in as the root user in the VM
     expect "login: "
     send "root\n"
 
     expect "Password: "
     send "123\n"
 
+    # Enter the directory for launcher scripts
     expect "root@ubuntu"
     send "cd split-kernel/tender\n"
 
     expect "root@ubuntu"
 }
 
+# Shut down the VM by sending Ctrl-A + X 
 proc shutdown {} {
     global spawn_id
 
@@ -42,29 +49,37 @@ proc shutdown {} {
     sleep 2
 }
 
+# Run an application for mutiple times
+# done: the last output of the application
+# times: execution count
 proc loop {command done times} {
     global spawn_id
 
     for {set x 0} {$x<$times} {incr x} {
-        send $command
+        send $command # launch the container
         expect {
+            # Application is done
             $done {
                 expect "root@ubuntu"
             }
+            # Container exits before application is done, retry
             "root@ubuntu" {
                 incr x -1
                 shutdown
                 boot
             }
+            # Fail to start a Kata Container, retry
             "failed to create shim task" {
                 incr x -1
                 expect "root@ubuntu"
             }
+            # VM crashes (nested HVM), retry
             "kvm run failed Input/output error" {
                 incr x -1
                 shutdown
                 boot
             }
+            # Timeout, retry
             timeout {
                 incr x -1
                 shutdown
@@ -74,6 +89,7 @@ proc loop {command done times} {
     }
 }
 
+# Launch the VM, run each application for 5 times, and then shut down the VM 
 boot
 loop "$launcher dmt btree 1\n" "</benchmark>" 5
 loop "$launcher dmt xsbench 50000\n" "</benchmark>" 5
