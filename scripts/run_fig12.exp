@@ -1,10 +1,16 @@
 #!/usr/bin/expect -f
 
-set kernel [lindex $argv 0]     # VM kernel version (cki/pvm)
-set runtime [lindex $argv 1]    # Container runtime (cki/pvm/hvm)
-set launcher [lindex $argv 2]   # Container launcher script
-set qemu [lindex $argv 3]       # QEMU path
-set password [lindex $argv 4]   # Host OS sudo password
+# Script paramters:
+# kernel: VM kernel version (cki/pvm)
+# runtime: container runtime (cki/pvm/hvm)
+# launcher: container launcher script
+# qemu: QEMU path
+# password: host OS sudo password
+set kernel [lindex $argv 0]
+set runtime [lindex $argv 1]
+set launcher [lindex $argv 2]
+set qemu [lindex $argv 3]
+set password [lindex $argv 4]
 
 set timeout 60
 
@@ -56,7 +62,8 @@ proc loop {command done times} {
     global spawn_id
 
     for {set x 0} {$x<$times} {incr x} {
-        send $command # launch the container
+        # launch the container
+        send $command
         expect {
             # Application is done
             $done {

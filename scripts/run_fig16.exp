@@ -1,13 +1,22 @@
 #!/usr/bin/expect -f
 
-set kernel [lindex $argv 0]         # VM kernel version (cki/pvm)
-set runtime [lindex $argv 1]        # Container runtime (cki/pvm/hvm)
-set launcher [lindex $argv 2]       # Container launcher script
-set qemu [lindex $argv 3]           # QEMU path
-set password [lindex $argv 4]       # Host OS sudo password
-set container_ip [lindex $argv 5]   # Container IP (with prefix length)
-set server_ip [lindex $argv 6]      # Server IP (Container IP without prefix length)
-set app [lindex $argv 7]            # Applicatin (redis/memcached)
+# Script paramters:
+# kernel: VM kernel version (cki/pvm)
+# runtime: container runtime (cki/pvm/hvm)
+# launcher: container launcher script
+# qemu: QEMU path
+# password: host OS sudo password
+# container_ip: container IP (with prefix length)
+# server_ip: server IP (container IP without prefix length)
+# app: application (redis/memcached)
+set kernel [lindex $argv 0]
+set runtime [lindex $argv 1]
+set launcher [lindex $argv 2]
+set qemu [lindex $argv 3]
+set password [lindex $argv 4]
+set container_ip [lindex $argv 5]
+set server_ip [lindex $argv 6]
+set app [lindex $argv 7]
 
 set timeout 300
 
