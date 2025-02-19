@@ -4,7 +4,7 @@ APP=${1:-redis}
 CLIENTS=${2:-1}
 SERVER=${3:-192.168.12.240}
 
-# Flush the ARP table
+# Flush the ARP cache
 sudo ip -s -s neigh flush all
 
 if [[ $APP == "redis" ]]; then

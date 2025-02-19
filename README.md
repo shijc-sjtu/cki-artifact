@@ -114,7 +114,7 @@ cd /root/split-kernel/tender
 ./runpk_test.sh hello
 ```
 
-4. If the custom application is a network server, configure its IP address with `IP` environment variable. When connecting to the container, first flush the ARP table using `sudo ip -s -s neigh flush all`.
+4. If the custom application is a network server, configure its IP address with `IP` environment variable. When connecting to the container, first flush the ARP cache using `sudo ip -s -s neigh flush all`.
 
 ```Bash
 # Run a CKI container with specfic IP address
